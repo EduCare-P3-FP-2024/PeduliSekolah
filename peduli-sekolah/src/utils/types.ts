@@ -9,6 +9,8 @@ export type User = {
   role: string;
 };
 
+export type CreateUserInput = Omit<User, "_id">;
+
 export type Category = {
   _id: ObjectId;
   name: string;
@@ -34,11 +36,15 @@ export type Post = {
   meta_description: string;
 };
 
+export type CreatePostInput = Omit<Post, "_id">;
+
 export type Vote = {
   _id: ObjectId;
   userId: ObjectId;
   postId: ObjectId;
 };
+
+export type AddVote = Omit<Vote, "_id">;
 
 export type SchoolDocument = {
   _id: ObjectId;
@@ -49,6 +55,8 @@ export type SchoolDocument = {
   updatedAt: Date;
   status: string;
 };
+
+export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
 
 export type Transaction = {
   _id: ObjectId;
@@ -65,6 +73,8 @@ export type Transaction = {
   updatedAt: Date;
 };
 
+export type TransactionInput = Omit<Transaction, "_id">;
+
 export type Payee = {
   _id: ObjectId;
   name: string;
@@ -75,3 +85,5 @@ export type Payee = {
   updatedAt: Date;
   userId: string;
 };
+
+export type PayeeInput = Omit<Payee, "_id">;
