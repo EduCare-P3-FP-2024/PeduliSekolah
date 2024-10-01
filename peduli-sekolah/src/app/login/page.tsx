@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
 
 export default function LoginPage() {
@@ -62,6 +63,15 @@ export default function LoginPage() {
             </svg>
             Continue with Google
           </Button>
+          <div className="mt-4 text-center text-white text-sm">
+            Don't have an account?{" "}
+            <Link
+              href="/register"
+              className="font-semibold hover:underline hover:text-white/80"
+            >
+              Register Now
+            </Link>
+          </div>
         </div>
         <div className="w-1/2 relative">
           <Image
