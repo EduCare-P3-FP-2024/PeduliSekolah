@@ -1,8 +1,11 @@
+"use server";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
+import { loginLogic } from "./action";
 
 export default function LoginPage() {
   return (
@@ -13,7 +16,7 @@ export default function LoginPage() {
           <p className="text-lg text-white mb-8 font-medium">
             to help those in need
           </p>
-          <form className="space-y-6">
+          <form className="space-y-6" action={loginLogic}>
             <div>
               <Input
                 type="text"
@@ -44,7 +47,10 @@ export default function LoginPage() {
                 </svg>
               </button>
             </div>
-            <Button className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3">
+            <Button
+              className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3"
+              type="submit"
+            >
               Log In
             </Button>
           </form>
