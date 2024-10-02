@@ -20,6 +20,8 @@ export type Category = {
   updatedAt: Date;
 };
 
+export type CategoryInput = Omit<Category, "_id">;
+
 export type Post = {
   _id: ObjectId;
   title: string;
