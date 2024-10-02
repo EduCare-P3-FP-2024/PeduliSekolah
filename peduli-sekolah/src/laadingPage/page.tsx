@@ -1,11 +1,11 @@
-import filebg from '@/assets/fille.png'
+import fille from "@/assets/fille.png";
 
 export default function Laddingpage() {
   return (
     <>
       <section
         className="relative bg-cover bg-center h-screen rounded-lg"
-        style={{ backgroundImage: `url(${filebg.src})` }}
+        style={{ backgroundImage: `url(${fille.src})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-50" />
         <div className="relative z-10 container mx-auto h-full flex flex-col justify-center items-center text-center px-4">
