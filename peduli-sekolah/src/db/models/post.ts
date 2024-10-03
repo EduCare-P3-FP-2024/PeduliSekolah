@@ -7,9 +7,25 @@ const COLLECTION_POST = "posts";
 export const getPosts = async () => {
   const db = await getDb();
 
+  const agg = [
+    {
+      $lookup: {
+        from: "votes",
+        localField: "_id",
+        foreignField: "postId",
+        as: "votes",
+      },
+    },
+    {
+      $project: {
+        votes: { $size: "votes" },
+      },
+    },
+  ];
+
   const posts = (await db
     .collection(COLLECTION_POST)
-    .find({})
+    .aggregate(agg)
     .toArray()) as Post[];
 
   return posts;
