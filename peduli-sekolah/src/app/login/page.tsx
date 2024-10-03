@@ -7,7 +7,7 @@ import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
 import { loginLogic } from "./action";
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return (
     <div className="min-h-screen bg-[#F0F4F9] flex items-center justify-center p-4">
       <div className="w-full max-w-5xl h-[600px] bg-white rounded-xl overflow-hidden shadow-2xl flex">
