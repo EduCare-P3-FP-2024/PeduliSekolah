@@ -4,7 +4,7 @@ import { CreateUserInput, User } from "@/utils/types";
 import { hashPassword } from "@/utils/bcrypt";
 
 const DATABASE_NAME = process.env.MONGODB_DB_NAME;
-const COLLECTION_USER = "users";
+const COLLECTION_USER = "Users";
 
 export const getDb = async () => {
   const client = await getMongoClientInstance();

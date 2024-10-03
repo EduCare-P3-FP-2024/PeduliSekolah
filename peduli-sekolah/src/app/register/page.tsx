@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import PasswordInput from "@/components/PasswordInput";
+import { RegisterLogic } from "./action";
 
 export default async function RegisterPage() {
   return (
@@ -33,23 +34,26 @@ export default async function RegisterPage() {
             <p className="text-lg text-white/80 mb-8 font-medium italic">
               Join us and be a part of something greater
             </p>
-            <form className="space-y-6">
+            <form className="space-y-6" action={RegisterLogic}>
               <Input
                 type="text"
+                name="username"
                 placeholder="Username"
                 className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
               />
               <Input
                 type="email"
+                name="email"
                 placeholder="Email"
                 className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
               />
               <Input
                 type="text"
+                name="phoneNumber"
                 placeholder="Phone Number"
                 className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
               />
-              <Select>
+              <Select name="accountType">
                 <SelectTrigger className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
@@ -58,7 +62,7 @@ export default async function RegisterPage() {
                   <SelectItem value="school">School</SelectItem>
                 </SelectContent>
               </Select>
-              <PasswordInput />
+              <PasswordInput name="password" />
               <Button
                 className="w-full text-white font-semibold py-6 rounded-xl bg-gradient-to-r from-[#CF2B61] from-40% to-[#691631] hover:shadow-lg transition-shadow"
                 type="submit"
