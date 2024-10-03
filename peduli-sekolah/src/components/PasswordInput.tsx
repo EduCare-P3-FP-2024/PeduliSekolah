@@ -16,7 +16,7 @@ export default function PasswordInput({ name }: PasswordInputProps) {
       <Input
         type={showPassword ? "text" : "password"}
         placeholder="Password"
-        className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white pr-10"
+        className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white pr-10 font-bold"
         name={name}
       />
       <button
