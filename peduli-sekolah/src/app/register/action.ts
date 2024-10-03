@@ -1,44 +1,74 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { hashPassword } from "@/utils/bcrypt";
+import { createUser } from "@/db/models/user";
 import { z } from "zod";
 
-export const RegisteLogic = async (formData: FormData) => {
-  type GenericResponse<Type> = {
-    statusCode: number;
-    message?: string;
-    data?: Type;
-    error?: string;
-  };
-
+export const RegisterLogic = async (formData: FormData) => {
   const registerInput = z.object({
     username: z.string({ message: "Username is required" }),
     email: z
       .string({ message: "Email is required" })
       .email({ message: "Must be in email format" }),
-    password: z.string({ message: "Password is required" }),
-  });
-
-  const response = await fetch("http://localhost:3000/api/register", {
-    method: "POST",
-    body: JSON.stringify({
-      username: formData.get("username"),
-      email: formData.get("email"),
-      phoneNumber: formData.get("phoneNumber"),
-      password: formData.get("password"),
+    phoneNumber: z.string().optional(),
+    password: z
+      .string({ message: "Password is required" })
+      .min(5, { message: "Password must be at least 5 characters" }),
+    accountType: z.enum(["individual", "school"], {
+      errorMap: () => ({ message: "Please select an account type" }),
     }),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
-  const responseJson: GenericResponse<unknown> = await response.json();
+  const rawData = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    phoneNumber: formData.get("phoneNumber"),
+    accountType: formData.get("accountType"),
+  };
 
-  if (!response.ok) {
-    let message = responseJson.error;
+  console.log("===== ini rawData dari action register =====", rawData);
 
-    return redirect(`/register?error=${message}`);
+  const validatedFields = registerInput.safeParse(rawData);
+
+  if (!validatedFields.success) {
+    const errorPath = validatedFields.error.issues[0].path[0];
+    const errorMessage = validatedFields.error.issues[0].message;
+
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=${encodeURIComponent(
+        `${errorPath} - ${errorMessage}`
+      )}`
+    );
   }
-  return redirect("/login");
+
+  try {
+    const role = "user";
+
+    const phoneNumberValue = validatedFields.data.phoneNumber || "";
+
+    const userDataForNewUser = {
+      username: validatedFields.data.username,
+      email: validatedFields.data.email,
+      phone_number: phoneNumberValue,
+      password: validatedFields.data.password,
+      role: role,
+    };
+
+    const result = await createUser(userDataForNewUser);
+    console.log(
+      "==== ini data user baru register dari action register ====",
+      result
+    );
+
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?success=Register%20Success`
+    );
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const firstError = error.issues[0];
+      return redirect(`/register?error=${firstError.message}`);
+    }
+    return redirect(`/register?error=${"Internal Server Error"}`);
+  }
 };

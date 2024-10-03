@@ -4,7 +4,11 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
-export default async function PasswordInput() {
+interface PasswordInputProps {
+  name: string;
+}
+
+export default function PasswordInput({ name }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -13,6 +17,7 @@ export default async function PasswordInput() {
         type={showPassword ? "text" : "password"}
         placeholder="Password"
         className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white pr-10"
+        name={name}
       />
       <button
         type="button"
