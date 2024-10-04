@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
-import DonationCard from "../components/CardPostList"
+import DonationCard from "../../components/CardPostList"
 
 
 interface DonationPost {

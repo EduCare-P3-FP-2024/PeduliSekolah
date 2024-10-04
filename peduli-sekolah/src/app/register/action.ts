@@ -19,7 +19,6 @@ export const RegisterLogic = async (formData: FormData) => {
     }),
   });
 
-  // Extract form data
   const rawData = {
     username: formData.get("username"),
     email: formData.get("email"),
@@ -28,17 +27,12 @@ export const RegisterLogic = async (formData: FormData) => {
     accountType: formData.get("accountType"),
   };
 
-  console.log("===== rawData from register action =====", rawData);
-
-  // Validate input using Zod schema
   const validatedFields = registerInput.safeParse(rawData);
 
-  // If validation fails
   if (!validatedFields.success) {
     const errorPath = validatedFields.error.issues[0].path[0];
     const errorMessage = validatedFields.error.issues[0].message;
 
-    // Improved redirect: Keep errors in URL in a better format for readability
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=${encodeURIComponent(
         `${errorPath}: ${errorMessage}`
@@ -62,18 +56,10 @@ export const RegisterLogic = async (formData: FormData) => {
       role: role,
     };
 
-    // Attempt to create the user
-    const result = await createUser(userDataForNewUser);
-    console.log("==== new user data from register action ====", result);
+    await createUser(userDataForNewUser);
 
-    // Success: Redirect to login page
-    console.log(
-      "Redirecting to",
-      `${process.env.NEXT_PUBLIC_BASE_URL}/login?success=Register%20Success`
-    );
-    check = true;
+    return check = true;
   } catch (error) {
-    // Handle known errors (e.g., database constraint, duplicate email, etc.)
     console.log(error);
 
     if (error instanceof z.ZodError) {
@@ -85,7 +71,6 @@ export const RegisterLogic = async (formData: FormData) => {
       );
     }
 
-    // Generic error handling: Add a more user-friendly message
     return redirect(
       `/register?error=Server%20Error:%20Please%20try%20again%20later`
     );

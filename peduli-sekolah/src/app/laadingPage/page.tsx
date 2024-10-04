@@ -1,4 +1,5 @@
 import filebg from '@/assets/fille.png'
+import React from 'react';
 
 export default function Laddingpage() {
   return (
