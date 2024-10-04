@@ -8,7 +8,6 @@ export const createTokenJose = async (payload: jose.JWTPayload) => {
   const secretKey = new TextEncoder().encode(SECRET_KEY);
   const tokenJose = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg })
-    .setExpirationTime("1h")
     .sign(secretKey);
 
   return tokenJose;
