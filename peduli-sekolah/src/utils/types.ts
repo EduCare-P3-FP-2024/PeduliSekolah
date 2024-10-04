@@ -51,11 +51,12 @@ export type AddVote = Omit<Vote, "_id">;
 export type SchoolDocument = {
   _id: ObjectId;
   userId: ObjectId;
-  imageFileUrl: string[];
-  description: string;
+  imageFileUrl?: string[];
+  description?: string;
   createdAt: Date;
   updatedAt: Date;
   status: string;
+  location: string;
 };
 
 export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
