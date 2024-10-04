@@ -13,7 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import PasswordInput from "@/components/PasswordInput";
-import { RegisterLogic } from "./action"; // Importing the registration logic
+
+import { actionLogin } from "./action"; // Importing the registration logic
 import { Label } from "@/components/ui/label";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
@@ -37,11 +38,12 @@ export default async function RegisterPage() {
             <p className="text-lg text-white/80 mb-8 font-medium italic">
               Join us and be a part of something greater
             </p>
+
             {/* Form submission is linked to the RegisterLogic */}
             <Suspense>
               <ClientFlashComponent />
             </Suspense>
-            <form className="space-y-6" action={RegisterLogic}>
+            <form className="space-y-6" action={actionLogin}>
               <div>
                 <Label htmlFor="username" className="text-white">
                   Username *:
