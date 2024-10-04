@@ -1,5 +1,6 @@
-import AdminSidebar from "@/app/components/AdminSidebar";
-import AdminNavbar from "@/app/components/adminNavbar";
+import AdminNavbar from "../../components/adminNavbar";
+import Link from "next/link";
+
 
 const PageAdminSchool = () => {
   return (
