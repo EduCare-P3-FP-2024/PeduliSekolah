@@ -7,67 +7,58 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { z } from "zod";
 
-export const loginLogic = async (formData: FormData) => {
-  const loginInput = z.object({
-    email: z
-      .string({ message: "Email is required" })
-      .email({ message: "Must be in email format" }),
-    password: z.string({ message: "Password is required" }),
+export const actionLogin = async (formData: FormData) => {
+  const loginInputSchema = z.object({
+    email: z.string().email(),
+    password: z.string(),
   });
 
-  const rawData = {
-    email: formData.get("email"),
-    password: formData.get("password"),
-  };
+  const email = formData.get("email");
+  const password = formData.get("password");
 
-  console.log("====== ini rawdata dari login ======", rawData);
+  const parsedData = loginInputSchema.safeParse({
+    email,
+    password,
+  });
 
-  const parsingData = loginInput.safeParse(rawData);
-
-  console.log("===== ini data parsing dari login =====", parsingData);
-
-  if (!parsingData.success) {
-    const errorPath = parsingData.error.issues[0].path[0];
-    const errorMessage = parsingData.error.issues[0].message;
-    const finalError = `${errorPath} - ${errorMessage}`;
+  if (!parsedData.success) {
+    const errPath = parsedData.error.issues[0].path[0];
+    const errMessage = parsedData.error.issues[0].message;
+    const errFinalMessage = `${errPath} - ${errMessage}`;
 
     return redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=${finalError}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=${errFinalMessage}`
     );
   }
 
-  const userData = await getUserByEmail(parsingData.data.email);
-  console.log(
-    "===== ini data get userByEmail dari action login =====",
-    userData
-  );
+  // Retrieve user by email
+  const user = await getUserByEmail(parsedData.data.email);
 
-  if (
-    !userData ||
-    !comparePassword(parsingData.data.password, userData.password)
-  ) {
+  // Check if user exists and password is correct
+  if (!user || !comparePassword(parsedData.data.password, user.password)) {
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=Invalid%20credentials`
     );
   }
 
+  // Create token payload with user details
   const payload = {
-    id: userData._id,
-    email: userData.email,
+    id: user._id,
+    email: user.email,
+    role: user.role,
   };
 
-  console.log("===== ini data token dari action login =====", payload);
-
+  // Generate token using jose
   const token = await createTokenJose(payload);
 
-  console.log("===== ini token hasil dari action login =====", token);
-
+  // Set token as a cookie
   cookies().set("token", token, {
     httpOnly: true,
     secure: false,
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3), // Expires in 3 days
     sameSite: "strict",
   });
 
-  return redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/`);
+  // Redirect to the homepage
+  return redirect(`/`);
 };

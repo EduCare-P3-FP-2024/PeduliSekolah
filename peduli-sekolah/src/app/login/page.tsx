@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import PasswordInput from "@/components/PasswordInput";
 import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
-import { loginLogic } from "./action";
+import { actionLogin } from "./action";
 
 export default async function LoginPage() {
   return (
@@ -17,10 +17,10 @@ export default async function LoginPage() {
           <p className="text-lg text-white mb-8 font-medium">
             to help those in need
           </p>
-          <form className="space-y-6" action={loginLogic}>
+          <form className="space-y-6" action={actionLogin}>
             <div>
               <Input
-                type="text"
+                type="email"
                 placeholder="email"
                 name="email"
                 className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
