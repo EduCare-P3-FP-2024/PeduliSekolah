@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import PasswordInput from "@/components/PasswordInput";
 import { RegisterLogic } from "./action"; // Importing the registration logic
+import { Label } from "@/components/ui/label";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
 
@@ -41,40 +42,69 @@ export default async function RegisterPage() {
               <ClientFlashComponent />
             </Suspense>
             <form className="space-y-6" action={RegisterLogic}>
-              <Input
-                type="text"
-                name="username"
-                placeholder="Username"
-                className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
-              />
-              <Input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
-              />
-              <Input
-                type="text"
-                name="phoneNumber"
-                placeholder="Phone Number"
-                className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
-              />
-              <Select name="accountType">
-                <SelectTrigger className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="individual">Personal</SelectItem>
-                  <SelectItem value="school">School</SelectItem>
-                </SelectContent>
-              </Select>
-              <PasswordInput name="password" />
+              <div>
+                <Label htmlFor="username" className="text-white">
+                  Username *:
+                </Label>
+                <Input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Username"
+                  className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+                />
+              </div>
+              <div>
+                <Label htmlFor="email" className="text-white">
+                  Email *:
+                </Label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+                />
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber" className="text-white">
+                  Phone Number:
+                </Label>
+                <Input
+                  type="text"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  placeholder="Phone Number"
+                  className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+                />
+              </div>
+              <div>
+                <Label htmlFor="accountType" className="text-white">
+                  Purpose *:
+                </Label>
+                <Select name="accountType">
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold">
+                    <SelectValue placeholder="Select type" id="accountType" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="individual">Personal</SelectItem>
+                    <SelectItem value="school">School</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="password" className="text-white">
+                  Password *:
+                </Label>
+                <PasswordInput name="password" />
+              </div>
               <Button
                 className="w-full text-white font-semibold py-6 rounded-xl bg-gradient-to-r from-[#CF2B61] from-40% to-[#691631] hover:shadow-lg transition-shadow"
                 type="submit"
               >
                 Register
               </Button>
+              <p className="text-sm italic opacity-50">* = Required</p>
             </form>
           </div>
         </CardContent>
