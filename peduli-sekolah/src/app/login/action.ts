@@ -36,7 +36,7 @@ export const actionLogin = async (formData: FormData) => {
 
   if (user.status === "banned") {
     return redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=this%20user%20has%20been%banned`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=this%20user%20has%20been%20banned`,
     );
   }
 
