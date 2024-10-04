@@ -9,7 +9,7 @@ const ClientFlashComponent = () => {
   return (
     <>
       {errorMessage && (
-        <p className="animate-pulse rounded bg-red-400 px-4 py-2 text-center text-white">
+        <p className="animate-pulse rounded bg-red-400 px-4 py-2 text-center text-white capitalize">
           {errorMessage}
         </p>
       )}
