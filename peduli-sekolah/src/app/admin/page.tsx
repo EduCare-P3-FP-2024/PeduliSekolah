@@ -1,6 +1,8 @@
-import AdminSidebar from "@/components/AdminSidebar";
-import AdminNavbar from "@/components/adminNavbar";
+"use client";
 import React from "react";
+import AdminSidebar from "@/components/AdminSidebar";
+import AdminNavbar from "../../components/adminNavbar";
+import ModalImage from "react-modal-image";
 
 const PageAdminSchool = () => {
   return (
@@ -9,13 +11,13 @@ const PageAdminSchool = () => {
         <AdminNavbar />
         <div className="flex min-h-screen">
           <AdminSidebar />
-          <div className="w-9/12 border bg-white rounded-xl m-5 p-5">
+          <div className="w-9/12 border bg-white rounded-xl mx-auto mt-5 p-5">
             <div className="border shadow-lg rounded-xl p-5">
               <div className="flex">
                 <img
                   src="https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"
                   alt="User avatar"
-                  className="rounded-full w-20 h-20 m-5"
+                  className="rounded-full w-20 h-20 m-5 hidden md:block"
                 />
                 <div className="w-full">
                   <div className="flex justify-between">
@@ -37,19 +39,34 @@ const PageAdminSchool = () => {
                     sangat berarti bagi kami. Terima kasih atas dukungan Anda!
                   </p>
                   <div className="flex space-x-4">
-                    <img
-                      src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
-                      alt="School photo 1"
+                    <ModalImage
+                      small={
+                        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      }
+                      large={
+                        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      }
+                      alt="School Image"
                       className="w-24 h-24 rounded-lg"
                     />
-                    <img
-                      src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
-                      alt="School photo 2"
+                    <ModalImage
+                      small={
+                        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      }
+                      large={
+                        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      }
+                      alt="School Image"
                       className="w-24 h-24 rounded-lg"
                     />
-                    <img
-                      src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
-                      alt="School photo 3"
+                    <ModalImage
+                      small={
+                        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      }
+                      large={
+                        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      }
+                      alt="School Image"
                       className="w-24 h-24 rounded-lg"
                     />
                   </div>
