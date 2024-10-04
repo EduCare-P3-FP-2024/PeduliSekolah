@@ -7,6 +7,8 @@ import PasswordInput from "@/components/PasswordInput";
 import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
 import { actionLogin } from "./action";
+import ClientFlashComponent from "@/components/ClientFlashComponent";
+import { Suspense } from "react";
 
 export default async function LoginPage() {
   return (
@@ -17,6 +19,9 @@ export default async function LoginPage() {
           <p className="text-lg text-white mb-8 font-medium">
             to help those in need
           </p>
+          <Suspense>
+            <ClientFlashComponent />
+          </Suspense>
           <form className="space-y-6" action={actionLogin}>
             <div>
               <Input
