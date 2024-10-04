@@ -7,6 +7,7 @@ export type User = {
   password: string;
   phone_number: string;
   role: string;
+  status: string;
 };
 
 export type CreateUserInput = Omit<User, "_id">;
