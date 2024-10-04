@@ -1,85 +1,70 @@
 import AdminSidebar from "@/app/components/AdminSidebar";
 import AdminNavbar from "@/app/components/adminNavbar";
-import Link from "next/link";
 
 const PageAdminSchool = () => {
   return (
     <>
-      <AdminNavbar />
-      <div className="flex h-screen bg-slate-200">
-        <AdminSidebar />
-
-        <main className="flex-1 p-8 bg-slate-200">
-          <header className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-semibold">Project List</h1>
-            <i className="fas fa-bell text-blue-500 text-xl"></i>
-          </header>
-
-          <section className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <img
-                src="https://placehold.co/60x60"
-                alt="Project image"
-                className="rounded-full w-14 h-14 mr-4"
-              />
-              <div>
-                <h2 className="text-xl font-semibold">
-                  Kompor MLEDUG! - SMAN 35 JAKARTA
-                </h2>
-                <div className="text-gray-500">
-                  <span>Donasi Terkumpul: Rp. 1.750.000</span>
-                  <span className="ml-4">Target Donasi: Rp. 1.450.000</span>
+      <div className="w-full min-h-screen bg-slate-200">
+        <AdminNavbar />
+        <div className="flex min-h-screen">
+          <AdminSidebar />
+          <div className="w-9/12 border bg-white rounded-xl m-5 p-5">
+            <div className="border shadow-lg rounded-xl p-5">
+              <div className="flex">
+                <img
+                  src="https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"
+                  alt="User avatar"
+                  className="rounded-full w-20 h-20 m-5"
+                />
+                <div className="w-full">
+                  <div className="flex justify-between">
+                    <h2 className="font-bold text-left my-5">
+                      SMAN 35 JAKARTA
+                    </h2>
+                    <div className="hidden sm:block text-right">
+                      <h2>Donasi Terkumpul : Rp. 1.500.000</h2>
+                      <h2>Target Donasi : Rp. 1.450.000</h2>
+                    </div>
+                  </div>
+                  <hr className="hidden sm:block h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                  <p className="my-3 text-sm">
+                    Halo teman-teman! Sekolah kami saat ini menghadapi masalah
+                    serius dengan genteng yang bocor. Untuk memastikan anak-anak
+                    tetap dapat belajar dengan nyaman, kami memerlukan bantuan
+                    dari Anda. Mari bersama-sama meringankan beban ini dengan
+                    memberikan sumbangan. Setiap kontribusi, sekecil apa pun,
+                    sangat berarti bagi kami. Terima kasih atas dukungan Anda!
+                  </p>
+                  <div className="flex space-x-4">
+                    <img
+                      src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      alt="School photo 1"
+                      className="w-24 h-24 rounded-lg"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      alt="School photo 2"
+                      className="w-24 h-24 rounded-lg"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                      alt="School photo 3"
+                      className="w-24 h-24 rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-end mt-5 space-x-2">
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
+                      Pin Post
+                    </button>
+                    <button className="bg-red-500 text-white px-4 py-2 rounded-lg">
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <p className="text-gray-700 mb-4">
-              Kejadian tak terduga terjadi di SMAN 35 Jakarta pagi ini ketika
-              sebuah kompor meledak di ruang praktik memasak. Insiden ini
-              terjadi sekitar pukul 08:00 WIB, saat siswa sedang mengikuti
-              pelajaran keterampilan memasak. Menurut keterangan saksi, ledakan
-              tersebut terjadi saat siswa sedang mencoba menyalakan kompor. Gas
-              tersendat pada pipa gas utama dan gas yang bocor di sekitar
-              tabung. Beruntung, tidak ada korban jiwa dalam insiden ini
-              meskipun beberapa siswa mengalami luka ringan akibat terjuhan saat
-              berusaha keluar dari ruang praktik.
-            </p>
-
-            {/* Project Images */}
-            <div className="flex space-x-2 mb-4">
-              <img
-                src="https://placehold.co/60x60"
-                alt="Image 1"
-                className="w-14 h-14 border-2 border-blue-500"
-              />
-              <img
-                src="https://placehold.co/60x60"
-                alt="Image 2"
-                className="w-14 h-14"
-              />
-              <img
-                src="https://placehold.co/60x60"
-                alt="Image 3"
-                className="w-14 h-14"
-              />
-              <img
-                src="https://placehold.co/60x60"
-                alt="Image 4"
-                className="w-14 h-14"
-              />
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex space-x-4">
-              <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                Pin Post
-              </button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Delete
-              </button>
-            </div>
-          </section>
-        </main>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -7,9 +7,7 @@ const PageAdminSchool = () => {
       <div className="w-full min-h-screen bg-slate-200">
         <AdminNavbar />
         <div className="flex min-h-screen">
-          {/* Sidebar */}
           <AdminSidebar />
-
           <div className="w-9/12 border bg-white rounded-xl m-5 p-5">
             <div className="border shadow-lg rounded-xl p-5">
               <div className="flex">
