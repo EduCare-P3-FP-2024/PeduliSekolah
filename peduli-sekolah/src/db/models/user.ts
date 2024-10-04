@@ -33,6 +33,12 @@ export const createUser = async (user: CreateUserInput) => {
 
   const db = await getDb();
 
+  const check = await db.collection(COLLECTION_USER).findOne({email: user.email})
+
+  if(check){
+    throw  new Error('Email already exists')
+  }
+
   const result = await db.collection(COLLECTION_USER).insertOne(modifiedUser);
 
   return result;

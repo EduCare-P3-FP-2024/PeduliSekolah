@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         {
           From: {
             Email: process.env.MAILJET_SENDER_EMAIL,
-            Name: 'Your Name or Company',
+            Name: 'PeduliSekolah',
           },
           To: [
             {

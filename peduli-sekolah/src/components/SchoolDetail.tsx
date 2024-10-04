@@ -1,3 +1,5 @@
+import React from "react";
+
 const SchoolDetail = ({ params }: { params: { id: string } }) => {
   return (
     <>
