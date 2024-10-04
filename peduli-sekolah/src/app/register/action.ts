@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createUser } from "@/db/models/user";
 import { z } from "zod";
 
+// Define the RegisterLogic function with proper type handling
 export const RegisterLogic = async (formData: FormData) => {
   const registerInput = z.object({
     username: z.string({ message: "Username is required" }),
@@ -19,14 +20,23 @@ export const RegisterLogic = async (formData: FormData) => {
     }),
   });
 
+  // Extracting form data and ensuring correct types (FormDataEntryValue | null)
   const rawData = {
-    username: formData.get("username"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    phoneNumber: formData.get("phoneNumber"),
-    accountType: formData.get("accountType"),
+    username: formData.get("username") as string | null,
+    email: formData.get("email") as string | null,
+    password: formData.get("password") as string | null,
+    phoneNumber: formData.get("phoneNumber") as string | null,
+    accountType: formData.get("accountType") as string | null,
   };
 
+  // Perform null checks before validation
+  if (!rawData.username || !rawData.email || !rawData.password || !rawData.accountType) {
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=Missing required fields`
+    );
+  }
+
+  // Validate fields using Zod
   const validatedFields = registerInput.safeParse(rawData);
 
   if (!validatedFields.success) {
@@ -57,8 +67,7 @@ export const RegisterLogic = async (formData: FormData) => {
     };
 
     await createUser(userDataForNewUser);
-
-    return check = true;
+    check = true
   } catch (error) {
     console.log(error);
 
