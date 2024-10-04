@@ -60,7 +60,7 @@ export const getUserByEmail = async (email: string) => {
   const db = await getDb();
   const user = (await db
     .collection(COLLECTION_USER)
-    .findOne({ email }, { projection: { password: 0 } })) as User;
+    .findOne({ email })) as User;
 
   return user;
 };
