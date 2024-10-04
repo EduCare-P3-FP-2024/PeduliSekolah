@@ -15,13 +15,14 @@ export const loginLogic = async (formData: FormData) => {
     password: z.string({ message: "Password is required" }),
   });
 
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const rawData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
 
-  const parsingData = loginInput.safeParse({
-    email,
-    password,
-  });
+  console.log("====== ini rawdata dari login ======", rawData);
+
+  const parsingData = loginInput.safeParse(rawData);
 
   console.log("===== ini data parsing dari login =====", parsingData);
 
@@ -30,16 +31,24 @@ export const loginLogic = async (formData: FormData) => {
     const errorMessage = parsingData.error.issues[0].message;
     const finalError = `${errorPath} - ${errorMessage}`;
 
-    return redirect(`http://localhost:3000/login?error=${finalError}`);
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=${finalError}`
+    );
   }
 
   const userData = await getUserByEmail(parsingData.data.email);
+  console.log(
+    "===== ini data get userByEmail dari action login =====",
+    userData
+  );
 
   if (
     !userData ||
     !comparePassword(parsingData.data.password, userData.password)
   ) {
-    return redirect(`http://localhost:3000/login?error=Invalid%20credentials`);
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=Invalid%20credentials`
+    );
   }
 
   const payload = {
@@ -60,5 +69,5 @@ export const loginLogic = async (formData: FormData) => {
     sameSite: "strict",
   });
 
-  return redirect("http://localhost:3000");
+  return redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/`);
 };

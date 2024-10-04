@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PasswordInput from "@/components/PasswordInput";
 import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
 import { loginLogic } from "./action";
@@ -20,33 +21,12 @@ export default async function LoginPage() {
             <div>
               <Input
                 type="text"
-                placeholder="Username"
-                className="w-full bg-[#D33D6D] border-2 border-white/50 text-white placeholder-white/80 focus:border-white py-3 px-4 rounded-lg font-bold"
+                placeholder="email"
+                name="email"
+                className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
               />
             </div>
-            <div className="relative">
-              <Input
-                type="password"
-                placeholder="Password"
-                className="w-full bg-[#D33D6D] border-2 border-white/50 text-white placeholder-white/80 focus:border-white py-3 px-4 rounded-lg font-bold"
-              />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </button>
-            </div>
+            <PasswordInput name="password" />
             <Button
               className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3"
               type="submit"
