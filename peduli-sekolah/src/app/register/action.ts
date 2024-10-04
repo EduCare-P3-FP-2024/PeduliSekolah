@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createUser } from "@/db/models/user";
 import { z } from "zod";
 
+// Define the RegisterLogic function with proper type handling
 export const RegisterLogic = async (formData: FormData) => {
   const registerInput = z.object({
     username: z.string({ message: "Username is required" }),
@@ -19,14 +20,28 @@ export const RegisterLogic = async (formData: FormData) => {
     }),
   });
 
+  // Extracting form data and ensuring correct types (FormDataEntryValue | null)
   const rawData = {
-    username: formData.get("username"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    phoneNumber: formData.get("phoneNumber"),
-    accountType: formData.get("accountType"),
+    username: formData.get("username") as string | null,
+    email: formData.get("email") as string | null,
+    password: formData.get("password") as string | null,
+    phoneNumber: formData.get("phoneNumber") as string | null,
+    accountType: formData.get("accountType") as string | null,
   };
 
+  // Perform null checks before validation
+  if (
+    !rawData.username ||
+    !rawData.email ||
+    !rawData.password ||
+    !rawData.accountType
+  ) {
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=Missing%20required%20fields`,
+    );
+  }
+
+  // Validate fields using Zod
   const validatedFields = registerInput.safeParse(rawData);
 
   if (!validatedFields.success) {
@@ -35,8 +50,8 @@ export const RegisterLogic = async (formData: FormData) => {
 
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=${encodeURIComponent(
-        `${errorPath}: ${errorMessage}`
-      )}`
+        `${errorPath}: ${errorMessage}`,
+      )}`,
     );
   }
 
@@ -44,6 +59,7 @@ export const RegisterLogic = async (formData: FormData) => {
 
   try {
     const role = "user";
+    const status = "active";
     const phoneNumberValue = validatedFields.data.phoneNumber || "";
 
     // User data for DB insertion
@@ -54,11 +70,11 @@ export const RegisterLogic = async (formData: FormData) => {
       password: validatedFields.data.password,
       account_type: validatedFields.data.accountType,
       role: role,
+      status: status,
     };
 
     await createUser(userDataForNewUser);
-
-    return check = true;
+    check = true;
   } catch (error) {
     console.log(error);
 
@@ -66,13 +82,13 @@ export const RegisterLogic = async (formData: FormData) => {
       const firstError = error.issues[0];
       return redirect(
         `/register?error=Validation%20error:%20${encodeURIComponent(
-          firstError.message
-        )}`
+          firstError.message,
+        )}`,
       );
     }
 
     return redirect(
-      `/register?error=Server%20Error:%20Please%20try%20again%20later`
+      `/register?error=Server%20Error:%20Please%20try%20again%20later`,
     );
   }
 

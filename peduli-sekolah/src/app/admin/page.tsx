@@ -1,6 +1,6 @@
-import AdminNavbar from "../../components/adminNavbar";
-import Link from "next/link";
-
+import AdminSidebar from "@/components/AdminSidebar";
+import AdminNavbar from "@/components/adminNavbar";
+import React from "react";
 
 const PageAdminSchool = () => {
   return (

@@ -3,7 +3,7 @@ import Link from "next/link";
 const AdminSidebar = () => {
   return (
     <>
-      <div className="w-6/12 sm:w-3/12 p-5">
+      <div className="w-6/12 sm:w-3/12 p-5 hidden sm:block">
         <div className="border bg-white rounded-xl">
           <Link href="/admin/SchoolVerify">
             <h1 className="text-center p-3">School Verify</h1>
