@@ -6,15 +6,15 @@ const PostPage = () => {
     <>
       <div>
         <AdminNavbar />
-        <div className="flex min-h-screen bg-slate-300">
+        <div className="flex min-h-screen bg-slate-200">
           <AdminSidebar />
-          <div className="w-9/12 border bg-white rounded-xl m-5 p-5">
+          <div className="w-9/12 border bg-white rounded-xl mx-auto mt-2 p-5">
             <div className="border shadow-lg rounded-xl p-5">
               <div className="flex">
                 <img
                   src="https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"
                   alt="User avatar"
-                  className="rounded-full w-20 h-20 m-5"
+                  className="rounded-full w-20 h-20 m-5 hidden sm:block"
                 />
                 <div className="w-full">
                   <div className="flex justify-between">
