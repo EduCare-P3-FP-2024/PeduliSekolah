@@ -30,9 +30,14 @@ export const RegisterLogic = async (formData: FormData) => {
   };
 
   // Perform null checks before validation
-  if (!rawData.username || !rawData.email || !rawData.password || !rawData.accountType) {
+  if (
+    !rawData.username ||
+    !rawData.email ||
+    !rawData.password ||
+    !rawData.accountType
+  ) {
     return redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=Missing required fields`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=Missing%20required%20fields`,
     );
   }
 
@@ -45,8 +50,8 @@ export const RegisterLogic = async (formData: FormData) => {
 
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/register?error=${encodeURIComponent(
-        `${errorPath}: ${errorMessage}`
-      )}`
+        `${errorPath}: ${errorMessage}`,
+      )}`,
     );
   }
 
@@ -54,6 +59,7 @@ export const RegisterLogic = async (formData: FormData) => {
 
   try {
     const role = "user";
+    const status = "active";
     const phoneNumberValue = validatedFields.data.phoneNumber || "";
 
     // User data for DB insertion
@@ -64,10 +70,11 @@ export const RegisterLogic = async (formData: FormData) => {
       password: validatedFields.data.password,
       account_type: validatedFields.data.accountType,
       role: role,
+      status: status,
     };
 
     await createUser(userDataForNewUser);
-    check = true
+    check = true;
   } catch (error) {
     console.log(error);
 
@@ -75,13 +82,13 @@ export const RegisterLogic = async (formData: FormData) => {
       const firstError = error.issues[0];
       return redirect(
         `/register?error=Validation%20error:%20${encodeURIComponent(
-          firstError.message
-        )}`
+          firstError.message,
+        )}`,
       );
     }
 
     return redirect(
-      `/register?error=Server%20Error:%20Please%20try%20again%20later`
+      `/register?error=Server%20Error:%20Please%20try%20again%20later`,
     );
   }
 
