@@ -27,17 +27,23 @@ export const actionLogin = async (formData: FormData) => {
     const errFinalMessage = `${errPath} - ${errMessage}`;
 
     return redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=${errFinalMessage}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=${errFinalMessage}`,
     );
   }
 
   // Retrieve user by email
   const user = await getUserByEmail(parsedData.data.email);
 
+  if (user.status === "banned") {
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=this%20user%20has%20been%banned`,
+    );
+  }
+
   // Check if user exists and password is correct
   if (!user || !comparePassword(parsedData.data.password, user.password)) {
     return redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=Invalid%20credentials`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=Invalid%20credentials`,
     );
   }
 
