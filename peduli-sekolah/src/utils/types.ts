@@ -36,8 +36,9 @@ export type Post = {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  deadLineAt: Date;
   featured_status: boolean;
-  meta_description: string;
+  meta_description?: string;
 };
 
 export type CreatePostInput = Omit<Post, "_id">;
