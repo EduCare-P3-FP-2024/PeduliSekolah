@@ -64,7 +64,7 @@ export const getUserById = async (id: string) => {
     .findOne({ _id: objectId }, { projection: { password: 0 } })) as User;
 };
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string | null | undefined) => {
   const db = await getDb();
   const user = (await db
     .collection(COLLECTION_USER)

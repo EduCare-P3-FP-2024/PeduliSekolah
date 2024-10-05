@@ -1,26 +1,102 @@
-// app/components/LoginButton.tsx
-"use client";
+'use client'
 
-import { signIn, signOut } from "next-auth/react";
-import React from "react";
+import { signIn, signOut } from "next-auth/react"
+import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { ChevronDown, Check } from "lucide-react"
 
-// Accept session as a prop from the server component
-const LoginButton: React.FC<{ session: any }> = ({ session }) => {
+interface User {
+  email: string
+  name?: string
+  image?: string
+}
+
+export interface Session {
+  user: User
+  expires: string
+}
+
+interface LoginButtonProps {
+  session: Session | null
+  providers: { name: string; id: string }[]
+}
+
+export default function LoginButton({ session, providers }: LoginButtonProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
+
+  const toggleDropdown = () => setIsOpen(!isOpen)
+
+  const handleProviderSelect = (providerId: string) => {
+    setSelectedProvider(providerId)
+    setIsOpen(false)
+  }
+
+  const handleSignIn = () => {
+    if (selectedProvider) {
+      signIn(selectedProvider)
+    }
+  }
+
   return (
-    <div style={{ textAlign: "center", paddingTop: "50px" }}>
+    <div className="flex flex-col items-center justify-center">
       {!session ? (
         <>
-          <h1>You are not signed in</h1>
-          <button onClick={() => signIn("google")}>Sign in with Google</button>
+          <div className="relative w-full mb-4">
+            <button
+              onClick={toggleDropdown}
+              className="w-full bg-white/10 border border-white/20 text-white font-bold p-2 rounded-md flex justify-between items-center"
+              aria-haspopup="listbox"
+              aria-expanded={isOpen}
+            >
+              {selectedProvider
+                ? providers.find((p) => p.id === selectedProvider)?.name
+                : "Select a provider"}
+              <ChevronDown className={`ml-2 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+              <ul
+                className="absolute w-full mt-1 bg-white/10 border border-white/20 rounded-md shadow-lg max-h-60 overflow-auto"
+                role="listbox"
+              >
+                {providers.map((provider) => (
+                  <li
+                    key={provider.id}
+                    onClick={() => handleProviderSelect(provider.id)}
+                    className={`p-2 hover:bg-white/20 cursor-pointer flex justify-between items-center ${
+                      selectedProvider === provider.id ? 'bg-white/30' : ''
+                    }`}
+                    role="option"
+                    aria-selected={selectedProvider === provider.id}
+                  >
+                    {provider.name}
+                    {selectedProvider === provider.id && <Check className="text-green-500" />}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <Button
+            onClick={handleSignIn}
+            disabled={!selectedProvider}
+            className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3 transition-colors duration-200"
+          >
+            Sign in
+          </Button>
         </>
       ) : (
         <>
-          <h1>Welcome, {session?.user?.email}</h1>
-          <button onClick={() => signOut()}>Sign out</button>
+          <h1 className="text-white text-lg font-semibold mb-4">
+            Welcome, {session.user.email}
+          </h1>
+          <Button
+            onClick={() => signOut()}
+            className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3 transition-colors duration-200"
+          >
+            Sign out
+          </Button>
         </>
       )}
     </div>
-  );
-};
-
-export default LoginButton;
+  )
+}
