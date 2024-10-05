@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +15,6 @@ import { motion } from "framer-motion"; // Import framer-motion
 import { cn } from "@/lib/utils";
 import logoPs from "@/assets/logo.png";
 import profilePicture from "@/assets/tempestus2.jpg";
-
 type NavItem = {
   name: string;
   href: string;
@@ -37,7 +36,8 @@ export default function Sidebar() {
     pathname === "/admin" ||
     pathname === "/admin/SchoolList" ||
     pathname === "/admin/ProjectList" ||
-    pathname === "/admin/PostVerify"
+    pathname === "/admin/PostVerify" ||
+    pathname === "/login"
   ) {
     return <div className="hidden"></div>;
   }

@@ -2,11 +2,12 @@ import { ObjectId } from "mongodb";
 
 export type User = {
   _id: ObjectId;
-  username: string;
+  username?: string;
   email: string;
   password: string;
-  phone_number: string;
+  phone_number?: string;
   role: string;
+  type?: string;
   status: string;
 };
 
