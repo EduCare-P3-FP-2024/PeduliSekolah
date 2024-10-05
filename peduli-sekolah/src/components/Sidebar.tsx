@@ -9,6 +9,7 @@ import {
   UserIcon,
   ChatBubbleOvalLeftIcon,
   EnvelopeIcon,
+  AcademicCapIcon,
 } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
 import logoPs from "@/assets/logo.png";
@@ -22,6 +23,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Schools", href: "/schools", icon: AcademicCapIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
   { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
   { name: "Own Post", href: "/own-post", icon: EnvelopeIcon },
@@ -38,7 +40,12 @@ export default function Sidebar() {
     <div className="flex h-screen w-64 flex-col justify-between border-r border-[#BA2758] bg-white p-4">
       <div>
         <div className="mb-8">
-          <Image src={logoPs} alt="PS Logo" width={50} height={50} />
+          <Image
+            src={logoPs}
+            alt="PS Logo"
+            width={50}
+            height={50}
+          />
         </div>
         <nav className="space-y-4">
           {isLoading
@@ -99,7 +106,7 @@ function NavButton({ item, isActive }: { item: NavItem; isActive: boolean }) {
         "flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
         isActive
           ? "bg-[#DE2F69] text-white"
-          : "text-gray-600 hover:bg-[#D9D9D9] hover:text-gray-900"
+          : "text-gray-600 hover:bg-[#D9D9D9] hover:text-gray-900",
       )}
     >
       <item.icon className="h-5 w-5" />
