@@ -10,6 +10,8 @@ export type User = {
   status: string;
 };
 
+export type UserSchools = Omit<User, "password" | "role">;
+
 export type CreateUserInput = Omit<User, "_id">;
 
 export type Category = {

@@ -33,10 +33,12 @@ export const createUser = async (user: CreateUserInput) => {
 
   const db = await getDb();
 
-  const check = await db.collection(COLLECTION_USER).findOne({email: user.email})
+  const check = await db
+    .collection(COLLECTION_USER)
+    .findOne({ email: user.email });
 
-  if(check){
-    throw  new Error('Email already exists')
+  if (check) {
+    throw new Error("Email already exists");
   }
 
   const result = await db.collection(COLLECTION_USER).insertOne(modifiedUser);
@@ -69,4 +71,15 @@ export const getUserByEmail = async (email: string) => {
     .findOne({ email })) as User;
 
   return user;
+};
+
+export const getUsersByRole = async (role: string) => {
+  const db = await getDb();
+
+  const users = (await db
+    .collection(COLLECTION_USER)
+    .find({ role }, { projection: { password: 0 } })
+    .toArray()) as User[];
+
+  return users;
 };

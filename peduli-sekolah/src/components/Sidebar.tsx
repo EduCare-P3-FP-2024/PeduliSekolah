@@ -9,6 +9,7 @@ import {
   UserIcon,
   ChatBubbleOvalLeftIcon,
   EnvelopeIcon,
+  AcademicCapIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion"; // Import framer-motion
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Schools", href: "/schools", icon: AcademicCapIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
   { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
   { name: "Own Post", href: "/own-post", icon: EnvelopeIcon },
@@ -31,8 +33,15 @@ const navItems: NavItem[] = [
 export default function Sidebar() {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  if (
+    pathname === "/admin" ||
+    pathname === "/admin/SchoolList" ||
+    pathname === "/admin/ProjectList" ||
+    pathname === "/admin/PostVerify"
+  ) {
+    return <div className="hidden"></div>;
+  }
 
-  // Simulate loading
   setTimeout(() => setIsLoading(false), 2000);
 
   // Animation variants for sidebar entrance
