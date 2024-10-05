@@ -52,7 +52,8 @@ const authOptions: NextAuthOptions = {
             username: user.name || profile?.name,
             type: account?.provider,
             password: "oauth",
-            role: "Personal",
+            account_type: "Individual",
+            role: "user",
           });
         }
 
