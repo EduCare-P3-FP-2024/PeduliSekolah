@@ -71,6 +71,7 @@ export const RegisterLogic = async (formData: FormData) => {
       account_type: validatedFields.data.accountType,
       role: role,
       status: status,
+      type: "Site"
     };
 
     await createUser(userDataForNewUser);
