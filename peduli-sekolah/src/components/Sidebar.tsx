@@ -32,8 +32,15 @@ const navItems: NavItem[] = [
 export default function Sidebar() {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  if (
+    pathname === "/admin" ||
+    pathname === "/admin/SchoolList" ||
+    pathname === "/admin/ProjectList" ||
+    pathname === "/admin/PostVerify"
+  ) {
+    return <div className="hidden"></div>;
+  }
 
-  // Simulate loading
   setTimeout(() => setIsLoading(false), 2000);
 
   return (

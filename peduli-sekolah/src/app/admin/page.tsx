@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import AdminSidebar from "@/components/AdminSidebar";
-import AdminNavbar from "../../components/adminNavbar";
 import ModalImage from "react-modal-image";
 
 const PageAdminSchool = () => {

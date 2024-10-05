@@ -8,15 +8,13 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <body>
-      <div>
-        <AdminNavbar />
-        <div>{children}</div>
-      </div>
-    </body>
+    <div className="w-full">
+      <AdminNavbar />
+      <div>{children}</div>
+    </div>
   );
 }
