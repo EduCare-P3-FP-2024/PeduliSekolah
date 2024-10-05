@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import PasswordInput from "@/components/PasswordInput";
 
-import { actionLogin } from "./action"; // Importing the registration logic
+import { RegisterLogic } from "./action"; // Importing the registration logic
 import { Label } from "@/components/ui/label";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
@@ -43,7 +43,7 @@ export default async function RegisterPage() {
             <Suspense>
               <ClientFlashComponent />
             </Suspense>
-            <form className="space-y-6" action={actionLogin}>
+            <form className="space-y-6" action={RegisterLogic}>
               <div>
                 <Label htmlFor="username" className="text-white">
                   Username *:
