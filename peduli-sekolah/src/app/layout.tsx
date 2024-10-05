@@ -40,7 +40,7 @@ export default function RootLayout({
           <Sidebar />
 
           {/* Main content area with padding to account for the sidebar */}
-          <main className="flex-1 p-8 flex items-center justify-center">
+          <main className="flex-1  flex items-center justify-center">
             {children}
           </main>
         </div>
