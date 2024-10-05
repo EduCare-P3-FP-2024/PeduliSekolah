@@ -1,22 +1,22 @@
 import SchoolPageAll from "@/components/SchoolPage";
-import { UserSchools } from "@/utils/types";
+import { SchoolProfile } from "@/utils/types";
 import { ObjectId } from "mongodb";
 
 const SchoolPage = () => {
-  const schoolData: UserSchools[] = [
+  const schoolData: SchoolProfile[] = [
     {
-      _id: new ObjectId("66ff8d2540b967ae37803f23"),
-      username: "SMAN 90 PARUNG",
+      name: "SMAN 90 PARUNG",
       email: "mamang@gmail.com",
-      phone_number: "08124124",
-      status: "Jl. Aja dulu",
+      phoneNumber: "08124124",
+      location: "Jl. Aja dulu",
+      status: "Layak",
     },
     {
-      _id: new ObjectId("66ff8d2540b967ae37803f95"),
-      username: "SMAN 100 JAKARTA",
+      name: "SMAN 100 JAKARTA",
       email: "ffznrr20@gmailc.om",
-      phone_number: "08123456",
-      status: "Jl. Jalan Terus",
+      phoneNumber: "08123456",
+      location: "Jl. Jalan Terus",
+      status: "Tidak Layak",
     },
   ];
   return (
