@@ -35,10 +35,11 @@ export const createUser = async (user: CreateUserInput) => {
 
   const check = await db
     .collection(COLLECTION_USER)
-    .findOne({ email: user.email });
+    .findOne({ email: user.email, type:  user.type });
+
 
   if (check) {
-    throw new Error("Email already exists");
+    throw new Error("User already exists");
   }
 
   const result = await db.collection(COLLECTION_USER).insertOne(modifiedUser);
@@ -83,3 +84,14 @@ export const getUsersByRole = async (role: string) => {
 
   return users;
 };
+
+export const getUserByEmailAndType = async (email: string, type: string) => {
+  const db = await getDb();
+
+  const user = (await db
+    .collection(COLLECTION_USER)
+    .findOne({email, type})
+  ) as User
+
+  return user
+}

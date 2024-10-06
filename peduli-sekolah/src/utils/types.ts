@@ -11,8 +11,6 @@ export type User = {
   status: string;
 };
 
-export type UserSchools = Omit<User, "password" | "role">;
-
 export type CreateUserInput = Omit<User, "_id">;
 
 export type Category = {
@@ -38,8 +36,9 @@ export type Post = {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  deadLineAt: Date;
   featured_status: boolean;
-  meta_description: string;
+  meta_description?: string;
 };
 
 export type CreatePostInput = Omit<Post, "_id">;
@@ -54,6 +53,9 @@ export type AddVote = Omit<Vote, "_id">;
 
 export type SchoolDocument = {
   _id: ObjectId;
+  name: string;
+  email: string;
+  phoneNumber: string;
   userId: ObjectId;
   imageFileUrl?: string[];
   description?: string;
@@ -62,6 +64,11 @@ export type SchoolDocument = {
   status: string;
   location: string;
 };
+
+export type SchoolProfile = Omit<
+  SchoolDocument,
+  "_id" | "userId" | "createdAt" | "updatedAt"
+>;
 
 export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
 
