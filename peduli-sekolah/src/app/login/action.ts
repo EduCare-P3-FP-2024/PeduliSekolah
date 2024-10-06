@@ -1,11 +1,11 @@
 "use server";
 
-import { getUserByEmail } from "@/db/models/user";
 import { comparePassword } from "@/utils/bcrypt";
 import { createTokenJose } from "@/utils/jose";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { z } from "zod";
+import { getUserByEmailAndType } from "@/db/models/user";
 
 export const actionLogin = async (formData: FormData) => {
   const loginInputSchema = z.object({
@@ -33,7 +33,7 @@ export const actionLogin = async (formData: FormData) => {
   }
 
   // Retrieve user by email
-  const user = await getUserByEmail(parsedData.data.email);
+  const user = await getUserByEmailAndType(parsedData.data.email, "origin");
 
   console.log(user);
   
