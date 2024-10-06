@@ -7,7 +7,8 @@ export type User = {
   password: string;
   phone_number?: string;
   role: string;
-  type?: string;
+  type: string;
+  account_type: string
   status: string;
 };
 
