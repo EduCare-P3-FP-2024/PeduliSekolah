@@ -37,10 +37,10 @@ export default function RootLayout({
         {/* Flex container for sidebar and main content */}
         <div className="flex min-h-screen">
           {/* Sidebar */}
-          <Sidebar />
+          {/* <Sidebar /> */}
 
           {/* Main content area with padding to account for the sidebar */}
-          <main className="flex-1  flex items-center justify-center">
+          <main className="flex-1 flex items-center justify-center">
             {children}
           </main>
         </div>
