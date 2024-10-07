@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 import giftBg from "@/assets/givingbg.jpg";
 import {
   Select,
@@ -22,8 +23,8 @@ import ServerTokenableProtection from "@/components/ServerTokenableProtection";
 export default async function RegisterPage() {
   return (
     <ServerTokenableProtection>
-      <div className="min-h-screen w-full bg-[#ECF0F1] flex items-center justify-center p-4">
-        <Card className="max-w-4xl overflow-hidden rounded-3xl shadow-lg">
+      <div className="min-h-screen bg-[#ECF0F1] flex items-center justify-center p-4">
+        <Card className="w-full max-w-4xl overflow-hidden rounded-3xl shadow-lg">
           <CardContent className="p-0 flex">
             {/* Left Section: Image */}
             <div className="w-1/2 relative">
@@ -64,6 +65,7 @@ export default async function RegisterPage() {
                     className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold"
                   />
                 </div>
+
                 <div>
                   <Label htmlFor="email" className="text-[#ECF0F1]">
                     Email *:
@@ -76,6 +78,7 @@ export default async function RegisterPage() {
                     className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold"
                   />
                 </div>
+
                 <div>
                   <Label htmlFor="phoneNumber" className="text-[#ECF0F1]">
                     Phone Number:
@@ -88,6 +91,7 @@ export default async function RegisterPage() {
                     className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold"
                   />
                 </div>
+
                 <div>
                   <Label htmlFor="accountType" className="text-[#ECF0F1]">
                     Purpose *:
@@ -102,28 +106,31 @@ export default async function RegisterPage() {
                     </SelectContent>
                   </Select>
                 </div>
+
                 <div>
                   <Label htmlFor="password" className="text-[#ECF0F1]">
                     Password *:
                   </Label>
                   <PasswordInput name="password" />
                 </div>
+
                 <Button
-                  className="w-full text-white font-semibold py-6 rounded-xl bg-gradient-to-r from-[#E67E22] from-40% to-[#D35400] hover:shadow-lg hover:shadow-[#ECF0F1]/10 transition-shadow"
+                  className="w-full text-white font-semibold py-6 rounded-xl bg-gradient-to-r from-[#E67E22] from-40% to-[#D35400] hover:shadow-lg hover:shadow-[#ECF0F1]/20 transition-shadow"
                   type="submit"
                 >
                   Register
                 </Button>
+
                 <p className="text-sm italic text-[#ECF0F1]/60">* = Required</p>
               </form>
-              <div className="mt-4 text-center text-[#ECF0F1] text-sm">
+              <div className="mt-4 text-center text-white text-sm">
                 Have an account?{" "}
-                <a
+                <Link
                   href="/login"
-                  className="font-semibold hover:underline hover:text-[#ECF0F1]/80"
+                  className="font-semibold hover:underline hover:text-white/80"
                 >
-                  Login Now
-                </a>
+                  Back to login
+                </Link>
               </div>
             </div>
           </CardContent>
