@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     // Use NextResponse to return a JSON response
     return NextResponse.json({ success: true, message: "School profile created", result }, { status: 200 });
   } catch (error) {
-    if(error instanceof Error){     
+    if(error instanceof Error){ 
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }

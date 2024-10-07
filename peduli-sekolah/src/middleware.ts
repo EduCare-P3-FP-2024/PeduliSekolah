@@ -5,7 +5,9 @@ import { verifyTokenJose } from "./utils/jose";
 
 export const middleware = async (request: NextRequest) => {
   // Check if the request path starts with /api/auth, if so, bypass the middleware
-  if (request.nextUrl.pathname.startsWith("/api/auth")) {
+  if (
+    request.nextUrl.pathname.startsWith("/api/auth")
+  ) {
     return NextResponse.next();
   }
 
@@ -54,16 +56,6 @@ export const middleware = async (request: NextRequest) => {
     return response;  // Return response after handling admin case
   }
 
-  // API endpoint protection
-  if (url.pathname.startsWith("/api")) {
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-userId", tokenData.id);  // Set userId header
-    requestHeaders.set("x-role", tokenData.role);  // Set role header
-
-    return NextResponse.next({
-      headers: requestHeaders,
-    });
-  }
 
   // For other routes (e.g., school-document pages)
   const requestHeaders = new Headers(request.headers);
@@ -80,7 +72,6 @@ export const config = {
     "/admin/:path*",
     "/midtrans",
     "/school-document/:path*",
-    "/api/:path*"
     // No need to add exclusion here
   ],
 };
