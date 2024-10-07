@@ -1,19 +1,9 @@
 // app/api/auth/[...nextauth]/route.ts
-import NextAuth, { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth from "next-auth";
+import authOptions from "../authOption"; // Import from the new file
 
-export const authOptions: NextAuthOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
-  ],
-  secret: process.env.NEXTAUTH_SECRET,
-};
-
-console.log(process.env.GOOGLE_CLIENT_SECRET);
-
-
+// Create a handler for the NextAuth routes
 const handler = NextAuth(authOptions);
+
+// Export the handler as GET and POST methods
 export { handler as GET, handler as POST };

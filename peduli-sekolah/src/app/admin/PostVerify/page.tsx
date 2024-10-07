@@ -1,14 +1,12 @@
 import AdminSidebar from "@/components/AdminSidebar";
-import AdminNavbar from "@/components/adminNavbar";
 
 const PostPage = () => {
   return (
     <>
       <div>
-        <AdminNavbar />
-        <div className="flex min-h-screen bg-slate-200">
+        <div className="flex min-h-screen ">
           <AdminSidebar />
-          <div className="w-9/12 border bg-white rounded-xl mx-auto mt-2 p-5">
+          <div className="w-9/12  bg-white  mx-auto mt-2 p-5">
             <div className="border shadow-lg rounded-xl p-5">
               <div className="flex">
                 <img

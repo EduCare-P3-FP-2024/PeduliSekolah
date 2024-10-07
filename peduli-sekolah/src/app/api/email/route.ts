@@ -3,7 +3,7 @@ import mailjet from 'node-mailjet';
 
 export async function POST(req: Request) {
   try {
-    const { to, subject, message } = await req.json();
+    const { subject, message } = await req.json();
 
     // Initialize Mailjet client with API Key and Secret
     const mailjetClient = mailjet.apiConnect(
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
           },
           To: [
             {
-              Email: to,
+              Email: "sasaputri0705@gmail.com",
             },
           ],
           Subject: subject,

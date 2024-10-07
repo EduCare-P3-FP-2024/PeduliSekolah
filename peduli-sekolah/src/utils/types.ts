@@ -2,11 +2,13 @@ import { ObjectId } from "mongodb";
 
 export type User = {
   _id: ObjectId;
-  username: string;
+  username?: string;
   email: string;
   password: string;
-  phone_number: string;
+  phone_number?: string;
   role: string;
+  type: string;
+  account_type: string;
   status: string;
 };
 
@@ -35,8 +37,9 @@ export type Post = {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  deadLineAt: Date;
   featured_status: boolean;
-  meta_description: string;
+  meta_description?: string;
 };
 
 export type CreatePostInput = Omit<Post, "_id">;
@@ -51,14 +54,23 @@ export type AddVote = Omit<Vote, "_id">;
 
 export type SchoolDocument = {
   _id: ObjectId;
+  name: string;
+  email: string;
+  phoneNumber: string;
   userId: ObjectId;
   imageFileUrl?: string[];
   description?: string;
   createdAt: Date;
   updatedAt: Date;
+  purpose: string;
   status: string;
   location: string;
 };
+
+export type SchoolProfile = Omit<
+  SchoolDocument,
+  "userId" | "createdAt" | "updatedAt"
+>;
 
 export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
 

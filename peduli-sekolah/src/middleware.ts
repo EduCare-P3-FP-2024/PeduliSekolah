@@ -3,53 +3,84 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyTokenJose } from "./utils/jose";
 
 export const middleware = async (request: NextRequest) => {
+  // Skip middleware for auth-related API requests
+  if (request.nextUrl.pathname.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
+
   // Retrieve token from cookies
   const cookieStore = cookies();
   const token = cookieStore.get("token");
 
-  // If token does not exist, redirect to login
+  // Redirect to login if no token exists
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   let tokenData;
   try {
-    // Verify token and extract user data (id, role, etc.)
-    tokenData = await verifyTokenJose<{ id: string, role: string }>(token.value);
+    // Verify the token and extract user data (id, role, etc.)
+    tokenData = await verifyTokenJose<{
+      id: string;
+      role: string;
+      account_type: string;
+      username: string;
+    }>(token.value);
   } catch (error) {
-    console.log("Failed to decode", error);
-    return NextResponse.json({
-      statusCode: 401,
-      error: "Invalid token",
-    });
+    console.log("Failed to decode token", error);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Check if this is an admin page
   const url = request.nextUrl;
   const isAdminPage = url.pathname.startsWith("/admin");
-
+  
   const response = NextResponse.next();
 
+  // Handle access to admin pages
   if (isAdminPage) {
-    // Set user ID in the cookie for admin pages
+    if (tokenData.role !== "admin") {
+      // Redirect non-admin users to a forbidden or custom error page
+      return NextResponse.redirect(new URL("/forbidden", request.url));
+    }
+
+    // Set user data in cookies for admin page actions
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/",
     });
-  } else {
-    // Attach user information to request headers for other pages
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-userId", tokenData.id);
-    requestHeaders.set("x-role", tokenData.role);
-    
-    return NextResponse.next({
-      headers: requestHeaders,
+    response.cookies.set("role", tokenData.role, {
+      httpOnly: true,
+      path: "/",
     });
+    response.cookies.set("accountType", tokenData.account_type, {
+      httpOnly: true,
+      path: "/",
+    });
+    response.cookies.set("username", tokenData.username, {
+      httpOnly: true,
+      path: "/",
+    });
+
+    return response; // Return response after setting the cookie for admin access
   }
 
-  return response;
+  // For other routes, set user details in headers
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-userId", tokenData.id);         // Pass userId in headers
+  requestHeaders.set("x-role", tokenData.role);         // Pass role in headers
+  requestHeaders.set("x-accountType", tokenData.account_type); // Pass account type in headers
+  requestHeaders.set("x-username", tokenData.username);   // Pass username in headers
+
+  return NextResponse.next({
+    headers: requestHeaders,
+  });
 };
 
+// Configure paths for the middleware to match
 export const config = {
-  matcher: ["/admin/"],
+  matcher: [
+    "/admin/:path*",            // Protect admin pages
+    "/midtrans",                // Protect midtrans-related routes
+    "/school-document/:path*",  // Protect school-document pages
+  ],
 };

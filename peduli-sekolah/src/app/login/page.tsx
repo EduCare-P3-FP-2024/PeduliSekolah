@@ -1,78 +1,63 @@
 "use server";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import PasswordInput from "@/components/PasswordInput";
-import Link from "next/link";
 import studentBg from "@/assets/studentbg.jpg";
-import { actionLogin } from "./action";
-import ClientFlashComponent from "@/components/ClientFlashComponent";
 import { Suspense } from "react";
+import ClientFlashComponent from "@/components/ClientFlashComponent";
+import LoginButton from "@/components/LoginButton";
+import { getServerSession } from "next-auth";
+import { getProviders } from "next-auth/react";
+import authOptions from "../api/auth/authOption";
+import { Session } from "@/components/LoginButton"; // Adjust the path as needed
+import ClientLoginForm from "@/components/ClientLoginForm";
+import ServerTokenableProtection from "@/components/ServerTokenableProtection";
 
 export default async function LoginPage() {
+  const session: Session | null = await getServerSession(authOptions);
+  const providers = await getProviders();
+
   return (
-    <div className="min-h-screen bg-[#F0F4F9] flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl h-[600px] bg-white rounded-xl overflow-hidden shadow-2xl flex">
-        <div className="w-1/2 bg-[#BA2758] p-12 flex flex-col justify-center">
-          <h1 className="text-4xl font-bold text-white mb-2">PeduliSekolah.</h1>
-          <p className="text-lg text-white mb-8 font-medium">
+    <ServerTokenableProtection>
+
+    <div className="min-h-screen w-full bg-[#F0F4F9] flex items-center justify-center p-4">
+      <div className="w-full max-w-5xl h-full md:h-[600px] bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
+        {/* Left Section - Login form */}
+        <div className="w-full md:w-1/2 bg-[#2C3E50] p-8 md:p-12 flex flex-col justify-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#ECF0F1] mb-2">
+            PeduliSekolah.
+          </h1>
+          <p className="text-base md:text-lg text-[#ECF0F1] mb-6 md:mb-8 font-medium">
             to help those in need
           </p>
           <Suspense>
             <ClientFlashComponent />
           </Suspense>
-          <form className="space-y-6" action={actionLogin}>
-            <div>
-              <Input
-                type="email"
-                placeholder="email"
-                name="email"
-                className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
-              />
-            </div>
-            <PasswordInput name="password" />
-            <Button
-              className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3"
-              type="submit"
-            >
-              Log In
-            </Button>
-          </form>
-          <div className="mt-6 text-center text-white/80 font-semibold">
-            Or Continue with
-          </div>
-          <Button
-            variant="outline"
-            className="mt-4 w-full bg-transparent text-white border-white/20 hover:bg-white/10 font-semibold"
-          >
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
-              />
-            </svg>
-            Continue with Google
-          </Button>
-          <div className="mt-4 text-center text-white text-sm">
+          <ClientLoginForm
+            session={session}
+            providers={Object.values(providers || {})}
+          />
+          <div className="mt-4 text-center text-[#ECF0F1] text-sm">
             Don't have an account?{" "}
-            <Link
+            <a
               href="/register"
-              className="font-semibold hover:underline hover:text-white/80"
+              className="font-semibold hover:underline hover:text-[#ECF0F1]/80"
             >
               Register Now
-            </Link>
+            </a>
           </div>
         </div>
-        <div className="w-1/2 relative">
+
+        {/* Right Section (Image) */}
+        <div className="w-full md:w-1/2 relative h-64 md:h-auto">
           <Image
             src={studentBg}
             alt="Classroom"
             layout="fill"
             objectFit="cover"
-          />
+            />
         </div>
       </div>
     </div>
+            </ServerTokenableProtection>
   );
 }

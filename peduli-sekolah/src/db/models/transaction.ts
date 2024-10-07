@@ -35,8 +35,22 @@ export const getTransactionByUserId = async (userId: string) => {
   return transaction;
 };
 
+export const updateTransactionStatus = async (id: string, status: string) => {
+  const db = await getDb();
+  
+  const result = await db.collection(COLLECTION_TRANSACTION).updateOne(
+    { _id: new ObjectId(id) }, 
+    { $set: { status } } // Update the transaction status
+  );
+
+  return result;
+};
+
 export const AddTransaction = async (transaction: TransactionInput) => {
   const db = await getDb();
+
+  console.log(transaction);
+  
 
   const modifiedTransaction = {
     ...transaction,

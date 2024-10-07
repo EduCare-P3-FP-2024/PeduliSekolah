@@ -1,14 +1,18 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+// app/page.tsx
+import { getServerSession } from "next-auth/next";
+import { getProviders } from "next-auth/react";
 import LoginButton from "@/components/LoginButton";
-export default async function LoginTest() {
-  const session = await getServerSession(authOptions);
+import React from "react";
+import { Session } from "@/components/LoginButton"; // Adjust the path as needed
+import authOptions from "../api/auth/authOption"; // Import from the new file
+
+export default async function Home() {
+  const session: Session | null = await getServerSession(authOptions);
+  const providers = await getProviders();
 
   return (
     <div>
-      <h1>Welcome to the App</h1>
-      {/* Pass session data to the client-side component if needed */}
-      <LoginButton session={session} />
+      <LoginButton session={session} providers={Object.values(providers || {})} />
     </div>
   );
 }

@@ -59,3 +59,13 @@ export const getPostById = async (id: string) => {
 
   return post;
 };
+
+export const getPostByUserId = async (id: string) => {
+  const db = await getDb();
+
+  const post = (await db
+    .collection(COLLECTION_POST)
+    .findOne({ userId: new ObjectId(id) })) as Post;
+
+  return post;
+};

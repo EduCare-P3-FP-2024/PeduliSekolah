@@ -18,9 +18,11 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
+import ServerTokenableProtection from "@/components/ServerTokenableProtection";
 
 export default async function RegisterPage() {
   return (
+    <ServerTokenableProtection>
     <div className="min-h-screen bg-[#ECF0F1] flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl overflow-hidden rounded-3xl shadow-lg">
         <CardContent className="p-0 flex">
@@ -132,5 +134,6 @@ export default async function RegisterPage() {
         </CardContent>
       </Card>
     </div>
+    </ServerTokenableProtection>
   );
 }
