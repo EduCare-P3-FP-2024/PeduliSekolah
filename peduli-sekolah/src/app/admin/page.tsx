@@ -6,11 +6,11 @@ import ModalImage from "react-modal-image";
 const PageAdminSchool = () => {
   return (
     <>
-      <div className="w-full min-h-screen ">
+      <div className="w-full min-h-screen bg-[#2C3E50]">
         <div className="flex min-h-screen">
           <AdminSidebar />
-          <div className="w-9/12 mx-auto  p-5">
-            <div className="border shadow-lg rounded-xl p-5">
+          <div className="w-9/12 mx-auto p-5">
+            <div className="border shadow-lg rounded-xl p-5 bg-white">
               <div className="flex">
                 <img
                   src="https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"

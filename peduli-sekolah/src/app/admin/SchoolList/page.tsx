@@ -3,11 +3,13 @@ import AdminSidebar from "@/components/AdminSidebar";
 const PageAdminSchoolList = () => {
   return (
     <>
-      <div className="w-full min-h-screen ">
-        <div className="flex min-h-screen">
+      <div className="w-full min-h-screen bg-[#2C3E50]">
+        {" "}
+        <div className="flex min-h-screen ">
           <AdminSidebar />
-          <div className="w-9/12  bg-white  mx-auto mt-2 p-5">
-            <div className="border shadow-lg rounded-xl p-5">
+          <div className="w-9/12 bg-[#2C3E50] mx-auto mt-2 p-5">
+            {" "}
+            <div className="border shadow-lg rounded-xl p-5 bg-white">
               <div className="flex">
                 <img
                   src="https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"
@@ -16,18 +18,22 @@ const PageAdminSchoolList = () => {
                 />
                 <div className="w-full">
                   <div className="flex justify-between">
-                    <h2 className="font-bold text-left my-5">
+                    <h2 className="font-bold text-left my-5 text-black">
+                      {" "}
+                      {/* Text color set to black */}
                       SMAN 35 JAKARTA
                     </h2>
                     <div className="text-right">
-                      <p className="text-xs">Member since 2019</p>
-                      <p className="text-xs font-bold">
+                      <p className="text-xs text-black">Member since 2019</p>
+                      <p className="text-xs font-bold text-black">
                         Total Dana Dikumpulkan: Rp. 1.450.000
                       </p>
                     </div>
                   </div>
                   <hr className="hidden sm:block h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                  <p className="my-3 text-sm">
+                  <p className="my-3 text-sm text-black">
+                    {" "}
+                    {/* Text color set to black */}
                     Cerdas, Berkarakter, Berakhlak Mulia. <br />
                     Jalan Mutiara no. 7, Bendungan Hilir Jakarta Pusat <br />
                     Contact Us:{" "}
