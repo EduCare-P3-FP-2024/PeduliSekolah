@@ -13,17 +13,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import PasswordInput from "@/components/PasswordInput";
-
-import { RegisterLogic } from "./action"; // Importing the registration logic
+import { RegisterLogic } from "./action";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
 
 export default async function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#D9D9D9] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#ECF0F1] flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl overflow-hidden rounded-3xl shadow-lg">
         <CardContent className="p-0 flex">
+          {/* Left Section: Image */}
           <div className="w-1/2 relative">
             <Image
               src={giftBg}
@@ -33,19 +34,23 @@ export default async function RegisterPage() {
               className="object-cover h-full"
             />
           </div>
-          <div className="w-1/2 bg-[#911F45] p-8 flex flex-col justify-center">
-            <h1 className="text-4xl font-bold text-white mb-2">Register</h1>
-            <p className="text-lg text-white/80 mb-8 font-medium italic">
+
+          {/* Right Section: Form */}
+          <div className="w-1/2 bg-[#2C3E50] p-8 flex flex-col justify-center">
+            <h1 className="text-4xl font-bold text-[#ECF0F1] mb-2">Register</h1>
+            <p className="text-lg text-[#ECF0F1]/80 mb-8 font-medium italic">
               Join us and be a part of something greater
             </p>
 
-            {/* Form submission is linked to the RegisterLogic */}
+            {/* Flash Component */}
             <Suspense>
               <ClientFlashComponent />
             </Suspense>
+
+            {/* Registration Form */}
             <form className="space-y-6" action={RegisterLogic}>
               <div>
-                <Label htmlFor="username" className="text-white">
+                <Label htmlFor="username" className="text-[#ECF0F1]">
                   Username *:
                 </Label>
                 <Input
@@ -53,11 +58,12 @@ export default async function RegisterPage() {
                   id="username"
                   name="username"
                   placeholder="Username"
-                  className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+                  className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold"
                 />
               </div>
+
               <div>
-                <Label htmlFor="email" className="text-white">
+                <Label htmlFor="email" className="text-[#ECF0F1]">
                   Email *:
                 </Label>
                 <Input
@@ -65,11 +71,12 @@ export default async function RegisterPage() {
                   id="email"
                   name="email"
                   placeholder="Email"
-                  className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+                  className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold"
                 />
               </div>
+
               <div>
-                <Label htmlFor="phoneNumber" className="text-white">
+                <Label htmlFor="phoneNumber" className="text-[#ECF0F1]">
                   Phone Number:
                 </Label>
                 <Input
@@ -77,15 +84,16 @@ export default async function RegisterPage() {
                   id="phoneNumber"
                   name="phoneNumber"
                   placeholder="Phone Number"
-                  className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+                  className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold"
                 />
               </div>
+
               <div>
-                <Label htmlFor="accountType" className="text-white">
+                <Label htmlFor="accountType" className="text-[#ECF0F1]">
                   Purpose *:
                 </Label>
                 <Select name="accountType">
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold">
+                  <SelectTrigger className="bg-[#ECF0F1]/10 border-[#ECF0F1]/20 text-[#ECF0F1] placeholder-[#ECF0F1]/60 focus:border-[#ECF0F1] font-bold">
                     <SelectValue placeholder="Select type" id="accountType" />
                   </SelectTrigger>
                   <SelectContent>
@@ -94,20 +102,32 @@ export default async function RegisterPage() {
                   </SelectContent>
                 </Select>
               </div>
+
               <div>
-                <Label htmlFor="password" className="text-white">
+                <Label htmlFor="password" className="text-[#ECF0F1]">
                   Password *:
                 </Label>
                 <PasswordInput name="password" />
               </div>
+
               <Button
-                className="w-full text-white font-semibold py-6 rounded-xl bg-gradient-to-r from-[#CF2B61] from-40% to-[#691631] hover:shadow-lg transition-shadow"
+                className="w-full text-white font-semibold py-6 rounded-xl bg-gradient-to-r from-[#E67E22] from-40% to-[#D35400] hover:shadow-lg hover:shadow-[#ECF0F1]/20 transition-shadow"
                 type="submit"
               >
                 Register
               </Button>
-              <p className="text-sm italic opacity-50">* = Required</p>
+
+              <p className="text-sm italic text-[#ECF0F1]/60">* = Required</p>
             </form>
+            <div className="mt-4 text-center text-white text-sm">
+              Have an account?{" "}
+              <Link
+                href="/login"
+                className="font-semibold hover:underline hover:text-white/80"
+              >
+                Back to login
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>
