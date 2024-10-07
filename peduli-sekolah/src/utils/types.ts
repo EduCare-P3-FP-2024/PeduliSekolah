@@ -8,7 +8,7 @@ export type User = {
   phone_number?: string;
   role: string;
   type: string;
-  account_type: string
+  account_type: string;
   status: string;
 };
 
