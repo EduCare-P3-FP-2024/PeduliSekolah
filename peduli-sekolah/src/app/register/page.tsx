@@ -23,7 +23,7 @@ import ServerTokenableProtection from "@/components/ServerTokenableProtection";
 export default async function RegisterPage() {
   return (
     <ServerTokenableProtection>
-      <div className="min-h-screen bg-[#ECF0F1] flex items-center justify-center p-4">
+      <div className="min-h-screen w-full bg-[#ECF0F1] flex items-center justify-center p-4">
         <Card className="w-full max-w-4xl overflow-hidden rounded-3xl shadow-lg">
           <CardContent className="p-0 flex">
             {/* Left Section: Image */}

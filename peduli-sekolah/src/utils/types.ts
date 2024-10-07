@@ -67,10 +67,17 @@ export type SchoolDocument = {
   location: string;
 };
 
-export type SchoolProfile = Omit<
-  SchoolDocument,
-  "userId" | "createdAt" | "updatedAt"
->;
+export type SchoolProfile = {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: string;
+  location: string;
+};
 
 export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
 

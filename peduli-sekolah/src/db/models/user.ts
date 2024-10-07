@@ -61,12 +61,15 @@ export const getUserById = async (id: string): Promise<User | null> => {
   return user as User;
 };
 
-export const getUserByEmailAndType = async (email: string, type: string): Promise<User | null> => {
+export const getUserByEmailAndType = async (
+  email: string,
+  type: string,
+): Promise<User | null> => {
   const db = await getDb();
 
-  const user = await db
+  const user = (await db
     .collection(COLLECTION_USER)
-    .findOne({ email, type }) as User;
+    .findOne({ email, type })) as User;
 
   return user;
 };
