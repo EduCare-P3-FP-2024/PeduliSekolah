@@ -32,11 +32,7 @@ export default async function LoginPage() {
           <Suspense>
             <ClientFlashComponent />
           </Suspense>
-          <ClientLoginForm />
-          <div className="mt-6 text-center text-[#ECF0F1]/80 font-semibold">
-            Or Continue with
-          </div>
-          <LoginButton
+          <ClientLoginForm
             session={session}
             providers={Object.values(providers || {})}
           />
