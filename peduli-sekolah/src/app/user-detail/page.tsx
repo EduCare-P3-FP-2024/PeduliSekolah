@@ -69,6 +69,7 @@ export default function UserProfile() {
                         <Input
                           id="username"
                           name="username"
+                          defaultValue={user?.username}
                           className="col-span-3"
                         />
                       </div>
@@ -77,6 +78,7 @@ export default function UserProfile() {
                           Email
                         </Label>
                         <Input
+                          defaultValue={user?.email}
                           id="email"
                           name="email"
                           type="email"
@@ -89,6 +91,7 @@ export default function UserProfile() {
                         </Label>
                         <Input
                           id="phoneNumber"
+                          defaultValue={user?.phone_number}
                           name="phoneNumber"
                           className="col-span-3"
                         />
@@ -111,17 +114,31 @@ export default function UserProfile() {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-1">Username</label>
-              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">test</div>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">
+                {user?.username}
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
-              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">test</div>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">
+                {user?.email}
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
                 Phone Number
               </label>
-              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">test</div>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">
+                {user?.phone_number}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Account Type
+              </label>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg capitalize">
+                {user?.account_type}
+              </div>
             </div>
             <div className="flex justify-end">
               <Button className="bg-[#E67E22] hover:bg-[#D35400] text-white">
