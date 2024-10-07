@@ -1,13 +1,10 @@
-// middleware.ts
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyTokenJose } from "./utils/jose";
 
 export const middleware = async (request: NextRequest) => {
-  // Check if the request path starts with /api/auth, if so, bypass the middleware
-  if (
-    request.nextUrl.pathname.startsWith("/api/auth")
-  ) {
+  // Skip middleware for auth-related API requests
+  if (request.nextUrl.pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
@@ -15,63 +12,56 @@ export const middleware = async (request: NextRequest) => {
   const cookieStore = cookies();
   const token = cookieStore.get("token");
 
-  // If token does not exist, redirect to login
+  // Redirect to login if no token exists
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   let tokenData;
   try {
-    // Verify token and extract user data (id, role, etc.)
+    // Verify the token and extract user data (id, role, etc.)
     tokenData = await verifyTokenJose<{ id: string; role: string; account_type: string }>(token.value);
-    console.log(tokenData);
   } catch (error) {
-    console.log("Failed to decode", error);
-    return NextResponse.json({
-      statusCode: 401,
-      error: "Invalid token",
-    });
+    console.log("Failed to decode token", error);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Check URL paths for admin or school-document access
   const url = request.nextUrl;
   const isAdminPage = url.pathname.startsWith("/admin");
-
+  
   const response = NextResponse.next();
 
-  // Admin page protection
+  // Handle access to admin pages
   if (isAdminPage) {
-    // Check if the user has the 'admin' role
-    if (tokenData.role !== 'admin') {
-      // If not an admin, redirect to Forbidden page or a custom error page
+    if (tokenData.role !== "admin") {
+      // Redirect non-admin users to a forbidden or custom error page
       return NextResponse.redirect(new URL("/forbidden", request.url));
     }
 
-    // Set user ID in the cookie for admin pages if the user is admin
+    // Set userId in cookies for admin page actions
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/",
     });
 
-    return response;  // Return response after handling admin case
+    return response;  // Return response after setting the cookie for admin access
   }
 
-
-  // For other routes (e.g., school-document pages)
+  // For other routes, set the user details in headers
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-userId", tokenData.id);  // Set userId header
-  requestHeaders.set("x-role", tokenData.role);  // Set role header
+  requestHeaders.set("x-userId", tokenData.id);  // Pass userId in headers
+  requestHeaders.set("x-role", tokenData.role);  // Pass role in headers
 
   return NextResponse.next({
     headers: requestHeaders,
   });
 };
 
+// Configure paths for the middleware to match
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/midtrans",
-    "/school-document/:path*",
-    // No need to add exclusion here
+    "/admin/:path*",            // Protect admin pages
+    "/midtrans",                // Protect midtrans-related routes
+    "/school-document/:path*",  // Protect school-document pages
   ],
 };

@@ -25,7 +25,7 @@ const Success = () => {
   }, [orderId, payment_method, payment_date]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-green-100">
+    <div className="flex items-center justify-center min-h-screen w-screen bg-green-100">
       <div className="p-8 bg-white rounded-lg shadow-lg max-w-md w-full text-center">
         <h2 className="text-2xl font-bold text-green-800 mb-6">Payment Successful!</h2>
         <p className="text-gray-700">Order ID: {transaction?.orderId}</p>

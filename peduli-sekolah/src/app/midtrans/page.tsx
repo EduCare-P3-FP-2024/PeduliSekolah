@@ -173,17 +173,7 @@ const Client = () => {
         </button>
 
         {/* Cloudinary Upload Button */}
-        <div className="mt-6">
-          <CldUploadButton
-            options={{ multiple: true }}
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
-            onSuccess={handleUploadSuccess} // Handle successful upload
-            className="w-full bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-600 transition duration-300"
-          >
-            <span>Upload</span>
-          </CldUploadButton>
-        </div>
-
+       
         {/* Display Uploaded Image */}
         {imageUrl && (
           <div className="mt-4">

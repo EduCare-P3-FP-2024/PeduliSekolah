@@ -10,13 +10,16 @@ import { getProviders } from "next-auth/react";
 import authOptions from "../api/auth/authOption";
 import { Session } from "@/components/LoginButton"; // Adjust the path as needed
 import ClientLoginForm from "@/components/ClientLoginForm";
+import ServerTokenableProtection from "@/components/ServerTokenableProtection";
 
 export default async function LoginPage() {
   const session: Session | null = await getServerSession(authOptions);
   const providers = await getProviders();
 
   return (
-    <div className="min-h-screen w-full bg-[#ECF0F1] flex items-center justify-center p-4">
+    <ServerTokenableProtection>
+
+    <div className="min-h-screen w-full bg-[#F0F4F9] flex items-center justify-center p-4">
       <div className="w-full max-w-5xl h-full md:h-[600px] bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
         {/* Left Section - Login form */}
         <div className="w-full md:w-1/2 bg-[#2C3E50] p-8 md:p-12 flex flex-col justify-center">
@@ -55,9 +58,10 @@ export default async function LoginPage() {
             alt="Classroom"
             layout="fill"
             objectFit="cover"
-          />
+            />
         </div>
       </div>
     </div>
+            </ServerTokenableProtection>
   );
 }
