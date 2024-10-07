@@ -62,13 +62,14 @@ export type SchoolDocument = {
   description?: string;
   createdAt: Date;
   updatedAt: Date;
+  purpose: string;
   status: string;
   location: string;
 };
 
 export type SchoolProfile = Omit<
   SchoolDocument,
-  "_id" | "userId" | "createdAt" | "updatedAt"
+  "userId" | "createdAt" | "updatedAt"
 >;
 
 export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
