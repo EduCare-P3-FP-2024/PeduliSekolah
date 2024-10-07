@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const posts = await getPosts(Number(page), category, search);
 
     // Response object with paginated posts
-    return NextResponse.json({
+    return NextResponse.json({ 
       data: posts,
       currentPage: Number(page),
       totalPages: Math.ceil(posts.length / Number(limit)),
