@@ -1,69 +1,38 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useForm, Controller } from "react-hook-form";
+import { Upload, FileText, Tag, Calendar, FileImage } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { CldUploadButton } from "next-cloudinary"; // For handling image uploads
+import { useRouter } from "next/navigation";
 import { Category } from "@/utils/types";
-import { FormEvent } from "react";
+import { useEffect } from "react";
 
-const handlePost = async (event: FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.currentTarget);
-
-  // Handle multiple image files
-  const imageFiles = formData.getAll("imageUrl") as File[];
-  const imageUrls: string[] = await Promise.all(
-    imageFiles.map(async (file) => {
-      const reader = new FileReader();
-      return new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file); // convert image to base64 URL
-      });
-    }),
-  );
-
-  const postInput = {
-    title: formData.get("title"),
-    content: formData.get("content"),
-    slug: formData.get("slug"),
-    categoryId: formData.get("Category"),
-    amount: formData.get("content"),
-    tags: formData.get("tags"),
-    imageUrl: imageUrls, // array of image URLs
-    deadLineAt: formData.get("deadLineAt"),
-    meta_description: formData.get("meta_description"),
-  };
-
-  try {
-    const response = await fetch("/api/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postInput),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to submit post: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-    console.log("Post successfully submitted:", result);
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error("Error submitting post:", err.message);
-    } else {
-      console.error("An unknown error occurred.");
-    }
-  }
+export type PostInput = {
+  title: string;
+  content: string;
+  slug: string;
+  categoryId: string;
+  amount: number;
+  tags: string;
+  imageUrl: string[]; // Changed to array of image URLs
+  deadLineAt: Date;
+  meta_description: string;
 };
 
 const PostForm = () => {
+  const { control, handleSubmit } = useForm<PostInput>();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]); // Array of image URLs
+  const router = useRouter();
 
+  // Fetch categories from API
   useEffect(() => {
     const fetchCategory = async () => {
       const url = "http://localhost:3000/api/categories";
@@ -75,100 +44,128 @@ const PostForm = () => {
         const json = await response.json();
         setCategories(json);
       } catch (err) {
-        if (err instanceof Error) {
-          console.log(err.message);
-        } else {
-          console.log("An unknown error occurred.");
-        }
+        console.error(err instanceof Error ? err.message : "Unknown error");
       }
     };
     fetchCategory();
   }, []);
 
+  const onSubmit = async (data: PostInput) => {
+    setIsSubmitting(true);
+
+    // Add the uploaded image URLs to the form data
+    if (imageUrls.length) {
+      data.imageUrl = imageUrls;
+    }
+
+    // Post submission logic
+    try {
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        router.push("/success-page"); // Redirect to success page
+      } else {
+        throw new Error(`Submission failed: ${response.statusText}`);
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const handleUploadSuccess = (result: any) => {
+    if (result?.info?.secure_url) {
+      setImageUrls((prev) => [...prev, result.info.secure_url]); // Append new image URL
+    }
+  };
+
   return (
-    <div className="w-full min-h-screen bg-[#ECF0F1] py-12">
-      <div className="container mx-auto">
-        <form
-          onSubmit={handlePost}
-          className="space-y-6 max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md"
-          encType="multipart/form-data"
-        >
-          <h2 className="text-2xl font-bold mb-6">Create New Post</h2>
-          <div>
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
+    <div className="min-h-screen w-screen bg-gray-100 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl"
+      >
+        <h1 className="text-3xl font-bold text-center mb-6">Create New Post</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+            <Label htmlFor="title" className="text-sm font-medium text-gray-700">Title</Label>
+            <Controller
               name="title"
+              control={control}
+              render={({ field }) => <Input {...field} type="text" id="title" placeholder="Post title" />}
             />
-          </div>
+          </motion.div>
 
-          <div>
-            <Label htmlFor="content">Content</Label>
-            <Textarea
-              id="content"
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+            <Label htmlFor="content" className="text-sm font-medium text-gray-700">Content</Label>
+            <Controller
               name="content"
-              rows={5}
+              control={control}
+              render={({ field }) => <Textarea {...field} rows={4} id="content" placeholder="Post content" />}
             />
-          </div>
+          </motion.div>
 
-          <div>
-            <Label htmlFor="categoryId">Category</Label>
-            <select name="Category">
-              {categories.map((el, i) => (
-                <option
-                  key={i}
-                  value={el._id.toString()}
-                >
-                  {el.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+            <Label htmlFor="categoryId" className="text-sm font-medium text-gray-700">Category</Label>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <select {...field} className="block w-full p-2 border-gray-300 rounded-md">
+                  {categories.map((el, i) => (
+                    <option key={i} value={el._id.toString()}>{el.name}</option>
+                  ))}
+                </select>
+              )}
+            />
+          </motion.div>
 
-          <div>
-            <Label htmlFor="tags">Tags (comma-separated)</Label>
-            <Input
-              id="tags"
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+            <Label htmlFor="tags" className="text-sm font-medium text-gray-700">Tags (comma-separated)</Label>
+            <Controller
               name="tags"
+              control={control}
+              render={({ field }) => <Input {...field} type="text" id="tags" placeholder="Post tags" />}
             />
-          </div>
+          </motion.div>
 
-          <div>
-            <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              name="imageUrl"
-              type="file"
-              multiple
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="deadLineAt">Deadline At</Label>
-            <Input
-              type="datetime-local"
-              id="deadLineAt"
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+            <Label htmlFor="deadLineAt" className="text-sm font-medium text-gray-700">Deadline At</Label>
+            <Controller
               name="deadLineAt"
+              control={control}
+              render={({ field }) => <Input {...field} type="datetime-local" id="deadLineAt" />}
             />
-          </div>
+          </motion.div>
 
-          <div>
-            <Label htmlFor="meta_description">Meta Description</Label>
-            <Textarea
-              id="meta_description"
-              name="meta_description"
-              rows={3}
-            />
-          </div>
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+            <Label htmlFor="imageUrl" className="text-sm font-medium text-gray-700">Upload Images</Label>
+            <CldUploadButton uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME} onSuccess={handleUploadSuccess} />
+            {imageUrls.length > 0 && <p className="text-sm text-green-500">Images uploaded!</p>}
+          </motion.div>
 
-          <Button
-            type="submit"
-            className="w-full"
-          >
-            Submit Post
-          </Button>
+          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                  <FileText className="h-5 w-5" />
+                </motion.div>
+              ) : (
+                "Submit Post"
+              )}
+            </Button>
+          </motion.div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
