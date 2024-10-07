@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Script from "next/script";
+import Sidebar from "@/components/Sidebar";
+
 import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
@@ -38,7 +40,7 @@ export default function RootLayout({
         <div className="flex min-h-screen">
           {/* Sidebar */}
           {/* <Sidebar /> */}
-
+          <Toaster />
           {/* Main content area with padding to account for the sidebar */}
           <main className="flex-1 flex items-center justify-center">
             {children}
