@@ -32,10 +32,6 @@ const authOptions: NextAuthOptions = {
       clientSecret: process.env.DISCORD_CLIENT_SECRET || "",
       authorization: { params: { scope: scopes } },
     }),
-    LINEProvider({
-      clientId: process.env.LINE_CLIENT_ID || "",
-      clientSecret: process.env.LINE_CLIENT_SECRET || "",
-    }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
 
@@ -67,6 +63,7 @@ const authOptions: NextAuthOptions = {
           email: dbUser.email,
           role: dbUser.role,
           account_type: dbUser.account_type,
+          username: dbUser.username
         };
 
         // Generate token using jose

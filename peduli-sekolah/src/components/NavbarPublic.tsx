@@ -34,7 +34,7 @@ export default function NavbarPublic() {
           </nav>
           <div className="flex-1 flex justify-end">
             <Link
-              href="#"
+              href="/login"
               className="bg-[#E67E22] text-[#ECF0F1] px-4 py-2 rounded-md hover:bg-[#D35400] transition duration-200"
             >
               Login

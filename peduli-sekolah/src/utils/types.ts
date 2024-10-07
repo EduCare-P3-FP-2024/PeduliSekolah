@@ -33,7 +33,7 @@ export type Post = {
   slug: string;
   categoryId: ObjectId;
   tags: string[];
-  imageUrl: string;
+  imageUrl: string[];
   status: string;
   createdAt: Date;
   updatedAt: Date;
@@ -67,10 +67,17 @@ export type SchoolDocument = {
   location: string;
 };
 
-export type SchoolProfile = Omit<
-  SchoolDocument,
-  "userId" | "createdAt" | "updatedAt"
->;
+export type SchoolProfile = {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: string;
+  location: string;
+};
 
 export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
 

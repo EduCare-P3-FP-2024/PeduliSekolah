@@ -50,7 +50,7 @@ export default function HeroLandingPage() {
         </p>
         <div className="flex space-x-4">
           <Link
-            href="#"
+            href="/register"
             className="bg-[#E67E22] text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300"
           >
             Sign Up Now
