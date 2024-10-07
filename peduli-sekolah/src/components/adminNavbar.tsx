@@ -1,28 +1,28 @@
 import Link from "next/link";
+import LogoNavbarPNG from "@/assets/logo-navbar-transparant.png";
+import Image from "next/image";
 
 const AdminNavbar = () => {
   return (
     <>
-      <div className="w-full h-[64px] bg-white rounded-b-lg flex justify-between p-2">
+      <div className="w-full h-[64px] bg-[#2C3E50] flex justify-between p-2 border-b-2">
         <div className="flex justify-center items-center gap-2">
-          <img
-            src={
-              "https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"
-            }
-            alt=""
-            className="rounded-full w-12 h-12 hidden sm:block"
+          <Image
+            src={LogoNavbarPNG}
+            alt="PeduliSekolah logo"
+            width={200}
+            height={40}
+            className="object-contain"
           />
-          <h2 className="font-semibold text-2xl">PeduliSekolah.id</h2>
         </div>
         <div>
-          {" "}
           <div className="dropdown dropdown-end sm:hidden">
             <div
               tabIndex={0}
               role="button"
               className=" m-1"
             >
-              <button className="btn btn-square btn-ghost">
+              <button className="btn btn-square btn-ghost text-wh">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
