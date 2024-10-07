@@ -3,10 +3,10 @@ import AdminSidebar from "@/components/AdminSidebar";
 const PageAdminSchool = () => {
   return (
     <>
-      <div className="w-full min-h-screen bg-slate-200">
+      <div className="w-full min-h-screen">
         <div className="flex min-h-screen">
           <AdminSidebar />
-          <div className="w-9/12 border bg-white rounded-xl mx-auto mt-2 p-5">
+          <div className="w-9/12  bg-white mx-auto mt-2 p-5">
             <div className="border shadow-lg rounded-xl p-5">
               <div className="flex">
                 <img

@@ -18,7 +18,7 @@ declare global {
           onPending?: (result: any) => void;
           onError?: (result: any) => void;
           onClose?: () => void;
-        }
+        },
       ) => void;
     };
   }
@@ -104,7 +104,9 @@ const Client = () => {
           },
         });
       } else {
-        console.error("Failed to get transaction token or Snap.js is not loaded");
+        console.error(
+          "Failed to get transaction token or Snap.js is not loaded",
+        );
       }
     } catch (error) {
       console.error("Checkout error:", error);
@@ -123,7 +125,10 @@ const Client = () => {
     if (!window.snap) {
       const script = document.createElement("script");
       script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
-      script.setAttribute("data-client-key", process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "");
+      script.setAttribute(
+        "data-client-key",
+        process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "",
+      );
       document.body.appendChild(script);
     }
   }, []);
@@ -137,7 +142,9 @@ const Client = () => {
 
         {/* Midtrans Form */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">User ID</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            User ID
+          </label>
           <input
             type="text"
             name="userId"
@@ -149,7 +156,9 @@ const Client = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Amount</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Amount
+          </label>
           <input
             type="number"
             name="amount"
