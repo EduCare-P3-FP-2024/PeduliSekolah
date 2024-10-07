@@ -20,7 +20,12 @@ export const middleware = async (request: NextRequest) => {
   let tokenData;
   try {
     // Verify the token and extract user data (id, role, etc.)
-    tokenData = await verifyTokenJose<{ id: string; role: string; account_type: string }>(token.value);
+    tokenData = await verifyTokenJose<{
+      id: string;
+      role: string;
+      account_type: string;
+      username: string;
+    }>(token.value);
   } catch (error) {
     console.log("Failed to decode token", error);
     return NextResponse.redirect(new URL("/login", request.url));
@@ -38,19 +43,33 @@ export const middleware = async (request: NextRequest) => {
       return NextResponse.redirect(new URL("/forbidden", request.url));
     }
 
-    // Set userId in cookies for admin page actions
+    // Set user data in cookies for admin page actions
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/",
     });
+    response.cookies.set("role", tokenData.role, {
+      httpOnly: true,
+      path: "/",
+    });
+    response.cookies.set("accountType", tokenData.account_type, {
+      httpOnly: true,
+      path: "/",
+    });
+    response.cookies.set("username", tokenData.username, {
+      httpOnly: true,
+      path: "/",
+    });
 
-    return response;  // Return response after setting the cookie for admin access
+    return response; // Return response after setting the cookie for admin access
   }
 
-  // For other routes, set the user details in headers
+  // For other routes, set user details in headers
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-userId", tokenData.id);  // Pass userId in headers
-  requestHeaders.set("x-role", tokenData.role);  // Pass role in headers
+  requestHeaders.set("x-userId", tokenData.id);         // Pass userId in headers
+  requestHeaders.set("x-role", tokenData.role);         // Pass role in headers
+  requestHeaders.set("x-accountType", tokenData.account_type); // Pass account type in headers
+  requestHeaders.set("x-username", tokenData.username);   // Pass username in headers
 
   return NextResponse.next({
     headers: requestHeaders,
