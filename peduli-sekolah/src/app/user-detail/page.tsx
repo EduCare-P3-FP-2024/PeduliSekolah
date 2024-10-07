@@ -3,22 +3,10 @@
 import { useState } from "react";
 import profilePicture from "@/assets/tempestus2.jpg";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -28,19 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import AlertLogout from "@/components/AlertLogout";
 
 export default function UserProfile() {
-  const router = useRouter();
   const { toast } = useToast();
   const [user, setUser] = useState({
     username: "johndoe",
     email: "johndoe@mail.com",
     phoneNumber: "081234567890",
   });
-
-  const handleLogout = () => {
-    router.push("/landing-page");
-  };
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -74,7 +58,7 @@ export default function UserProfile() {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-[#E67E22] hover:bg-[#D35400] text-white">
-                    Edit
+                    Edit Profile
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -133,38 +117,7 @@ export default function UserProfile() {
                   </form>
                 </DialogContent>
               </Dialog>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="border-[#2C3E50] text-[#2C3E50] hover:bg-[#2C3E50] hover:text-white"
-                  >
-                    Logout
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you sure you want to logout?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action will log you out of your account. You will
-                      need to log in again to access your profile.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="bg-[#ECF0F1] text-[#34495E] hover:bg-[#BDC3C7]">
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleLogout}
-                      className="bg-[#E67E22] hover:bg-[#D35400] text-white"
-                    >
-                      Logout
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <AlertLogout />
             </div>
           </div>
           <div className="space-y-6">
