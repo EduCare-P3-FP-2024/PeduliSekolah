@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { SchoolProfile } from "@/utils/types";
+import { SchoolDocument, SchoolProfile } from "@/utils/types";
 
 const colors = {
   primary: "#BA2758",
@@ -38,7 +38,7 @@ const SchoolPageAll = ({ schoolData }: { schoolData: SchoolProfile[] }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {schoolData.map((user, index) => (
-          <Link key={index} href={`/schools/${user.name}`}>
+          <Link key={index} href={`/schools/${user._id}`}>
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -60,6 +60,7 @@ const SchoolPageAll = ({ schoolData }: { schoolData: SchoolProfile[] }) => {
               </div>
               <p className="text-gray-600 mt-3">Email: {user.email}</p>
               <p className="text-gray-600">Telepon: {user.phoneNumber}</p>
+              <p className="text-gray-600">Lokasi: {user.location}</p>
             </motion.div>
           </Link>
         ))}
