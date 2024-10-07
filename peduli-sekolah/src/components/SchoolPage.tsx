@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { UserSchools } from "@/utils/types";
+import { SchoolProfile } from "@/utils/types";
 
 const colors = {
   primary: "#BA2758",
@@ -12,7 +12,7 @@ const colors = {
   background: "#fff",
 };
 
-const SchoolPageAll = ({ schoolData }: { schoolData: UserSchools[] }) => {
+const SchoolPageAll = ({ schoolData }: { schoolData: SchoolProfile[] }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -38,10 +38,7 @@ const SchoolPageAll = ({ schoolData }: { schoolData: UserSchools[] }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {schoolData.map((user, index) => (
-          <Link
-            key={index}
-            href={`/schools/${user._id}`}
-          >
+          <Link key={index} href={`/schools/${user.name}`}>
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -50,19 +47,19 @@ const SchoolPageAll = ({ schoolData }: { schoolData: UserSchools[] }) => {
             >
               <div className="flex items-center">
                 <img
-                  src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
-                  alt={`${user.username} avatar`}
+                  src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                  alt={`${user.name} avatar`}
                   className="w-14 h-14 rounded-full object-cover mr-4"
                 />
                 <h2
                   className="text-lg font-semibold"
                   style={{ color: colors.primary }}
                 >
-                  {user.username}
+                  {user.name}
                 </h2>
               </div>
               <p className="text-gray-600 mt-3">Email: {user.email}</p>
-              <p className="text-gray-600">Telepon: {user.phone_number}</p>
+              <p className="text-gray-600">Telepon: {user.phoneNumber}</p>
             </motion.div>
           </Link>
         ))}
