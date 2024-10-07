@@ -11,14 +11,14 @@ export default function ClientLoginForm() {
       <div>
         <Input
           type="text"
-          placeholder="email"
+          placeholder="Email"
           name="email"
-          className="bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white font-bold"
+          className="bg-[#ECF0F1] border-[#2C3E50]/20 text-[#34495E] placeholder-[#34495E]/60 focus:border-[#2C3E50] font-bold"
         />
       </div>
       <PasswordInput name="password" />
       <Button
-        className="w-full bg-[#9D1C44] hover:bg-[#7D1636] text-white font-semibold py-3"
+        className="w-full bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-3"
         type="submit"
       >
         Log In
