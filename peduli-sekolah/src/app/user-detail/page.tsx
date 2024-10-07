@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import profilePicture from "@/assets/tempestus2.jpg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -17,29 +17,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AlertLogout from "@/components/AlertLogout";
+import ProfileServer from "./ProfileServer";
+import { User } from "@/utils/types";
 
 export default function UserProfile() {
   const { toast } = useToast();
-  const [user, setUser] = useState({
-    username: "johndoe",
-    email: "johndoe@mail.com",
-    phoneNumber: "081234567890",
-  });
+  const [user, setUser] = useState<User | null>(null);
 
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const updatedUser = {
-      username: formData.get("username") as string,
-      email: formData.get("email") as string,
-      phoneNumber: formData.get("phoneNumber") as string,
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await ProfileServer();
+      setUser(user);
     };
-    setUser(updatedUser);
-    toast({
-      title: "Profile Updated",
-      description: "Your profile information has been successfully updated.",
-    });
-  };
+    fetchUser();
+  }, []);
 
   return (
     <div className="min-h-screen w-full bg-[#ECF0F1] flex flex-col text-[#34495E]">
@@ -69,7 +60,7 @@ export default function UserProfile() {
                       done.
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleSave}>
+                  <form>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="username" className="text-right">
@@ -78,7 +69,6 @@ export default function UserProfile() {
                         <Input
                           id="username"
                           name="username"
-                          defaultValue={user.username}
                           className="col-span-3"
                         />
                       </div>
@@ -90,7 +80,6 @@ export default function UserProfile() {
                           id="email"
                           name="email"
                           type="email"
-                          defaultValue={user.email}
                           className="col-span-3"
                         />
                       </div>
@@ -101,7 +90,6 @@ export default function UserProfile() {
                         <Input
                           id="phoneNumber"
                           name="phoneNumber"
-                          defaultValue={user.phoneNumber}
                           className="col-span-3"
                         />
                       </div>
@@ -123,23 +111,17 @@ export default function UserProfile() {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-1">Username</label>
-              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">
-                @{user.username}
-              </div>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">test</div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
-              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">
-                {user.email}
-              </div>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">test</div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
                 Phone Number
               </label>
-              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">
-                {user.phoneNumber}
-              </div>
+              <div className="p-3 bg-[#ECF0F1] rounded-md text-lg">test</div>
             </div>
             <div className="flex justify-end">
               <Button className="bg-[#E67E22] hover:bg-[#D35400] text-white">
