@@ -25,7 +25,7 @@ export const getUsers = async () => {
   return users;
 };
 
-export const createUser = async (user: CreateUserInput) => {
+export const createUser = async (user: CreateUserInput): Promise<User> => {
   const modifiedUser: CreateUserInput = {
     ...user,
     password: hashPassword(user.password),
@@ -33,40 +33,40 @@ export const createUser = async (user: CreateUserInput) => {
 
   const db = await getDb();
 
-  const check = await db.collection(COLLECTION_USER).findOne({email: user.email})
+  const check = await db
+    .collection(COLLECTION_USER)
+    .findOne({ email: user.email, type: user.type });
 
-  if(check){
-    throw  new Error('Email already exists')
+  if (check) {
+    throw new Error("User already exists");
   }
 
   const result = await db.collection(COLLECTION_USER).insertOne(modifiedUser);
 
-  return result;
+  // Return the inserted document with the generated _id
+  return {
+    _id: result.insertedId,
+    ...modifiedUser,
+  };
 };
 
-export const getUserByUsername = async (username: string) => {
-  const db = await getDb();
-  const user = (await db
-    .collection(COLLECTION_USER)
-    .findOne({ username }, { projection: { password: 0 } })) as User;
-
-  return user;
-};
-
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string): Promise<User | null> => {
   const objectId = new ObjectId(id);
   const db = await getDb();
 
-  const user = (await db
+  const user = await db
     .collection(COLLECTION_USER)
-    .findOne({ _id: objectId }, { projection: { password: 0 } })) as User;
+    .findOne({ _id: objectId }, { projection: { password: 0 } });
+
+  return user as User;
 };
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmailAndType = async (email: string, type: string): Promise<User | null> => {
   const db = await getDb();
-  const user = (await db
+
+  const user = await db
     .collection(COLLECTION_USER)
-    .findOne({ email })) as User;
+    .findOne({ email, type }) as User;
 
   return user;
 };

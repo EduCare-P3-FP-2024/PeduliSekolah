@@ -1,11 +1,11 @@
 "use server";
 
-import { getUserByEmail } from "@/db/models/user";
 import { comparePassword } from "@/utils/bcrypt";
 import { createTokenJose } from "@/utils/jose";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { z } from "zod";
+import { getUserByEmailAndType } from "@/db/models/user";
 
 export const actionLogin = async (formData: FormData) => {
   const loginInputSchema = z.object({
@@ -21,6 +21,7 @@ export const actionLogin = async (formData: FormData) => {
     password,
   });
 
+
   if (!parsedData.success) {
     const errPath = parsedData.error.issues[0].path[0];
     const errMessage = parsedData.error.issues[0].message;
@@ -32,26 +33,28 @@ export const actionLogin = async (formData: FormData) => {
   }
 
   // Retrieve user by email
-  const user = await getUserByEmail(parsedData.data.email);
+  const user = await getUserByEmailAndType(parsedData.data.email, "origin");
 
-  if (user.status === "banned") {
-    return redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=this%20user%20has%20been%20banned`,
-    );
-  }
-
+  console.log(user);
+  
   // Check if user exists and password is correct
   if (!user || !comparePassword(parsedData.data.password, user.password)) {
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=Invalid%20credentials`,
     );
   }
-
+  
+  if (user.status === "banned") {
+    return redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=this%20user%20has%20been%20banned`,
+    );
+  }
   // Create token payload with user details
   const payload = {
     id: user._id,
     email: user.email,
     role: user.role,
+    account_type: user.account_type
   };
 
   // Generate token using jose

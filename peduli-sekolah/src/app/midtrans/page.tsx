@@ -1,10 +1,11 @@
 "use client";
 
 import { CldUploadButton } from "next-cloudinary";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 interface TransactionResponse {
   token: string;
+  orderId: string;
 }
 
 declare global {
@@ -17,7 +18,7 @@ declare global {
           onPending?: (result: any) => void;
           onError?: (result: any) => void;
           onClose?: () => void;
-        }
+        },
       ) => void;
     };
   }
@@ -29,6 +30,8 @@ const Client = () => {
     amount: "",
   });
 
+  const [imageUrl, setImageUrl] = useState<string | null>(null); // State to store uploaded image URL
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -37,53 +40,70 @@ const Client = () => {
     });
   };
 
-  const handleCheckout = async () => {
+  const updateTransactionStatus = async (
+    orderId: string,
+    payment_status: string,
+    payment_method: string,
+    payment_date: string
+  ) => {
     try {
-      const { userId, amount } = formData;
-
-      // Validate form input
-      if (!userId || !amount) {
-        alert("Please fill in all fields.");
-        return;
-      }
-
-      // Call the API to get Midtrans transaction token
-      const response = await fetch("/api/transaction", {
+      const response = await fetch("/api/transaction/status", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify([
-          {
-            _id: "1",
-            amount: parseInt(amount, 10), // Parse amount as integer
-            userId: userId,
-          },
-        ]),
+        body: JSON.stringify({
+          orderId,
+          payment_method,
+          payment_status,
+          payment_date,
+        }),
       });
 
-      // Parse the response and ensure it's typed correctly
-      const data: TransactionResponse = await response.json();
-      const token = data.token;
+      if (!response.ok) {
+        throw new Error("Failed to update transaction status");
+      }
 
+      console.log("Transaction status updated successfully");
+    } catch (error) {
+      console.error("Error updating transaction status:", error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const { userId, amount } = formData;
+  
+      if (!userId || !amount) {
+        alert("Please fill in all fields.");
+        return;
+      }
+  
+      const response = await fetch("/api/transaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify([{ _id: "1", amount: parseInt(amount, 10), userId: userId }]),
+      });
+  
+      const data: TransactionResponse = await response.json();
+      const { token, orderId } = data;
+  
       if (token && window.snap) {
-        // Trigger the Midtrans Snap payment page
         window.snap.pay(token, {
           onSuccess: function (result) {
-            console.log("Payment success!", result);
-            // Handle success logic here
+            updateTransactionStatus(orderId, "success", result.payment_type, result.transaction_time);
+            
+            // Redirect to success page with transaction data as query parameters
+            window.location.href = `/success?orderId=${orderId}&payment_method=${result.payment_type}&payment_date=${result.transaction_time}`;
           },
           onPending: function (result) {
-            console.log("Payment pending!", result);
-            // Handle pending logic here
+            updateTransactionStatus(orderId, "pending", result.payment_type, result.transaction_time);
           },
           onError: function (result) {
-            console.error("Payment error!", result);
-            // Handle error logic here
+            updateTransactionStatus(orderId, "failed", result.payment_type, result.transaction_time);
           },
           onClose: function () {
             console.log("Payment popup closed!");
-            // Handle logic when the user closes the popup without completing payment
           },
         });
       } else {
@@ -93,13 +113,18 @@ const Client = () => {
       console.error("Checkout error:", error);
     }
   };
+  
+  
 
   useEffect(() => {
-    // Make sure that Snap.js is loaded by adding it as a script dynamically if necessary
+    // Ensure Snap.js is loaded
     if (!window.snap) {
       const script = document.createElement("script");
       script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
-      script.setAttribute("data-client-key", process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "");
+      script.setAttribute(
+        "data-client-key",
+        process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "",
+      );
       document.body.appendChild(script);
     }
   }, []);
@@ -110,10 +135,12 @@ const Client = () => {
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
           Checkout & Upload
         </h2>
-        
+
         {/* Midtrans Form */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">User ID</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            User ID
+          </label>
           <input
             type="text"
             name="userId"
@@ -125,7 +152,9 @@ const Client = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Amount</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Amount
+          </label>
           <input
             type="number"
             name="amount"
@@ -144,15 +173,14 @@ const Client = () => {
         </button>
 
         {/* Cloudinary Upload Button */}
-        <div className="mt-6">
-          <CldUploadButton
-            options={{ multiple: true }}
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
-            className="w-full bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-600 transition duration-300"
-          >
-            <span>Upload</span>
-          </CldUploadButton>
-        </div>
+       
+        {/* Display Uploaded Image */}
+        {imageUrl && (
+          <div className="mt-4">
+            <p>Uploaded Image:</p>
+            <img src={imageUrl} alt="Uploaded" className="w-full h-auto" />
+          </div>
+        )}
       </div>
     </div>
   );

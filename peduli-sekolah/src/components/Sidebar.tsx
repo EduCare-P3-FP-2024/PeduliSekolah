@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,12 +9,12 @@ import {
   UserIcon,
   ChatBubbleOvalLeftIcon,
   EnvelopeIcon,
+  AcademicCapIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion"; // Import framer-motion
 import { cn } from "@/lib/utils";
 import logoPs from "@/assets/logo.png";
 import profilePicture from "@/assets/tempestus2.jpg";
-
 type NavItem = {
   name: string;
   href: string;
@@ -23,6 +23,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Schools", href: "/schools", icon: AcademicCapIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
   { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
   { name: "Own Post", href: "/own-post", icon: EnvelopeIcon },
@@ -31,8 +32,16 @@ const navItems: NavItem[] = [
 export default function Sidebar() {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  if (
+    pathname === "/admin" ||
+    pathname === "/admin/SchoolList" ||
+    pathname === "/admin/ProjectList" ||
+    pathname === "/admin/PostVerify" ||
+    pathname === "/login"
+  ) {
+    return <div className="hidden"></div>;
+  }
 
-  // Simulate loading
   setTimeout(() => setIsLoading(false), 2000);
 
   // Animation variants for sidebar entrance
