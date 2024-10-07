@@ -33,7 +33,7 @@ export type Post = {
   slug: string;
   categoryId: ObjectId;
   tags: string[];
-  imageUrl: string;
+  imageUrl: string[];
   status: string;
   createdAt: Date;
   updatedAt: Date;

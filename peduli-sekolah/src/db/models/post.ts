@@ -18,7 +18,21 @@ export const getPosts = async () => {
     },
     {
       $project: {
-        votes: { $size: "votes" },
+        _id: 1,
+        title: 1,
+        content: 1,
+        userId: 1,
+        slug: 1,
+        categoryId: 1,
+        tags: 1,
+        imageUrl: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        deadLineAt: 1,
+        featured_status: 1,
+        meta_description: 1,
+        votes: { $size: { $ifNull: ["$votes", []] } }, // Counting votes
       },
     },
   ];
@@ -27,6 +41,8 @@ export const getPosts = async () => {
     .collection(COLLECTION_POST)
     .aggregate(agg)
     .toArray()) as Post[];
+
+  console.log(posts);
 
   return posts;
 };
