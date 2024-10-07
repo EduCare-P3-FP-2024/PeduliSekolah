@@ -43,7 +43,7 @@ export default function RootLayout({
           {/* Main content area with padding to account for the sidebar */}
           <main className="flex-1 flex items-center justify-center">
             {children}
-            <Toaster/>
+            <Toaster />
           </main>
         </div>
       </body>
