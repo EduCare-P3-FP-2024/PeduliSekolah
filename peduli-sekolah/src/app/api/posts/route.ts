@@ -51,40 +51,60 @@ export type Post = {
 
 export const POST = async (req: Request) => {
   try {
+    // Parse the incoming JSON payload
     const {
       title,
       content,
       categoryId,
       amount,
       tags,
-      imageUrl, // now array of strings
+      imageUrl, // Array of image URLs
       deadLineAt,
       meta_description,
     } = await req.json();
 
-    console.log("Title:", title);
-    console.log("Content:", content);
+    // Simulate getting userId from a session/cookie (replace with actual user logic)
+    const userId = new ObjectId(); // Replace with actual userId
 
-    console.log("Category ID:", categoryId);
-    console.log("Amount:", amount);
-    console.log("Tags:", tags);
-    console.log("Image URLs:", imageUrl); // array of image URLs
-    console.log("Deadline:", deadLineAt);
-    console.log("Meta Description:", meta_description);
+    // Create a new post object
+    const newPost = {
+      title,
+      content,
+      userId,
+      slug: title.toLowerCase().replace(/ /g, "-"), // Create a slug from the title
+      categoryId: new ObjectId(categoryId), // Convert categoryId to ObjectId
+      tags: tags ? tags.split(",").map((tag: string) => tag.trim()) : [], // Convert tags to array
+      imageUrl, // Already an array of image URLs
+      deadLineAt: new Date(deadLineAt),
+      amount: Number(amount),
+      target_amount: 1000, // Assuming a default target amount (can be dynamic)
+      featured_status: false, // Default status
+      status: "pending", // Default post status
+      meta_description,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
-    // Lakukan logika lain di sini, seperti menyimpan ke database, dsb.
+    // Insert the post into the database using the createPost function
+    const result = await createPost(newPost);
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    // Log success and return a success response
+    console.log("Post successfully created:", result);
+    return new Response(JSON.stringify({ success: true, postId: result.insertedId }), {
+      status: 201,
+    });
+
   } catch (err) {
+    // Handle errors gracefully
     if (err instanceof Error) {
-      console.log(err.message);
+      console.log("Error creating post:", err.message);
       return new Response(JSON.stringify({ error: err.message }), {
         status: 500,
       });
     } else {
       return new Response(
         JSON.stringify({ error: "An unknown error occurred." }),
-        { status: 500 },
+        { status: 500 }
       );
     }
   }
