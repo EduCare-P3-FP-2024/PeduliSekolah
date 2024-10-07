@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 import giftBg from "@/assets/givingbg.jpg";
 import {
   Select,
@@ -15,7 +16,6 @@ import {
 import PasswordInput from "@/components/PasswordInput";
 import { RegisterLogic } from "./action";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
 import ServerTokenableProtection from "@/components/ServerTokenableProtection";
