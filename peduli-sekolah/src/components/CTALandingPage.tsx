@@ -48,7 +48,7 @@ export default function CTALandingPage() {
           students.
         </p>
         <Link
-          href="#"
+          href="/register"
           className="bg-[#2C3E50] text-[#ECF0F1] px-8 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300 inline-block"
         >
           Sign Up Now

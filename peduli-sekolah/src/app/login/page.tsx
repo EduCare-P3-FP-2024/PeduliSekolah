@@ -18,7 +18,6 @@ export default async function LoginPage() {
 
   return (
     <ServerTokenableProtection>
-
     <div className="min-h-screen w-full bg-[#F0F4F9] flex items-center justify-center p-4">
       <div className="w-full max-w-5xl h-full md:h-[600px] bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
         {/* Left Section - Login form */}
@@ -45,19 +44,18 @@ export default async function LoginPage() {
               Register Now
             </a>
           </div>
-        </div>
 
-        {/* Right Section (Image) */}
-        <div className="w-full md:w-1/2 relative h-64 md:h-auto">
-          <Image
-            src={studentBg}
-            alt="Classroom"
-            layout="fill"
-            objectFit="cover"
+          {/* Right Section (Image) */}
+          <div className="w-full md:w-1/2 relative h-64 md:h-auto">
+            <Image
+              src={studentBg}
+              alt="Classroom"
+              layout="fill"
+              objectFit="cover"
             />
+          </div>
         </div>
       </div>
-    </div>
-            </ServerTokenableProtection>
+    </ServerTokenableProtection>
   );
 }

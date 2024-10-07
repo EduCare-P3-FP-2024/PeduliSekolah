@@ -22,22 +22,32 @@ interface NavButtonProps {
   isActive: boolean;
 }
 
-const navItems: NavItem[] = [
+const navItems = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon },
   { name: "School List", href: "/admin/SchoolList", icon: ClipboardIcon },
   { name: "Post List", href: "/admin/ProjectList", icon: ClipboardIcon },
   { name: "Post Verify", href: "/admin/PostVerify", icon: CheckCircleIcon },
-  { name: "Logout", href: "/login", icon: LogOutIcon },
 ];
+
+const navLogout = [{ name: "Logout", href: "/login", icon: LogOutIcon }];
 
 const AdminSidebar: FC = () => {
   const pathname = usePathname();
 
   return (
-    <div className="w-6/12 sm:w-3/12 p-5 hidden sm:block h-screen bg-white">
-      <div className="bg-white rounded-xl">
+    <div className="w-6/12 sm:w-3/12 p-5 hidden sm:flex flex-col h-screen border-r-2  bg-[#2C3E50] ">
+      <div className=" rounded-xl flex flex-col h-full ">
         <nav className="space-y-4">
           {navItems.map((item) => (
+            <NavButton
+              key={item.name}
+              item={item}
+              isActive={pathname === item.href}
+            />
+          ))}
+        </nav>
+        <nav className="mt-auto">
+          {navLogout.map((item) => (
             <NavButton
               key={item.name}
               item={item}
@@ -55,16 +65,16 @@ const NavButton: FC<NavButtonProps> = ({ item, isActive }) => {
     <Link
       href={item.href}
       className={cn(
-        "flex items-center space-x-2 rounded-full px-3 py-2 text-sm font-medium transition-all duration-200",
+        "flex items-center space-x-2  px-3 py-2 text-sm font-medium transition-all duration-200",
         isActive
-          ? "bg-white text-[#DE2F69] border-2 border-[#DE2F69]"
-          : "text-gray-700 hover:bg-gray-200 hover:text-gray-900 border-2 border-transparent",
+          ? " text-[#E67E22] border-r-2  border-[#E67E22]"
+          : "text-white hover:bg-[#E67E22] hover:text-white border-2 border-transparent",
       )}
     >
       <item.icon
         className={cn(
           "h-5 w-5 transition-colors duration-200",
-          isActive ? "text-[#DE2F69]" : "text-gray-700",
+          isActive ? "text-[#E67E22]" : "hover:text-white",
         )}
       />
       <span>{item.name}</span>
