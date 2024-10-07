@@ -10,6 +10,7 @@ import { createTokenJose } from "@/utils/jose";
 import { cookies } from "next/headers";
 
 const scopes = ["identify"].join(" ");
+let check;
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -80,11 +81,16 @@ const authOptions: NextAuthOptions = {
         });
 
         // Allow the sign-in process to proceed
+        check = true;
         return true;
       } catch (error) {
         console.error("Error in signIn callback:", error);
         return false;
       }
+    },
+    async redirect({ url, baseUrl }) {
+      // After successful login, redirect the user
+      return baseUrl; // Redirect to the homepage or any desired page
     },
   },
 };

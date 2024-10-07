@@ -37,7 +37,7 @@ export default function FeedbackForm() {
       } else {
         throw new Error(data.message || 'Something went wrong')
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,

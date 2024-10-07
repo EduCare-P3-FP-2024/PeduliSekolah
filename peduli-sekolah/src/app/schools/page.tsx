@@ -1,5 +1,4 @@
 import SchoolPageAll from "@/components/SchoolPage";
-import { SchoolProfile } from "@/utils/types";
 import { getSchools } from "./action";
 
 const SchoolPage = async () => {
