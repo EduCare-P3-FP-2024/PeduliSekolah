@@ -92,9 +92,7 @@ const Client = () => {
         window.snap.pay(token, {
           onSuccess: function (result) {
             updateTransactionStatus(orderId, "success", result.payment_type, result.transaction_time);
-            
-            // Redirect to success page with transaction data as query parameters
-            window.location.href = `/success?orderId=${orderId}&payment_method=${result.payment_type}&payment_date=${result.transaction_time}`;
+                        window.location.href = `/success?orderId=${orderId}&payment_method=${result.payment_type}&payment_date=${result.transaction_time}`;
           },
           onPending: function (result) {
             updateTransactionStatus(orderId, "pending", result.payment_type, result.transaction_time);

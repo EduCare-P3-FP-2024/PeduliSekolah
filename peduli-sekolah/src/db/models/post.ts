@@ -79,6 +79,17 @@ export const createPost = async (postInput: CreatePostInput) => {
   return result;
 };
 
+export const getPostBySlug = async (slug: string) => {
+  const db = await getDb();
+  
+  const post = (await db
+    .collection(COLLECTION_POST)
+    .findOne({ slug })) as Post;
+
+  return post;
+};
+
+
 export const getPostsByCategory = async (categoryId: string) => {
   const db = await getDb();
 
