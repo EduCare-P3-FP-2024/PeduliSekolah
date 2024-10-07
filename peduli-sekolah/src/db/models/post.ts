@@ -3,33 +3,45 @@ import { getDb } from "./user";
 import { ObjectId } from "mongodb";
 
 const COLLECTION_POST = "posts";
+// const agg = [
+//   {
+//     $lookup: {
+//       from: "votes",
+//       localField: "_id",
+//       foreignField: "postId",
+//       as: "votes",
+//     },
+//   },
+//   {
+//     $project: {
+//       votes: { $size: "votes" },
+//     },
+//   },
+// ];
 
-export const getPosts = async () => {
+export const getPosts = async (page: number, category: string, searchTerm: string) => {
   const db = await getDb();
+  const perPage = 10;
+  const skip = (page - 1) * perPage;
 
-  const agg = [
-    {
-      $lookup: {
-        from: "votes",
-        localField: "_id",
-        foreignField: "postId",
-        as: "votes",
-      },
-    },
-    {
-      $project: {
-        votes: { $size: "votes" },
-      },
-    },
-  ];
+  const query: any = {};
+  if (category !== "All") {
+    query.category = category;
+  }
+  if (searchTerm) {
+    query.title = { $regex: searchTerm, $options: "i" }; // Case-insensitive search
+  }
 
-  const posts = (await db
+  const posts = await db
     .collection(COLLECTION_POST)
-    .aggregate(agg)
-    .toArray()) as Post[];
+    .find(query)
+    .skip(skip)
+    .limit(perPage)
+    .toArray() as Post[];
 
   return posts;
 };
+
 
 export const createPost = async (postInput: CreatePostInput) => {
   const db = await getDb();
