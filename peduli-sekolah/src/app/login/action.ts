@@ -54,6 +54,7 @@ export const actionLogin = async (formData: FormData) => {
     id: user._id,
     email: user.email,
     role: user.role,
+    account_type: user.account_type
   };
 
   // Generate token using jose

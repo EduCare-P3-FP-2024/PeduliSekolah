@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { School, Phone, User, Users } from "lucide-react";
+import { School, Phone, Check, X, Users, MapPin } from "lucide-react";
 import { ObjectId } from "mongodb";
+import { SchoolDocument } from "@/utils/types";
 
 const colors = {
   primary: "#BA2758",
@@ -12,12 +13,21 @@ const colors = {
   background: "#fff",
 };
 
-const SchoolDetailPage = ({ params }: { params: { _id: ObjectId } }) => {
+const SchoolDetailPage = ({ params }: { params: { id: string } }) => {
   const [isClient, setIsClient] = useState(false);
-  console.log(params._id);
+  const [schoolData, setSchoolData] = useState<SchoolDocument | null>(null);
+  const getSchoolData = async () => {
+    const res = await fetch(`http://localhost:3000/api/schools/${params.id}`);
+    const data = await res.json();
+
+    setSchoolData(data);
+
+    return data;
+  };
 
   useEffect(() => {
     setIsClient(true);
+    getSchoolData();
   }, []);
 
   if (!isClient) return null;
@@ -54,11 +64,23 @@ const SchoolDetailPage = ({ params }: { params: { _id: ObjectId } }) => {
                 {
                   icon: School,
                   label: "School Name",
-                  value: "Greenwood High School",
+                  value: `${schoolData?.name}`,
                 },
-                { icon: Phone, label: "Phone Number", value: "(123) 456-7890" },
-                { icon: User, label: "Principal", value: "John Doe" },
-                { icon: Users, label: "Number of Students", value: "1,234" },
+                {
+                  icon: Phone,
+                  label: "Phone Number",
+                  value: `${schoolData?.phoneNumber}`,
+                },
+                {
+                  icon: MapPin,
+                  label: "Location",
+                  value: `${schoolData?.location}`,
+                },
+                {
+                  icon: schoolData?.status === "Layak" ? Check : X,
+                  label: "Status",
+                  value: `${schoolData?.status}`,
+                },
               ].map((detail, index) => (
                 <motion.div
                   key={detail.label}

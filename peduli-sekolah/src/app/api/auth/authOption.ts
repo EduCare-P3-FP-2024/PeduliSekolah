@@ -9,7 +9,7 @@ import { createUser, getUserByEmailAndType } from "@/db/models/user";
 import { createTokenJose } from "@/utils/jose";
 import { cookies } from "next/headers";
 
-const scopes = ['identify'].join(' ');
+const scopes = ["identify"].join(" ");
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -42,26 +42,30 @@ const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       try {
         // Check if user exists in the database
-        let dbUser = await getUserByEmailAndType(user.email || '', account?.provider || '');
+        let dbUser = await getUserByEmailAndType(
+          user.email || "",
+          account?.provider || ""
+        );
 
         if (!dbUser) {
           dbUser = await createUser({
-            username: user.name || profile?.name || 'Anonymous', // Fallback for username
-            email: user.email || '', // Provide fallback for email
-            password: "oauth", 
+            username: user.name || profile?.name || "Anonymous", // Fallback for username
+            email: user.email || "", // Provide fallback for email
+            password: "oauth",
             phone_number: "",
-            type: account?.provider || 'unknown',
-            account_type: "Individual",
+            type: account?.provider || "unknown",
+            account_type: "Personal",
             role: "user",
-            status: "active"
+            status: "active",
           });
         }
 
         // Create token payload with user details
         const payload = {
-          id: dbUser._id.toString(), // Use the ID from the database, cast to string
+          id: dbUser._id, // Use the ID from the database, cast to string
           email: dbUser.email,
           role: dbUser.role,
+          account_type: dbUser.account_type,
         };
 
         // Generate token using jose
@@ -81,27 +85,6 @@ const authOptions: NextAuthOptions = {
         console.error("Error in signIn callback:", error);
         return false;
       }
-    },
-
-    async session({ session, token }) {
-      // Attach token info to the session
-      if (session.user && token.sub) {
-        session.user.id = token.sub;  // Use the sub (subject) field for user ID
-      }
-
-      session.user.email = token.email || session.user.email; // Fallback if token doesn't have email
-      session.user.role = token.role || "user"; // Default role is user
-      return session;
-    },
-
-    async jwt({ token, user }) {
-      // If there's a user object, attach their data to the token
-      if (user) {
-        token.sub = (user as any).id; // Cast user to 'any' to access id
-        token.email = user.email || '';
-        token.role = (user as any).role || 'user'; // Cast user to 'any' to access role
-      }
-      return token;
     },
   },
 };

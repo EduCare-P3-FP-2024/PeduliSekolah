@@ -73,25 +73,28 @@ const Client = () => {
   const handleCheckout = async () => {
     try {
       const { userId, amount } = formData;
-
+  
       if (!userId || !amount) {
         alert("Please fill in all fields.");
         return;
       }
-
+  
       const response = await fetch("/api/transaction", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify([{ _id: "1", amount: parseInt(amount, 10), userId: userId }]),
       });
-
+  
       const data: TransactionResponse = await response.json();
-      const { token, orderId } = data; // Ensure both token and orderId are received
-
+      const { token, orderId } = data;
+  
       if (token && window.snap) {
         window.snap.pay(token, {
           onSuccess: function (result) {
             updateTransactionStatus(orderId, "success", result.payment_type, result.transaction_time);
+            
+            // Redirect to success page with transaction data as query parameters
+            window.location.href = `/success?orderId=${orderId}&payment_method=${result.payment_type}&payment_date=${result.transaction_time}`;
           },
           onPending: function (result) {
             updateTransactionStatus(orderId, "pending", result.payment_type, result.transaction_time);
@@ -104,21 +107,14 @@ const Client = () => {
           },
         });
       } else {
-        console.error(
-          "Failed to get transaction token or Snap.js is not loaded",
-        );
+        console.error("Failed to get transaction token or Snap.js is not loaded");
       }
     } catch (error) {
       console.error("Checkout error:", error);
     }
   };
-
-  const handleUploadSuccess = (result: any) => {
-    // Extract the image URL from the result and store it in the state
-    if (result?.info?.secure_url) {
-      setImageUrl(result.info.secure_url); // Save image URL
-    }
-  };
+  
+  
 
   useEffect(() => {
     // Ensure Snap.js is loaded
