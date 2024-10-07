@@ -11,10 +11,10 @@ import {
   EnvelopeIcon,
   AcademicCapIcon,
 } from "@heroicons/react/24/outline";
-import { motion } from "framer-motion"; // Import framer-motion
 import { cn } from "@/lib/utils";
 import logoPs from "@/assets/logo.png";
 import profilePicture from "@/assets/tempestus2.jpg";
+
 type NavItem = {
   name: string;
   href: string;
@@ -32,6 +32,7 @@ const navItems: NavItem[] = [
 export default function Sidebar() {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+
   if (
     pathname === "/admin" ||
     pathname === "/admin/SchoolList" ||
@@ -44,22 +45,8 @@ export default function Sidebar() {
 
   setTimeout(() => setIsLoading(false), 2000);
 
-  // Animation variants for sidebar entrance
-  const sidebarVariants = {
-    hidden: { x: "-100%" },
-    visible: {
-      x: 0,
-      transition: { type: "spring", stiffness: 100, damping: 20 },
-    },
-  };
-
   return (
-    <motion.div
-      className="flex h-screen w-64 flex-col justify-between border-r border-[#BA2758] bg-white p-4"
-      initial="hidden"
-      animate="visible"
-      variants={sidebarVariants}
-    >
+    <div className="flex h-screen w-64 flex-col justify-between border-r border-[#E67E22] bg-[#ECF0F1] p-4">
       <div>
         <div className="mb-8">
           {isLoading ? (
@@ -104,7 +91,7 @@ export default function Sidebar() {
               height={40}
               className="rounded-full"
             />
-            <span className="text-sm font-medium">John Doe</span>
+            <span className="text-sm font-medium text-[#34495E]">John Doe</span>
             <button className="ml-auto">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +99,7 @@ export default function Sidebar() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="h-6 w-6"
+                className="h-6 w-6 text-[#34495E]"
               >
                 <path
                   strokeLinecap="round"
@@ -124,7 +111,7 @@ export default function Sidebar() {
           </>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -133,16 +120,16 @@ function NavButton({ item, isActive }: { item: NavItem; isActive: boolean }) {
     <Link
       href={item.href}
       className={cn(
-        "flex items-center space-x-2 rounded-full px-3 py-2 text-sm font-medium transition-all duration-200", // Rounded full and transition for smooth animation
+        "flex items-center space-x-2 rounded-full px-3 py-2 text-sm font-medium", // Removed transition
         isActive
-          ? "bg-white text-[#DE2F69] border-2 border-[#DE2F69]" // Active state: Pink text, white background, border
-          : "text-gray-700 hover:bg-gray-200 hover:text-gray-900 border-2 border-transparent" // Idle & Hover state: Gray text with hover effects
+          ? "bg-[#2C3E50] text-[#E67E22] border-2 border-[#E67E22]" // Active state: Orange text, Navy background, border
+          : "text-[#34495E] hover:bg-[#E67E22] hover:text-white border-2 border-transparent" // Idle & Hover state: Dark Gray text with hover effects
       )}
     >
       <item.icon
         className={cn(
-          "h-5 w-5 transition-colors duration-200", // Add transition for smooth color change
-          isActive ? "text-[#DE2F69]" : "text-gray-700" // Active: Pink, Idle: Gray
+          "h-5 w-5", // Removed transition
+          isActive ? "text-[#E67E22]" : "text-[#34495E]" // Active: Orange, Idle: Dark Gray
         )}
       />
       <span>{item.name}</span>
