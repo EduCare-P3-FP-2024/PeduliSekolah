@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import NavbarPublic from "@/components/NavbarPublic";
 import HeroLandingPage from "@/components/HeroLandingPage";
 import FeaturesLandingPage from "@/components/FeaturesLandingPage";
