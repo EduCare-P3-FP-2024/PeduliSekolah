@@ -67,7 +67,7 @@ export default function FeaturesLandingPage() {
           </div>
         </FadeInWhenVisible>
         <FadeInWhenVisible>
-          <div className="bg-[#27AE60] p-6 rounded-lg">
+          <div className="bg-[#E67E22] p-6 rounded-lg">
             <h3 className="text-xl font-semibold mb-4 text-[#ECF0F1]">
               Verified School Network
             </h3>
