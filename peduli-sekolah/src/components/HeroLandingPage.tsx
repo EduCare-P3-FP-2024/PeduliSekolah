@@ -8,7 +8,7 @@ import Link from "next/link";
 import { TypeAnimation } from "react-type-animation";
 import Image from "next/image";
 import logoPs from "@/assets/logo.svg";
-import SadSchool from "@/assets/SADSchool1.png"
+import SadSchool from "@/assets/SADSchool.png"
 
 interface FadeInWhenVisibleProps {
   children: ReactNode;
