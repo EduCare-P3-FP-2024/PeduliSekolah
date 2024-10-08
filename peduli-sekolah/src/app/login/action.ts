@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { getUserByEmailAndType } from "@/db/models/user";
+import { getDocumentByUserId } from "@/db/models/schoolDocument";
 
 export const actionLogin = async (formData: FormData) => {
   const loginInputSchema = z.object({
@@ -21,7 +22,6 @@ export const actionLogin = async (formData: FormData) => {
     password,
   });
 
-
   if (!parsedData.success) {
     const errPath = parsedData.error.issues[0].path[0];
     const errMessage = parsedData.error.issues[0].message;
@@ -34,16 +34,17 @@ export const actionLogin = async (formData: FormData) => {
 
   // Retrieve user by email
   const user = await getUserByEmailAndType(parsedData.data.email, "origin");
-
   console.log(user);
-  
+
   // Check if user exists and password is correct
   if (!user || !comparePassword(parsedData.data.password, user.password)) {
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=Invalid%20credentials`,
     );
   }
-  
+
+  const school = await getDocumentByUserId(user._id.toString());
+
   if (user.status === "banned") {
     return redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=this%20user%20has%20been%20banned`,
@@ -56,6 +57,7 @@ export const actionLogin = async (formData: FormData) => {
     role: user.role,
     account_type: user.account_type,
     username: user.username,
+    schoolstatus: school?.status,
   };
 
   // Generate token using jose

@@ -27,7 +27,9 @@ export const middleware = async (request: NextRequest) => {
       role: string;
       account_type: string;
       username: string;
+      schoolstatus: string;
     }>(token.value);
+    console.log(tokenData);
   } catch (error) {
     console.log("Failed to decode token", error);
     return NextResponse.redirect(new URL("/login", request.url));
@@ -37,14 +39,13 @@ export const middleware = async (request: NextRequest) => {
   const isAdminPage = url.pathname.startsWith("/admin");
   const isPostPage = url.pathname.startsWith("/post/");
   const isAddPostPage = url.pathname.startsWith("/add-post");
-  const isSchoolDocumentPage = url.pathname.startsWith("/school-document")
+  const isSchoolDocumentPage = url.pathname.startsWith("/school-document");
 
   const response = NextResponse.next();
 
   if (tokenData.role === "admin") {
     return NextResponse.next();
   }
-
   // Protect /admin route
   if (isAdminPage && tokenData.role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url));
@@ -56,12 +57,20 @@ export const middleware = async (request: NextRequest) => {
   }
 
   // Protect /add-post route: only "School" account types can add posts
-  if (isAddPostPage && tokenData.account_type !== "School") {
+  if (
+    (isAddPostPage && tokenData.account_type !== "school") ||
+    tokenData.schoolstatus !== "Tidak Layak"
+  ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-
   // Set user data in cookies for specific routes (admin, post, add-post)
-  if (isMainPage || isAdminPage || isPostPage || isAddPostPage || isSchoolDocumentPage) {
+  if (
+    isMainPage ||
+    isAdminPage ||
+    isPostPage ||
+    isAddPostPage ||
+    isSchoolDocumentPage
+  ) {
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/school-document",
@@ -75,6 +84,10 @@ export const middleware = async (request: NextRequest) => {
       path: "/",
     });
     response.cookies.set("username", tokenData.username, {
+      httpOnly: true,
+      path: "/",
+    });
+    response.cookies.set("schoolstatus", tokenData.schoolstatus, {
       httpOnly: true,
       path: "/",
     });
