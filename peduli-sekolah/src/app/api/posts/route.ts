@@ -76,10 +76,10 @@ export const POST = async (req: Request) => {
       tags: tags ? tags.split(",").map((tag: string) => tag.trim()) : [], // Convert tags to array
       imageUrl, // Already an array of image URLs
       deadLineAt: new Date(deadLineAt),
-      amount: Number(amount),
-      target_amount: 1000, // Assuming a default target amount (can be dynamic)
+      amount: 0,
+      target_amount: Number(amount), // Assuming a default target amount (can be dynamic)
       featured_status: false, // Default status
-      status: "pending", // Default post status
+      status: "draft", // Default post status
       meta_description,
       createdAt: new Date(),
       updatedAt: new Date(),
