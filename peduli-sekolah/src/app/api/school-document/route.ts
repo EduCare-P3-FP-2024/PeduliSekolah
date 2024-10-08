@@ -1,15 +1,22 @@
-// app/api/school-document/route.ts
 import { NextResponse } from "next/server"; // Use NextResponse from next/server
 import { addDocument } from "@/db/models/schoolDocument";
 import { ObjectId } from "mongodb";
 import { SchoolDocumentInput } from "@/utils/types";
+import { cookies } from "next/headers";
 
-// Function to get userId from the request header
-async function getUserIdFromHeader(headers: Headers): Promise<ObjectId> {
-  const userId = headers.get('x-userid') as string;
+// Function to get userId from the request header or cookies
+async function getUserIdFromHeaderOrCookies(headers: Headers): Promise<ObjectId> {
+  let userId: string | undefined = headers.get('x-userid') as string;
 
   if (!userId) {
-    throw new Error("Unauthorized");
+    const userIdCookie = cookies().get("userId");
+    if (userIdCookie) {
+      userId = userIdCookie.value; // Access the value from the cookie object
+    }
+  }
+
+  if (!userId) {
+    throw new Error("Unauthorized: userId is missing from headers or cookies.");
   }
 
   return new ObjectId(userId);
@@ -18,11 +25,11 @@ async function getUserIdFromHeader(headers: Headers): Promise<ObjectId> {
 // POST handler
 export async function POST(req: Request) {
   try {
-    // Get user ID from request headers
-    const userId = await getUserIdFromHeader(req.headers);
+    // Get user ID from headers or cookies
+    const userId = await getUserIdFromHeaderOrCookies(req.headers);
 
     // Parse the incoming form data
-    const { name, email, phone, location, description, imageFileUrl } = await req.json();
+    const { name, email, phone, purpose, location, description, imageFileUrl } = await req.json();
 
     // Create the school document
     const schoolDocument: SchoolDocumentInput = {
@@ -33,6 +40,7 @@ export async function POST(req: Request) {
       description,
       imageFileUrl: imageFileUrl ? imageFileUrl : [], // Handle image URL array
       userId,
+      purpose,
       status: "pending", // Set status to pending by default
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -44,10 +52,8 @@ export async function POST(req: Request) {
     // Use NextResponse to return a JSON response
     return NextResponse.json({ success: true, message: "School profile created", result }, { status: 200 });
   } catch (error) {
-    if(error instanceof Error){ 
-        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
+  }
 }
-}
-
-// If you need to support more methods, you can do that similarly

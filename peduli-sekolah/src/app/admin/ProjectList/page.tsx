@@ -7,10 +7,10 @@ const PageAdminSchool = async () => {
 
   return (
     <>
-      <div className="w-full min-h-screen">
-        <div className="flex min-h-screen">
+      <div className="w-full min-h-screen bg-[#2C3E50]">
+        <div className="flex min-h-screen ">
           <AdminSidebar />
-          <div className="w-9/12  bg-white mx-auto mt-2 p-5">
+          <div className="w-9/12  bg-white mx-auto mt-2 p-5 bg-[#2C3E50]">
             {posts.map((post, index) => (
               <div key={index} className="border shadow-lg rounded-xl p-5">
                 <div className="flex">

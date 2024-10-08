@@ -38,6 +38,8 @@ export type Post = {
   createdAt: Date;
   updatedAt: Date;
   deadLineAt: Date;
+  amount: number;
+  target_amount: number;
   featured_status: boolean;
   meta_description?: string;
 };
@@ -84,6 +86,7 @@ export type SchoolDocumentInput = Omit<SchoolDocument, "_id">;
 export type Transaction = {
   _id: ObjectId;
   userId: ObjectId;
+  postId: ObjectId;
   orderId: string;
   amount: number;
   payeeId: ObjectId;
@@ -91,7 +94,7 @@ export type Transaction = {
   payment_status: string;
   payment_token: string;
   payment_date: Date;
-  payer_notes: string;
+  payer_notes?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -106,7 +109,7 @@ export type Payee = {
   wallet_id: string;
   createdAt: Date;
   updatedAt: Date;
-  userId: string;
+  userId: ObjectId;
 };
 
 export type PayeeInput = Omit<Payee, "_id">;

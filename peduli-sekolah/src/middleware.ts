@@ -33,17 +33,20 @@ export const middleware = async (request: NextRequest) => {
 
   const url = request.nextUrl;
   const isAdminPage = url.pathname.startsWith("/admin");
-  
+  const isPostPage = url.pathname.startsWith("/post");
+
   const response = NextResponse.next();
 
-  // Handle access to admin pages
-  if (isAdminPage) {
-    if (tokenData.role !== "admin") {
-      // Redirect non-admin users to a forbidden or custom error page
-      return NextResponse.redirect(new URL("/forbidden", request.url));
+  // Set user data in cookies for /admin and /post routes
+  if (isAdminPage || isPostPage) {
+
+    if(isAdminPage){
+      if(tokenData.role !== "admin"){
+    return NextResponse.redirect(new URL("/", request.url));
+      }
     }
 
-    // Set user data in cookies for admin page actions
+    // Set user data in cookies
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/",
@@ -61,15 +64,15 @@ export const middleware = async (request: NextRequest) => {
       path: "/",
     });
 
-    return response; // Return response after setting the cookie for admin access
+    return response; // Return response after setting the cookies
   }
 
   // For other routes, set user details in headers
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-userId", tokenData.id);         // Pass userId in headers
-  requestHeaders.set("x-role", tokenData.role);         // Pass role in headers
+  requestHeaders.set("x-userId", tokenData.id); // Pass userId in headers
+  requestHeaders.set("x-role", tokenData.role); // Pass role in headers
   requestHeaders.set("x-accountType", tokenData.account_type); // Pass account type in headers
-  requestHeaders.set("x-username", tokenData.username);   // Pass username in headers
+  requestHeaders.set("x-username", tokenData.username); // Pass username in headers
 
   return NextResponse.next({
     headers: requestHeaders,
@@ -79,8 +82,9 @@ export const middleware = async (request: NextRequest) => {
 // Configure paths for the middleware to match
 export const config = {
   matcher: [
-    "/admin/:path*",            // Protect admin pages
-    "/midtrans",                // Protect midtrans-related routes
-    "/school-document/:path*",  // Protect school-document pages
+    "/admin/:path*", // Protect admin pages
+    "/midtrans", // Protect midtrans-related routes
+    "/school-document/:path*", // Protect school-document pages
+    "/post/:path*", // Protect post-related routes and apply user cookies
   ],
 };

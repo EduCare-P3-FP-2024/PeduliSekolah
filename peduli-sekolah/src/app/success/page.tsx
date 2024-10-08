@@ -1,9 +1,10 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Success = () => {
   const searchParams = useSearchParams();
+  const router = useRouter(); // Initialize useRouter to navigate
   const orderId = searchParams.get("orderId");
   const payment_method = searchParams.get("payment_method");
   const payment_date = searchParams.get("payment_date");
@@ -24,6 +25,10 @@ const Success = () => {
     }
   }, [orderId, payment_method, payment_date]);
 
+  const handleGoBack = () => {
+    router.back(); // Use router.back() to navigate to the previous page
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-green-100">
       <div className="p-8 bg-white rounded-lg shadow-lg max-w-md w-full text-center">
@@ -32,6 +37,12 @@ const Success = () => {
         <p className="text-gray-700">Payment Method: {transaction?.payment_method}</p>
         <p className="text-gray-700">Transaction Time: {transaction?.payment_date}</p>
         <p className="text-gray-700 mt-4">Thank you for your payment!</p>
+        <button
+          onClick={handleGoBack}
+          className="mt-6 bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-full"
+        >
+          Go Back
+        </button>
       </div>
     </div>
   );
