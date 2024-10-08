@@ -36,6 +36,7 @@ export const middleware = async (request: NextRequest) => {
   const isAdminPage = url.pathname.startsWith("/admin");
   const isPostPage = url.pathname.startsWith("/post/");
   const isAddPostPage = url.pathname.startsWith("/add-post");
+  const isSchoolDocumentPage = url.pathname.startsWith("/school-document")
 
   const response = NextResponse.next();
 
@@ -59,7 +60,27 @@ export const middleware = async (request: NextRequest) => {
   }
 
   // Set user data in cookies for specific routes (admin, post, add-post)
-  if (isAdminPage || isPostPage || isAddPostPage) {
+  if (isAdminPage || isPostPage || isAddPostPage || isSchoolDocumentPage) {
+    response.cookies.set("userId", tokenData.id, {
+      path: "/school-document",
+    });
+    response.cookies.set("role", tokenData.role, {
+      httpOnly: true,
+      path: "/",
+    });
+    response.cookies.set("accountType", tokenData.account_type, {
+      httpOnly: true,
+      path: "/",
+    });
+    response.cookies.set("username", tokenData.username, {
+      httpOnly: true,
+      path: "/",
+    });
+
+    return response;
+  }
+
+  if (url.pathname.startsWith("/api")) {
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/",
@@ -76,7 +97,6 @@ export const middleware = async (request: NextRequest) => {
       httpOnly: true,
       path: "/",
     });
-
     return response;
   }
 
@@ -97,8 +117,9 @@ export const config = {
   matcher: [
     "/admin/:path*", // Protect admin pages
     "/midtrans", // Protect midtrans-related routes
-    "/school-document/:path*", // Protect school-document pages
+    "/school-document", // Protect school-document pages
     "/post/:path*", // Protect post-related routes
     "/add-post", // Protect add-post route
+    "/school-document"
   ],
 };

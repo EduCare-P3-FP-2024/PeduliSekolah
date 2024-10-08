@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 // Function to get userId from the request header or cookies
 async function getUserIdFromHeaderOrCookies(headers: Headers): Promise<ObjectId> {
-  let userId: string | undefined = headers.get('x-userid') as string;
+  let userId: string | undefined = headers.get('x-userId') as string;
 
   if (!userId) {
     const userIdCookie = cookies().get("userId");
