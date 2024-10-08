@@ -109,7 +109,7 @@ export type Payee = {
   wallet_id: string;
   createdAt: Date;
   updatedAt: Date;
-  userId: string;
+  userId: ObjectId;
 };
 
 export type PayeeInput = Omit<Payee, "_id">;

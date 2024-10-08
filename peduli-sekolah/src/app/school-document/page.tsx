@@ -9,10 +9,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CldUploadButton } from "next-cloudinary";
-import { SchoolDocumentInput, SchoolProfile } from "@/utils/types"; // Adjust path accordingly
+import { SchoolProfile } from "@/utils/types"; // Adjust path accordingly
 import { useRouter } from "next/navigation"; // For redirecting after form submission
 
-export type SchoolProfileInput = Omit<SchoolProfile, "status">;
+// Fix 1: Add imageFileUrl to SchoolProfileInput type
+export type SchoolProfileInput = Omit<SchoolProfile, "status"> & {
+  imageFileUrl?: string[]; // Fixed imageFileUrl type
+};
 
 export default function SchoolProfileForm() {
   const { control, handleSubmit } = useForm<SchoolProfileInput>();
@@ -20,7 +23,7 @@ export default function SchoolProfileForm() {
   const [imageUrl, setImageUrl] = useState<string[]>([]); // Changed to array of strings
   const router = useRouter();
 
-  const onSubmit = async (data: SchoolDocumentInput) => {
+  const onSubmit = async (data: SchoolProfileInput) => {
     setIsSubmitting(true);
 
     // Add the uploaded image URL to the form data if available
@@ -52,7 +55,7 @@ export default function SchoolProfileForm() {
 
     if (response.ok) {
       console.log("Form submitted successfully", submissionData);
-      router.push("/success-page"); // Redirect to a success page if needed
+      router.push("/payee"); // Redirect to a success page if needed
     } else {
       console.error("Form submission failed");
     }
@@ -108,6 +111,7 @@ export default function SchoolProfileForm() {
                   render={({ field }) => (
                     <Input
                       {...field}
+                      // Fix 3: Pass type directly instead of using field.type
                       type={field.type}
                       className="block w-full pl-10 sm:text-sm border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
                       placeholder={field.label}
@@ -161,6 +165,8 @@ export default function SchoolProfileForm() {
                 render={({ field }) => (
                   <Textarea
                     {...field}
+                    // Fix 2: Ensure Date is converted to a string
+                    value={field.value instanceof Date ? field.value.toISOString() : field.value}
                     rows={4}
                     className="shadow-sm focus:ring-purple-500 focus:border-purple-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="Tell us more about your school..."
