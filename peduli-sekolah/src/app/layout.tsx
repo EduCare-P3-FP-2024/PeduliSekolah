@@ -29,16 +29,15 @@ export default function RootLayout({
     <html lang="en">
       <Script
         src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key={process.env.MIDTRANS_CLIENT_kEY}
+        data-client-key={process.env.MIDTRANS_CLIENT_KEY}
       ></Script>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Flex container for sidebar and main content */}
+        {/* Wrap the application with SessionProvider */}
         <div className="flex min-h-screen">
-          {/* <Sidebar /> */}
           <Toaster />
-          {/* Main content area with padding to account for the sidebar */}
+          {/* Main content area */}
           <main className="flex-1 flex items-center justify-center">
             {children}
             <Toaster />
