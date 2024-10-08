@@ -28,7 +28,9 @@ const PageAdminSchool = async ({
                         <h2>Donasi Terkumpul : Rp. {post.amount}</h2>
                         <h2>
                           Target Donasi : Rp.{" "}
-                          {post.target_amount.toLocaleString()}
+                          {typeof post.target_amount === "number"
+                            ? post.target_amount.toLocaleString()
+                            : "N/A"}
                         </h2>
                       </div>
                     </div>
@@ -55,10 +57,7 @@ const PageAdminSchool = async ({
                     {/* Display images */}
                     <div className="flex space-x-4">
                       {post.imageUrl.map((image, index) => (
-                        <ImageModal
-                          image={image}
-                          key={index}
-                        />
+                        <ImageModal image={image} key={index} />
                       ))}
                     </div>
 
