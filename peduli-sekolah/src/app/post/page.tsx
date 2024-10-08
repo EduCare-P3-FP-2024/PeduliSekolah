@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -17,6 +17,7 @@ export default function Component() {
   const [categories, setCategories] = useState<string[]>(["All"])
   const [loading, setLoading] = useState(true)
   const [loadingFeatured, setLoadingFeatured] = useState(true)
+  const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -48,6 +49,16 @@ export default function Component() {
     }
     fetchFeaturedPosts()
   }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeaturedIndex((prevIndex) =>
+        prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1
+      )
+    }, 5000) // Change slide every 5 seconds
+
+    return () => clearInterval(interval)
+  }, [featuredPosts])
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -86,16 +97,35 @@ export default function Component() {
           {loadingFeatured ? (
             <p className="text-center text-[#2C3E50]">Loading featured posts...</p>
           ) : (
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              {featuredPosts?.map((post: Post) => (
-                <PostCard key={post.slug} post={post} router={router} featured={true} />
-              ))}
-            </motion.div>
+            <div className="relative h-[400px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentFeaturedIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0"
+                >
+                  <PostCard
+                    post={featuredPosts[currentFeaturedIndex]}
+                    router={router}
+                    featured={true}
+                  />
+                </motion.div>
+              </AnimatePresence>
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {featuredPosts.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`w-3 h-3 rounded-full ${
+                      index === currentFeaturedIndex ? 'bg-[#D35400]' : 'bg-[#BDC3C7]'
+                    }`}
+                    onClick={() => setCurrentFeaturedIndex(index)}
+                  />
+                ))}
+              </div>
+            </div>
           )}
         </section>
 
@@ -158,7 +188,7 @@ function PostCard({ post, router, featured = false }: { post: Post; router: any;
   return (
     <motion.div
       className={`bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${
-        featured ? 'border-4' : 'border-2'
+        featured ? 'border-4 h-full' : 'border-2'
       } border-[#D35400] cursor-pointer`}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
@@ -170,10 +200,10 @@ function PostCard({ post, router, featured = false }: { post: Post; router: any;
       <img
         src={post.imageUrl[0]}
         alt={post.title}
-        className="w-full h-48 object-cover"
+        className={`w-full ${featured ? 'h-64' : 'h-48'} object-cover`}
       />
       <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2 text-[#2C3E50]">
+        <h2 className={`${featured ? 'text-2xl' : 'text-xl'} font-semibold mb-2 text-[#2C3E50]`}>
           {post.title}
         </h2>
         <span
@@ -183,6 +213,9 @@ function PostCard({ post, router, featured = false }: { post: Post; router: any;
         >
           {post.content}
         </span>
+        {featured && (
+          <p className="mt-4 text-[#2C3E50]">{post.content.slice(0, 150)}...</p>
+        )}
       </div>
     </motion.div>
   )

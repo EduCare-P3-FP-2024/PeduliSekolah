@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -11,6 +12,7 @@ export default function FeedbackForm() {
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()  // Initialize useRouter to use navigation
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -76,13 +78,22 @@ export default function FeedbackForm() {
               placeholder="Write your feedback here..."
             />
           </div>
-          <Button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Sending...' : 'Send Feedback'}
-          </Button>
+          <div className="flex space-x-4">
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Sending...' : 'Send Feedback'}
+            </Button>
+            <Button
+              type="button"
+              className="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
+              onClick={() => router.back()}  // Go back to the previous page
+            >
+              Go Back
+            </Button>
+          </div>
         </form>
       </div>
     </div>

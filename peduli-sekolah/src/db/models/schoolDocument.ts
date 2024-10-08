@@ -26,12 +26,12 @@ export const getDocumentById = async (id: string) => {
   return document;
 };
 
-export const getDocumentByUserId = async (id: string) => {
+export const getDocumentByUserId = async (id: ObjectId) => {
   const db = await getDb();
 
   const document = (await db
     .collection(COLLECTION_DOCUMENT)
-    .findOne({ userId: new ObjectId(id) })) as SchoolDocument;
+    .findOne({ userId: id })) as SchoolDocument;
 
   return document;
 };

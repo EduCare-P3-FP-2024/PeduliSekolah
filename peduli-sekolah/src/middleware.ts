@@ -43,9 +43,6 @@ export const middleware = async (request: NextRequest) => {
 
   const response = NextResponse.next();
 
-  if (tokenData.role === "admin") {
-    return NextResponse.next();
-  }
   // Protect /admin route
   if (isAdminPage && tokenData.role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url));
@@ -53,11 +50,14 @@ export const middleware = async (request: NextRequest) => {
 
   // Protect /add-post route: only "School" account types can add posts
   if (
-    (isAddPostPage && tokenData.account_type !== "school") ||
-    tokenData.schoolstatus !== "Tidak Layak"
+    (isAddPostPage && tokenData.account_type !== "School") ||
+    (
+     isAddPostPage && tokenData.schoolstatus !== "Tidak Layak"
+    )
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
+
   // Set user data in cookies for specific routes (admin, post, add-post)
   if (
     isMainPage ||
@@ -67,23 +67,18 @@ export const middleware = async (request: NextRequest) => {
     isSchoolDocumentPage
   ) {
     response.cookies.set("userId", tokenData.id, {
-      httpOnly: true,
-      path: "/school-document",
+      path: "/",
     });
     response.cookies.set("role", tokenData.role, {
-      httpOnly: true,
       path: "/",
     });
     response.cookies.set("accountType", tokenData.account_type, {
-      httpOnly: true,
       path: "/",
     });
     response.cookies.set("username", tokenData.username, {
-      httpOnly: true,
       path: "/",
     });
     response.cookies.set("schoolstatus", tokenData.schoolstatus, {
-      httpOnly: true,
       path: "/",
     });
 
@@ -92,19 +87,15 @@ export const middleware = async (request: NextRequest) => {
 
   if (url.pathname.startsWith("/api")) {
     response.cookies.set("userId", tokenData.id, {
-      httpOnly: true,
       path: "/",
     });
     response.cookies.set("role", tokenData.role, {
-      httpOnly: true,
       path: "/",
     });
     response.cookies.set("accountType", tokenData.account_type, {
-      httpOnly: true,
       path: "/",
     });
     response.cookies.set("username", tokenData.username, {
-      httpOnly: true,
       path: "/",
     });
     return response;
@@ -122,6 +113,7 @@ export const middleware = async (request: NextRequest) => {
   });
 };
 
+
 // Configure paths for the middleware to match
 export const config = {
   matcher: [
@@ -130,6 +122,5 @@ export const config = {
     "/school-document", // Protect school-document pages
     "/post/:path*", // Protect post-related routes
     "/add-post", // Protect add-post route
-    "/school-document"
   ],
 };
