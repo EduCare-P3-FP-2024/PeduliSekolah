@@ -1,6 +1,5 @@
 import AdminSidebar from "@/components/AdminSidebar";
 import { getAdminPostList, postPublished } from "./action";
-import { redirect } from "next/navigation";
 import AdminButtonClient from "@/components/AdminButtonVerifyClient";
 
 const PostPage = async ({ page = 1 }) => {
