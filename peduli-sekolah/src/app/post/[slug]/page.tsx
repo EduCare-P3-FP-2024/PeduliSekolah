@@ -174,7 +174,7 @@ export default function DonationPage() {
   return (
     <div className="min-h-screen w-full bg-[#ECF0F1] p-4 md:p-8">
       <Link
-        href="/explore"
+        href="/post"
         className="inline-flex items-center text-[#2C3E50] hover:text-[#E67E22] mb-6"
       >
         <ArrowLeft className="mr-2" size={20} />

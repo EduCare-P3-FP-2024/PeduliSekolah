@@ -26,7 +26,7 @@ export default function NavbarPublic() {
               About
             </Link>
             <Link
-              href="#"
+              href="/post"
               className="hover:text-[#E67E22] transition duration-200"
             >
               Post
