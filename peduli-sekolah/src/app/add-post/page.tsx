@@ -95,7 +95,10 @@ const PostForm = () => {
         className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl"
       >
         <h1 className="text-3xl font-bold text-center mb-6">Create New Post</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -116,6 +119,7 @@ const PostForm = () => {
                   type="text"
                   id="title"
                   placeholder="Post title"
+                  className="border-2 border-[#E67E22]"
                 />
               )}
             />
@@ -141,6 +145,7 @@ const PostForm = () => {
                   rows={4}
                   id="content"
                   placeholder="Post content"
+                  className="border-2 border-[#E67E22]"
                 />
               )}
             />
@@ -163,10 +168,13 @@ const PostForm = () => {
               render={({ field }) => (
                 <select
                   {...field}
-                  className="block w-full p-2 border-gray-300 rounded-md"
+                  className="block w-full p-2 border-2 border-[#E67E22] rounded-md"
                 >
                   {categories.map((el, i) => (
-                    <option key={i} value={el._id.toString()}>
+                    <option
+                      key={i}
+                      value={el._id.toString()}
+                    >
                       {el.name}
                     </option>
                   ))}
@@ -180,7 +188,10 @@ const PostForm = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Label htmlFor="tags" className="text-sm font-medium text-gray-700">
+            <Label
+              htmlFor="tags"
+              className="text-sm font-medium text-gray-700"
+            >
               Tags (comma-separated)
             </Label>
             <Controller
@@ -192,6 +203,7 @@ const PostForm = () => {
                   type="text"
                   id="tags"
                   placeholder="Post tags"
+                  className="border-2 border-[#E67E22]"
                 />
               )}
             />
@@ -212,7 +224,12 @@ const PostForm = () => {
               name="deadLineAt"
               control={control}
               render={({ field }) => (
-                <Input {...field} type="datetime-local" id="deadLineAt" />
+                <Input
+                  {...field}
+                  type="datetime-local"
+                  id="deadLineAt"
+                  className="border-2 border-[#E67E22]"
+                />
               )}
             />
           </motion.div>
@@ -237,6 +254,7 @@ const PostForm = () => {
                   type="number"
                   id="targetAmount"
                   placeholder="Target amount"
+                  className="border-2 border-[#E67E22]"
                 />
               )}
             />
@@ -256,6 +274,7 @@ const PostForm = () => {
             <CldUploadButton
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
               onSuccess={handleUploadSuccess}
+              className="border-2 border-[#E67E22] p-2 mx-3 rounded-sm hover:bg-black hover:text-white"
             />
             {imageUrls.length > 0 && (
               <p className="text-sm text-green-500">Images uploaded!</p>
@@ -267,7 +286,11 @@ const PostForm = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? (
                 <motion.div
                   animate={{ rotate: 360 }}
