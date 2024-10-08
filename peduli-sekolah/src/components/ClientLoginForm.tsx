@@ -1,63 +1,109 @@
-'use client'
+"use client";
 
-import { signIn, signOut } from "next-auth/react"
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ChevronDown, Check } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import PasswordInput from "@/components/PasswordInput"
-import { actionLogin } from "@/app/login/action"
+import { signIn, signOut } from "next-auth/react";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, Check } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import PasswordInput from "@/components/PasswordInput";
+import { actionLogin } from "@/app/login/action";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import { ToastComponent } from "@/components/ToastComponent";
 
 interface User {
-  email: string
-  name?: string
-  image?: string
+  email: string;
+  name?: string;
+  image?: string;
 }
 
 export interface Session {
-  user: User
-  expires: string
+  user: User;
+  expires: string;
 }
 
 interface LoginButtonProps {
-  session: Session | null
-  providers: { name: string; id: string }[]
+  session: Session | null;
+  providers: { name: string; id: string }[];
+}
+
+interface LoginResponse {
+  success?: boolean; // Optional in case it could also return something else
+  error?: string;
 }
 
 export default function LoginForm({ session, providers }: LoginButtonProps) {
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleProviderSelect = (providerId: string) => {
-    setSelectedProvider(providerId)
-    setIsModalOpen(false)
-  }
+    setSelectedProvider(providerId);
+    setIsModalOpen(false);
+  };
 
   const handleSignIn = () => {
     if (selectedProvider) {
-      signIn(selectedProvider)
+      signIn(selectedProvider);
     }
-  }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const res = await actionLogin(formData);
+
+    if (res?.success) {
+      // Trigger success toast
+      ToastComponent({
+        title: "Login successful!",
+        description: "You have successfully logged in with your credentials.",
+        variant: "default",
+      });
+      window.location.href = "/";
+    } else {
+      // Trigger error toast
+      ToastComponent({
+        title: "Login failed",
+        description: res?.error || "Invalid credentials. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md">
       {!session ? (
         <>
-          <form className="space-y-4 md:space-y-6 w-full mb-6" action={actionLogin}>
+          <form
+            className="space-y-4 md:space-y-6 w-full mb-6"
+            onSubmit={handleSubmit}
+          >
             <Input
               type="text"
               placeholder="Email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="bg-[#ECF0F1] border-[#2C3E50]/20 text-[#34495E] placeholder-[#34495E]/60 focus:border-[#2C3E50] font-bold"
             />
-            <PasswordInput name="password" />
+            <PasswordInput
+              name="password"
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+            />
             <Button
               className="w-full bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-3"
               type="submit"
@@ -72,9 +118,7 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
 
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
-              <Button
-                className="w-full bg-[#2C3E50]/10 border border-[#2C3E50]/20 text-[#ECF0F1] font-bold p-2 rounded-md flex justify-between items-center mt-4"
-              >
+              <Button className="w-full bg-[#2C3E50]/10 border border-[#2C3E50]/20 text-[#ECF0F1] font-bold p-2 rounded-md flex justify-between items-center mt-4">
                 {selectedProvider
                   ? providers.find((p) => p.id === selectedProvider)?.name
                   : "Select a provider"}
@@ -111,7 +155,8 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
               onClick={handleSignIn}
               className="w-full bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-3 transition-colors duration-200 mt-4"
             >
-              Sign in with {providers.find((p) => p.id === selectedProvider)?.name}
+              Sign in with{" "}
+              {providers.find((p) => p.id === selectedProvider)?.name}
             </Button>
           )}
         </>
@@ -129,5 +174,5 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
         </>
       )}
     </div>
-  )
+  );
 }
