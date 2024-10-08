@@ -73,3 +73,15 @@ export const getUserByEmailAndType = async (
 
   return user;
 };
+
+export const bannedUser = async (id: string) => {
+  const db = await getDb();
+
+  const objectId = new ObjectId(id);
+
+  const bannedUser = await db
+    .collection(COLLECTION_USER)
+    .updateOne({ _id: objectId }, { $set: { status: "banned" } });
+
+  return bannedUser;
+};
