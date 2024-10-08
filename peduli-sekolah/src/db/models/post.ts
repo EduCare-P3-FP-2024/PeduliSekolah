@@ -71,6 +71,17 @@ export const getPosts = async (
   return posts;
 };
 
+export const getPostsFeatured = async () => {
+  const db = await getDb();
+  const posts = (await db
+    .collection(COLLECTION_POST)
+    .find({featured_status: true})
+    .toArray()
+  ) as Post[]
+
+  return posts
+}
+
 export const adminGetPosts = async (page: number) => {
   const db = await getDb();
   const perPage = 10;
