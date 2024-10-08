@@ -4,13 +4,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
 import { Upload, MapPin, User, Mail, Phone, FileText } from "lucide-react";
+import Cookies from "js-cookie"; // Import js-cookie
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CldUploadButton } from "next-cloudinary";
 import { SchoolProfile } from "@/utils/types"; // Adjust path accordingly
 import { useRouter } from "next/navigation"; // For redirecting after form submission
+import { toast } from "@/hooks/use-toast";
 
 export type SchoolProfileInput = Omit<SchoolProfile, "status"> & {
   imageFileUrl?: string[];
@@ -29,11 +30,37 @@ export default function SchoolProfileForm() {
       data.imageFileUrl = imageUrl;
     }
 
-    const userId = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("userId="))
-      ?.split("=")[1];
+    // Extract userId from cookies using js-cookie
+    const userId = Cookies.get('userId'); 
 
+    console.log(userId);
+    
+
+    if (!userId) {
+      toast({
+        title: "Unauthorized",
+        description: "User is not logged in",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Check if the payee already exists
+    const checkPayeeResponse = await fetch(`/api/check-payee?userId=${userId}`);
+    const checkPayeeData = await checkPayeeResponse.json();
+
+    if (checkPayeeData.exists) {
+      toast({
+        title: "Payee Exists",
+        description: "A payee with this user ID already exists. No need to create another.",
+        variant: "default",
+      });
+      setIsSubmitting(false);
+      return; // Prevent further submission and redirect
+    }
+
+    // Proceed to create the school document if the payee doesn't exist
     const submissionData = {
       ...data,
       userId,
@@ -49,10 +76,18 @@ export default function SchoolProfileForm() {
     });
 
     if (response.ok) {
-      console.log("Form submitted successfully", submissionData);
+      toast({
+        title: "Success",
+        description: "School profile created successfully.",
+        variant: "success",
+      });
       router.push("/payee");
     } else {
-      console.error("Form submission failed");
+      toast({
+        title: "Error",
+        description: "Failed to create school profile.",
+        variant: "destructive",
+      });
     }
 
     setIsSubmitting(false);
@@ -144,35 +179,7 @@ export default function SchoolProfileForm() {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
-          >
-            <Label
-              htmlFor="description"
-              className="text-sm font-medium text-[#34495E]"
-            >
-              Description
-            </Label>
-            <div className="mt-1">
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    value={field.value instanceof Date ? field.value.toISOString() : field.value}
-                    rows={4}
-                    className="shadow-sm focus:ring-[#E67E22] focus:border-[#E67E22] mt-1 block w-full sm:text-sm border-[#2C3E50] rounded-md text-[#34495E]"
-                    placeholder="Tell us more about your school..."
-                  />
-                )}
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
@@ -186,11 +193,10 @@ export default function SchoolProfileForm() {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <FileText className="h-5 w-5" />
-                </motion.div>
+                  className="w-5 h-5 border-4 border-white border-t-transparent rounded-full"
+                />
               ) : (
-                "Submit"
+                "Submit Profile"
               )}
             </Button>
           </motion.div>

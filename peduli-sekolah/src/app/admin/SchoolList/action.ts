@@ -22,6 +22,7 @@ export const deleteAuthCookies = async () => {
   cookieStore.delete("username");
   cookieStore.delete("role");
   cookieStore.delete("accountType");
+  
   return redirect("/login");
 };
 

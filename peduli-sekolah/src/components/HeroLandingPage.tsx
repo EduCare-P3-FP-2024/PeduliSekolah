@@ -8,7 +8,10 @@ import Link from "next/link";
 import { TypeAnimation } from "react-type-animation";
 import Image from "next/image";
 import logoPs from "@/assets/logo.svg";
-import SadSchool from "@/assets/SADSchool.png"
+import SadSchool from "@/assets/SADSchool.png";
+import publicPhoto from "@/assets/publicmarketing.jpg";
+import forPublic from "@/assets/marketing.svg";
+import photoPublic from "@/assets/publicmarketingrounded.png";
 
 interface FadeInWhenVisibleProps {
   children: ReactNode;
@@ -105,7 +108,7 @@ export default function HeroLandingPage() {
             >
               <div className="absolute inset-0 bg-[#E67E22] opacity-20 blur-xl rounded-full" />
               <Image
-                src={SadSchool}
+                src={photoPublic}
                 alt="PeduliSekolah Logo"
                 width={400}
                 height={400}

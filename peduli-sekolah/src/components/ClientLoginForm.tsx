@@ -1,50 +1,50 @@
 'use client'
 
-import { signIn, signOut } from "next-auth/react"
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ChevronDown, Check } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import PasswordInput from "@/components/PasswordInput"
-import { actionLogin } from "@/app/login/action"
+import { signIn } from "next-auth/react";  // Removed signOut import
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, Check } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import PasswordInput from "@/components/PasswordInput";
+import { actionLogin } from "@/app/login/action";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 interface User {
-  email: string
-  name?: string
-  image?: string
+  email: string;
+  name?: string;
+  image?: string;
 }
 
 export interface Session {
-  user: User
-  expires: string
+  user: User;
+  expires: string;
 }
 
 interface LoginButtonProps {
-  session: Session | null
-  providers: { name: string; id: string }[]
+  session: Session | null;
+  providers: { name: string; id: string }[];
 }
 
 export default function LoginForm({ session, providers }: LoginButtonProps) {
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleProviderSelect = (providerId: string) => {
-    setSelectedProvider(providerId)
-    setIsModalOpen(false)
-  }
+    setSelectedProvider(providerId);
+    setIsModalOpen(false);
+  };
 
   const handleSignIn = () => {
     if (selectedProvider) {
-      signIn(selectedProvider)
+      signIn(selectedProvider);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md">
@@ -120,14 +120,9 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
           <h1 className="text-[#34495E] text-lg font-semibold mb-4">
             Welcome, {session.user.email}
           </h1>
-          <Button
-            onClick={() => signOut()}
-            className="w-full bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-3 transition-colors duration-200"
-          >
-            Sign out
-          </Button>
+          {/* Sign-out functionality is removed */}
         </>
       )}
     </div>
-  )
+  );
 }
