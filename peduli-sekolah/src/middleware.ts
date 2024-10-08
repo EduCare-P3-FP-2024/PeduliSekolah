@@ -46,7 +46,6 @@ export const middleware = async (request: NextRequest) => {
   if (tokenData.role === "admin") {
     return NextResponse.next();
   }
-
   // Protect /admin route
   if (isAdminPage && tokenData.role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url));
@@ -136,6 +135,6 @@ export const config = {
     "/school-document", // Protect school-document pages
     "/post/:path*", // Protect post-related routes
     "/add-post", // Protect add-post route
-    "/school-document",
+    "/school-document"
   ],
 };
