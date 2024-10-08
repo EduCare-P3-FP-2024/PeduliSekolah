@@ -8,28 +8,48 @@ import { Button } from "@/components/ui/button"
 import { Post } from "@/utils/types"
 import { useRouter } from "next/navigation" // Import useRouter
 
-const categories = [
-  "All",
-  "Health",
-  "Education",
-  "Environment",
-  "Technology",
-  "Arts",
-]
-
 export default function Component() {
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("") // New state for debounced search term
   const [posts, setPosts] = useState<Post[]>([])
+  const [categories, setCategories] = useState<string[]>(["All"]) // Initialize with default 'All'
   const [loading, setLoading] = useState(true)
   const router = useRouter() // Initialize the router
 
+  // Fetch categories from API
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch("/api/categories")
+        const data = await response.json()
+        const fetchedCategories = data.map((category: { name: string }) => category.name)
+        setCategories(["All", ...fetchedCategories]) // Add 'All' as the default option
+      } catch (error) {
+        console.error("Error fetching categories:", error)
+      }
+    }
+    fetchCategories()
+  }, [])
+
+  // Effect to handle debounce logic for searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm) // Update debounced term after delay
+    }, 500) // 500ms debounce time
+
+    return () => {
+      clearTimeout(handler) // Clear timeout if searchTerm changes before the delay
+    }
+  }, [searchTerm])
+
+  // Fetch posts when selectedCategory or debouncedSearchTerm changes
   useEffect(() => {
     async function fetchPosts() {
       setLoading(true)
       try {
         const response = await fetch(
-          `/api/posts?page=1&category=${selectedCategory}&search=${searchTerm}`
+          `/api/posts?page=1&category=${selectedCategory}&search=${debouncedSearchTerm}`
         )
         const data = await response.json()
         setPosts(data.data)
@@ -41,7 +61,7 @@ export default function Component() {
     }
 
     fetchPosts()
-  }, [selectedCategory, searchTerm])
+  }, [selectedCategory, debouncedSearchTerm])
 
   return (
     <div className="min-h-screen w-full bg-[#ECF0F1] p-4 md:p-8">
@@ -58,7 +78,7 @@ export default function Component() {
             placeholder="Search projects..."
             className="pl-10 pr-4 py-2 rounded-full border-2 border-[#E67E22] focus:border-[#E67E22] focus:ring-2 focus:ring-[#E67E22] bg-white w-full text-[#34495E]"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)} // Handle search term change
           />
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#E67E22]"
@@ -94,16 +114,16 @@ export default function Component() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {posts.map((post: Post) => (
+          {posts?.map((post: Post) => (
             <motion.div
               key={post.slug}
-              className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-[#E67E22] cursor-pointer" // Added cursor-pointer for clickability
+              className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-[#E67E22] cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              onClick={() => router.push(`/post/${post.slug}`)} // Redirect on click
+              onClick={() => router.push(`/post/${post.slug}`)}
             >
               <img
                 src={post.imageUrl[0]}
