@@ -5,7 +5,6 @@ import {
   updatePostRejected,
 } from "@/db/models/post";
 import { Post } from "@/utils/types";
-import { redirect } from "next/navigation";
 
 export const getAdminPostList = async (page: number) => {
   const data = (await adminGetPosts(page)) as Post[];

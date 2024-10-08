@@ -145,6 +145,31 @@ export const getPostBySlug = async (slug: string) => {
   return post;
 };
 
+export const deletePostById = async (id: string) => {
+  const db = await getDb();
+
+  const result = await db
+    .collection(COLLECTION_POST)
+    .deleteOne({ _id: new ObjectId(id) });
+
+  return result;
+};
+
+export const pinPostById = async (id: string) => {
+  const db = await getDb();
+
+  const result = await db.collection(COLLECTION_POST).updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: {
+        featured_status: true,
+      },
+    },
+  );
+
+  return result;
+};
+
 export const getPostsByCategory = async (categoryId: string) => {
   const db = await getDb();
 
