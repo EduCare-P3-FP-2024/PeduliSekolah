@@ -3,6 +3,7 @@
 import { getDocuments } from "@/db/models/schoolDocument";
 import { bannedUser } from "@/db/models/user";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const getSchoolList = async () => {
   const data = await getDocuments();
@@ -21,4 +22,11 @@ export const deleteAuthCookies = async () => {
   cookieStore.delete("username");
   cookieStore.delete("role");
   cookieStore.delete("accountType");
+  return redirect("/login");
+};
+
+export const getAuthCookies = async () => {
+  const cookieStore = cookies(); // Use cookies() once and assign it to a variable
+  const token = cookieStore.get("token");
+  return token;
 };
