@@ -33,6 +33,7 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  const isMainPage = url.pathname.startsWith("/");
   const isAdminPage = url.pathname.startsWith("/admin");
   const isPostPage = url.pathname.startsWith("/post/");
   const isAddPostPage = url.pathname.startsWith("/add-post");
@@ -60,8 +61,9 @@ export const middleware = async (request: NextRequest) => {
   }
 
   // Set user data in cookies for specific routes (admin, post, add-post)
-  if (isAdminPage || isPostPage || isAddPostPage || isSchoolDocumentPage) {
+  if (isMainPage || isAdminPage || isPostPage || isAddPostPage || isSchoolDocumentPage) {
     response.cookies.set("userId", tokenData.id, {
+      httpOnly: true,
       path: "/school-document",
     });
     response.cookies.set("role", tokenData.role, {
