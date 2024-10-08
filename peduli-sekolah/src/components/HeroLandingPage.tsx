@@ -49,15 +49,15 @@ export default function HeroLandingPage() {
               <TypeAnimation
                 sequence={[
                   "Empowering Low-Funded Schools",
-                  5000,
+                  2000,
                   "Bridging the Education Gap",
-                  5000,
+                  2000,
                   "Equipping Classrooms for Success",
-                  5000,
+                  2000,
                   "Supporting Underserved Students",
-                  5000,
+                  2000,
                   "Investing in Our Future Generations",
-                  5000,
+                  2000,
                 ]}
                 wrapper="span"
                 speed={50}
