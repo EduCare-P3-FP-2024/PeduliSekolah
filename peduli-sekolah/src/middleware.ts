@@ -51,11 +51,6 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Protect /post route: only "School" account types can access
-  if (isPostPage && tokenData.account_type !== "School") {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
   // Protect /add-post route: only "School" account types can add posts
   if (
     (isAddPostPage && tokenData.account_type !== "school") ||
