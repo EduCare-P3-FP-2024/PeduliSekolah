@@ -11,6 +11,7 @@ export const getDocuments = async () => {
     .collection(COLLECTION_DOCUMENT)
     .find({})
     .toArray()) as SchoolDocument[];
+  console.log(documents);
 
   return documents;
 };
