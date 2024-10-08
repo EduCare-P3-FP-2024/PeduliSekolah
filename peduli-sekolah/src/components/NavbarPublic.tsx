@@ -59,6 +59,7 @@ export default function NavbarPublic() {
             {token ? (
               <button
                 onClick={handleLogout}
+
                 className="bg-[#E67E22] text-[#ECF0F1] px-4 py-2 rounded-md hover:bg-[#D35400] transition duration-200"
               >
                 Logout
@@ -71,7 +72,6 @@ export default function NavbarPublic() {
                 Login
               </Link>
             )}
-            {/* Logout Button */}
           </div>
         </div>
       </div>
