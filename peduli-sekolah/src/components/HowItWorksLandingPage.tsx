@@ -8,6 +8,9 @@ import { useEffect } from "react";
 import donate from "@/assets/donate.jpg";
 import like from "@/assets/like.jpg";
 import share from "@/assets/share.jpg";
+import SAD2 from "@/assets/SADSchool2.jpeg"
+import SAD3 from "@/assets/SADSchool3.avif"
+import SAD4 from "@/assets/SADSchool4.jpg"
 
 interface FadeInWhenVisibleProps {
   children: ReactNode;
@@ -53,7 +56,7 @@ export default function HowItWorksLandingPage() {
             {" "}
             {/* Set the height */}
             <Image
-              src={donate}
+              src={SAD2}
               alt="Donate"
               fill
               objectFit="cover"
@@ -71,7 +74,7 @@ export default function HowItWorksLandingPage() {
         <FadeInWhenVisible>
           <div className="relative group overflow-hidden rounded-lg shadow-md h-80">
             <Image
-              src={like}
+              src={SAD3}
               alt="Like"
               fill
               objectFit="cover"
@@ -87,7 +90,7 @@ export default function HowItWorksLandingPage() {
         <FadeInWhenVisible>
           <div className="relative group overflow-hidden rounded-lg shadow-md h-80">
             <Image
-              src={share}
+              src={SAD4}
               alt="Share"
               fill
               objectFit="cover"
