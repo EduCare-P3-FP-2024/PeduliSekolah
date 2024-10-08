@@ -120,6 +120,7 @@ export default function Component() {
                   rows={4}
                   id="content"
                   placeholder="Post content"
+
                   className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
                 />
               )}
@@ -136,10 +137,14 @@ export default function Component() {
               render={({ field }) => (
                 <select
                   {...field}
+
                   className="block w-full p-2 bg-white border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60]"
                 >
                   {categories.map((el, i) => (
-                    <option key={i} value={el._id.toString()}>
+                    <option
+                      key={i}
+                      value={el._id.toString()}
+                    >
                       {el.name}
                     </option>
                   ))}
@@ -147,7 +152,6 @@ export default function Component() {
               )}
             />
           </div>
-
           <div>
             <Label htmlFor="tags" className="text-sm font-medium text-[#34495E]">
               Tags (comma-separated)

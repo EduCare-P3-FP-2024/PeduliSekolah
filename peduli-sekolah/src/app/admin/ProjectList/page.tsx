@@ -15,7 +15,10 @@ const PageAdminSchool = async ({
           <AdminSidebar />
           <div className="w-9/12 mx-auto mt-2 p-5 bg-[#2C3E50]">
             {posts.map((post, index) => (
-              <div key={index} className="border shadow-lg rounded-xl p-5">
+              <div
+                key={index}
+                className="border shadow-lg rounded-xl p-5"
+              >
                 <div className="flex">
                   <img
                     src="https://images.unsplash.com/photo-1530631673369-bc20fdb32288?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BsYXNofGVufDB8fDB8fHww"
@@ -34,7 +37,10 @@ const PageAdminSchool = async ({
                     <p className="my-3 text-sm">{post.content}</p>
                     <div className="flex space-x-4">
                       {post.imageUrl.map((image, index) => (
-                        <ImageModal image={image} key={index} />
+                        <ImageModal
+                          image={image}
+                          key={index}
+                        />
                       ))}
                     </div>
                     <div className="flex justify-end mt-5 space-x-2">
