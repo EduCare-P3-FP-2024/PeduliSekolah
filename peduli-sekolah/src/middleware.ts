@@ -3,8 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyTokenJose } from "./utils/jose";
 
 export const middleware = async (request: NextRequest) => {
+  const url = request.nextUrl;
+
   // Skip middleware for auth-related API requests
-  if (request.nextUrl.pathname.startsWith("/api/auth")) {
+  if (url.pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
@@ -19,7 +21,7 @@ export const middleware = async (request: NextRequest) => {
 
   let tokenData;
   try {
-    // Verify the token and extract user data (id, role, etc.)
+    // Verify the token and extract user data
     tokenData = await verifyTokenJose<{
       id: string;
       role: string;
@@ -31,22 +33,33 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const url = request.nextUrl;
   const isAdminPage = url.pathname.startsWith("/admin");
-  const isPostPage = url.pathname.startsWith("/post");
+  const isPostPage = url.pathname.startsWith("/post/");
+  const isAddPostPage = url.pathname.startsWith("/add-post");
 
   const response = NextResponse.next();
 
-  // Set user data in cookies for /admin and /post routes
-  if (isAdminPage || isPostPage) {
+  if (tokenData.role === "admin") {
+    return NextResponse.next();
+  }
 
-    if(isAdminPage){
-      if(tokenData.role !== "admin"){
+  // Protect /admin route
+  if (isAdminPage && tokenData.role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url));
-      }
-    }
+  }
 
-    // Set user data in cookies
+  // Protect /post route: only "School" account types can access
+  if (isPostPage && tokenData.account_type !== "School") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Protect /add-post route: only "School" account types can add posts
+  if (isAddPostPage && tokenData.account_type !== "School") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Set user data in cookies for specific routes (admin, post, add-post)
+  if (isAdminPage || isPostPage || isAddPostPage) {
     response.cookies.set("userId", tokenData.id, {
       httpOnly: true,
       path: "/",
@@ -64,15 +77,15 @@ export const middleware = async (request: NextRequest) => {
       path: "/",
     });
 
-    return response; // Return response after setting the cookies
+    return response;
   }
 
-  // For other routes, set user details in headers
+  // For other routes, pass user details in headers
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-userId", tokenData.id); // Pass userId in headers
-  requestHeaders.set("x-role", tokenData.role); // Pass role in headers
-  requestHeaders.set("x-accountType", tokenData.account_type); // Pass account type in headers
-  requestHeaders.set("x-username", tokenData.username); // Pass username in headers
+  requestHeaders.set("x-userId", tokenData.id);
+  requestHeaders.set("x-role", tokenData.role);
+  requestHeaders.set("x-accountType", tokenData.account_type);
+  requestHeaders.set("x-username", tokenData.username);
 
   return NextResponse.next({
     headers: requestHeaders,
@@ -85,6 +98,7 @@ export const config = {
     "/admin/:path*", // Protect admin pages
     "/midtrans", // Protect midtrans-related routes
     "/school-document/:path*", // Protect school-document pages
-    "/post/:path*", // Protect post-related routes and apply user cookies
+    "/post/:path*", // Protect post-related routes
+    "/add-post", // Protect add-post route
   ],
 };
