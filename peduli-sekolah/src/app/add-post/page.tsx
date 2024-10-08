@@ -69,7 +69,7 @@ const PostForm = () => {
       });
 
       if (response.ok) {
-        router.push("/success-page"); // Redirect to success page
+        router.push("/post"); // Redirect to success page
       } else {
         throw new Error(`Submission failed: ${response.statusText}`);
       }
@@ -96,67 +96,183 @@ const PostForm = () => {
       >
         <h1 className="text-3xl font-bold text-center mb-6">Create New Post</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Label htmlFor="title" className="text-sm font-medium text-gray-700">Title</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label
+              htmlFor="title"
+              className="text-sm font-medium text-gray-700"
+            >
+              Title
+            </Label>
             <Controller
               name="title"
               control={control}
-              render={({ field }) => <Input {...field} type="text" id="title" placeholder="Post title" />}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  id="title"
+                  placeholder="Post title"
+                />
+              )}
             />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Label htmlFor="content" className="text-sm font-medium text-gray-700">Content</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label
+              htmlFor="content"
+              className="text-sm font-medium text-gray-700"
+            >
+              Content
+            </Label>
             <Controller
               name="content"
               control={control}
-              render={({ field }) => <Textarea {...field} rows={4} id="content" placeholder="Post content" />}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  rows={4}
+                  id="content"
+                  placeholder="Post content"
+                />
+              )}
             />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Label htmlFor="categoryId" className="text-sm font-medium text-gray-700">Category</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label
+              htmlFor="categoryId"
+              className="text-sm font-medium text-gray-700"
+            >
+              Category
+            </Label>
             <Controller
               name="categoryId"
               control={control}
               render={({ field }) => (
-                <select {...field} className="block w-full p-2 border-gray-300 rounded-md">
+                <select
+                  {...field}
+                  className="block w-full p-2 border-gray-300 rounded-md"
+                >
                   {categories.map((el, i) => (
-                    <option key={i} value={el._id.toString()}>{el.name}</option>
+                    <option key={i} value={el._id.toString()}>
+                      {el.name}
+                    </option>
                   ))}
                 </select>
               )}
             />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Label htmlFor="tags" className="text-sm font-medium text-gray-700">Tags (comma-separated)</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label htmlFor="tags" className="text-sm font-medium text-gray-700">
+              Tags (comma-separated)
+            </Label>
             <Controller
               name="tags"
               control={control}
-              render={({ field }) => <Input {...field} type="text" id="tags" placeholder="Post tags" />}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  id="tags"
+                  placeholder="Post tags"
+                />
+              )}
             />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Label htmlFor="deadLineAt" className="text-sm font-medium text-gray-700">Deadline At</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label
+              htmlFor="deadLineAt"
+              className="text-sm font-medium text-gray-700"
+            >
+              Deadline At
+            </Label>
             <Controller
               name="deadLineAt"
               control={control}
-              render={({ field }) => <Input {...field} type="datetime-local" id="deadLineAt" />}
+              render={({ field }) => (
+                <Input {...field} type="datetime-local" id="deadLineAt" />
+              )}
             />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Label htmlFor="imageUrl" className="text-sm font-medium text-gray-700">Upload Images</Label>
-            <CldUploadButton uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME} onSuccess={handleUploadSuccess} />
-            {imageUrls.length > 0 && <p className="text-sm text-green-500">Images uploaded!</p>}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label
+              htmlFor="targetAmount"
+              className="text-sm font-medium text-gray-700"
+            >
+              Target Amount
+            </Label>
+            <Controller
+              name="amount"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="number"
+                  id="targetAmount"
+                  placeholder="Target amount"
+                />
+              )}
+            />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Label
+              htmlFor="imageUrl"
+              className="text-sm font-medium text-gray-700"
+            >
+              Upload Images
+            </Label>
+            <CldUploadButton
+              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
+              onSuccess={handleUploadSuccess}
+            />
+            {imageUrls.length > 0 && (
+              <p className="text-sm text-green-500">Images uploaded!</p>
+            )}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
                   <FileText className="h-5 w-5" />
                 </motion.div>
               ) : (

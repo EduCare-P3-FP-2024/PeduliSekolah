@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CldUploadButton } from "next-cloudinary";
-import { SchoolProfile } from "@/utils/types"; // Adjust path accordingly
+import { SchoolDocumentInput, SchoolProfile } from "@/utils/types"; // Adjust path accordingly
 import { useRouter } from "next/navigation"; // For redirecting after form submission
 
 export type SchoolProfileInput = Omit<SchoolProfile, "status">;
@@ -20,7 +20,7 @@ export default function SchoolProfileForm() {
   const [imageUrl, setImageUrl] = useState<string[]>([]); // Changed to array of strings
   const router = useRouter();
 
-  const onSubmit = async (data: SchoolProfileInput) => {
+  const onSubmit = async (data: SchoolDocumentInput) => {
     setIsSubmitting(true);
 
     // Add the uploaded image URL to the form data if available
