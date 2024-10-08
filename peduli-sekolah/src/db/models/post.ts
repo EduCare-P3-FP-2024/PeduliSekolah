@@ -28,6 +28,8 @@ const agg = [
       createdAt: 1,
       updatedAt: 1,
       deadLineAt: 1,
+      amount: 1,
+      target_amount: 1,
       featured_status: 1,
       meta_description: 1,
       votes: { $size: { $ifNull: ["$votes", []] } }, // Count votes and handle null values
@@ -38,14 +40,16 @@ const agg = [
 export const getPosts = async (
   page: number,
   category: string,
-  searchTerm: string
+  searchTerm: string,
 ) => {
   const db = await getDb();
   const perPage = 10;
   const skip = (page - 1) * perPage;
 
   // Build query object based on category and search term
-  const query: any = {};
+  const query: any = {
+    status: "published",
+  };
   if (category && category !== "All") {
     query.categoryId = new ObjectId(category); // Correct the field name
   }
@@ -54,15 +58,15 @@ export const getPosts = async (
   }
 
   // Use aggregate directly, since you're combining lookup and projection
-  const posts = await db
+  const posts = (await db
     .collection(COLLECTION_POST)
     .aggregate([
-      { $match: query },  // Match based on the query filter
+      { $match: query }, // Match based on the query filter
       { $skip: skip },
       { $limit: perPage },
-      ...agg // Apply the aggregation pipeline
+      ...agg, // Apply the aggregation pipeline
     ])
-    .toArray() as Post[];
+    .toArray()) as Post[];
 
   return posts;
 };
@@ -81,14 +85,11 @@ export const createPost = async (postInput: CreatePostInput) => {
 
 export const getPostBySlug = async (slug: string) => {
   const db = await getDb();
-  
-  const post = (await db
-    .collection(COLLECTION_POST)
-    .findOne({ slug })) as Post;
+
+  const post = (await db.collection(COLLECTION_POST).findOne({ slug })) as Post;
 
   return post;
 };
-
 
 export const getPostsByCategory = async (categoryId: string) => {
   const db = await getDb();

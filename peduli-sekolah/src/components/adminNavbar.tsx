@@ -1,8 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import LogoNavbarPNG from "@/assets/logo-navbar-transparant.png";
 import Image from "next/image";
+import { deleteAuthCookies } from "@/app/admin/SchoolList/action";
+import { useRouter } from "next/navigation";
 
 const AdminNavbar = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await deleteAuthCookies();
+    router.push("/login");
+  };
+
   return (
     <>
       <div className="w-full h-[64px] bg-[#2C3E50] flex justify-between p-2 border-b-2">
@@ -20,7 +31,7 @@ const AdminNavbar = () => {
             <div
               tabIndex={0}
               role="button"
-              className=" m-1"
+              className="m-1"
             >
               <button className="btn btn-square btn-ghost text-wh">
                 <svg
@@ -33,7 +44,7 @@ const AdminNavbar = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
                   ></path>
                 </svg>
               </button>
@@ -63,7 +74,9 @@ const AdminNavbar = () => {
                 </Link>
               </li>
               <li>
-                <h1 className="text-center px-7 py-4">Logout</h1>
+                <div onClick={handleLogout}>
+                  <h1 className="text-center px-7 py-4">Logout</h1>
+                </div>
               </li>
             </ul>
           </div>

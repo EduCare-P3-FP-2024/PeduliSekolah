@@ -3,8 +3,31 @@
 import Link from "next/link";
 import Image from "next/image";
 import LogoNavbarPNG from "@/assets/logo-navbar-transparant.png";
+import { useRouter } from "next/navigation";
+import {
+  deleteAuthCookies,
+  getAuthCookies,
+} from "@/app/admin/SchoolList/action";
+import { useEffect, useState } from "react";
 
 export default function NavbarPublic() {
+  const router = useRouter();
+  const [token, setToken] = useState<string | undefined>(undefined);
+  // Function to delete the token (if stored in localStorage)
+  const handleLogout = async () => {
+    await deleteAuthCookies(); // This will delete the token and cookies
+    router.push("/login"); // Redirect to login page after logging out
+  };
+
+  useEffect(() => {
+    const getToken = async () => {
+      const data = await getAuthCookies();
+
+      setToken(data?.value ?? undefined);
+    };
+    getToken();
+  }, []);
+
   return (
     <header className="bg-[#2C3E50] text-[#ECF0F1] py-2 sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -26,19 +49,29 @@ export default function NavbarPublic() {
               About
             </Link>
             <Link
-              href="#"
+              href="/post"
               className="hover:text-[#E67E22] transition duration-200"
             >
               Post
             </Link>
           </nav>
-          <div className="flex-1 flex justify-end">
-            <Link
-              href="/login"
-              className="bg-[#E67E22] text-[#ECF0F1] px-4 py-2 rounded-md hover:bg-[#D35400] transition duration-200"
-            >
-              Login
-            </Link>
+          <div className="flex-1 flex justify-end space-x-4">
+            {token ? (
+              <button
+                onClick={handleLogout}
+
+                className="bg-[#E67E22] text-[#ECF0F1] px-4 py-2 rounded-md hover:bg-[#D35400] transition duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-[#E67E22] text-[#ECF0F1] px-4 py-2 rounded-md hover:bg-[#D35400] transition duration-200"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
