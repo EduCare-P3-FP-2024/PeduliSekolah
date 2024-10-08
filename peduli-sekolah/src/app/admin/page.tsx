@@ -6,7 +6,7 @@ import ModalImage from "react-modal-image";
 const PageAdminSchool = () => {
   return (
     <>
-      <div className="w-full min-h-screen ">
+      <div className="w-full min-h-screen">
         <div className="flex min-h-screen">
           <AdminSidebar />
           <div className="w-9/12 mx-auto  p-5">
