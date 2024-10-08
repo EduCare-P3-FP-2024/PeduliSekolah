@@ -8,9 +8,9 @@ import { useEffect } from "react";
 import donate from "@/assets/donate.jpg";
 import like from "@/assets/like.jpg";
 import share from "@/assets/share.jpg";
-import SAD2 from "@/assets/SADSchool2.jpeg"
-import SAD3 from "@/assets/SADSchool3.avif"
-import SAD4 from "@/assets/SADSchool4.jpg"
+import SAD2 from "@/assets/SADSchool2.jpeg";
+import SAD3 from "@/assets/SADSchool3.avif";
+import SAD4 from "@/assets/SADSchool4.jpg";
 
 interface FadeInWhenVisibleProps {
   children: ReactNode;
@@ -46,7 +46,7 @@ export default function HowItWorksLandingPage() {
   return (
     <div className="container mx-auto px-4">
       <FadeInWhenVisible>
-        <h2 className="text-3xl font-bold mb-12 text-center text-[#2C3E50]">
+        <h2 className="text-3xl font-bold mb-12 text-center text-[#ECF0F1]">
           How You Can Help
         </h2>
       </FadeInWhenVisible>
