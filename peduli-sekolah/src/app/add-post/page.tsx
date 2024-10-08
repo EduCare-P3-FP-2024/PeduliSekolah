@@ -86,10 +86,18 @@ export default function Component() {
   return (
     <div className="min-h-screen w-screen bg-[#ECF0F1] flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl">
-        <h1 className="text-3xl font-bold text-center mb-6 text-[#2C3E50]">Create New Post</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <h1 className="text-3xl font-bold text-center mb-6 text-[#2C3E50]">
+          Create New Post
+        </h1>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           <div>
-            <Label htmlFor="title" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="title"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Title
             </Label>
             <Controller
@@ -108,7 +116,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="content" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="content"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Content
             </Label>
             <Controller
@@ -120,7 +131,6 @@ export default function Component() {
                   rows={4}
                   id="content"
                   placeholder="Post content"
-
                   className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
                 />
               )}
@@ -128,7 +138,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="categoryId" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="categoryId"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Category
             </Label>
             <Controller
@@ -137,7 +150,6 @@ export default function Component() {
               render={({ field }) => (
                 <select
                   {...field}
-
                   className="block w-full p-2 bg-white border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60]"
                 >
                   {categories.map((el, i) => (
@@ -153,7 +165,10 @@ export default function Component() {
             />
           </div>
           <div>
-            <Label htmlFor="tags" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="tags"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Tags (comma-separated)
             </Label>
             <Controller
@@ -172,7 +187,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="deadLineAt" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="deadLineAt"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Deadline At
             </Label>
             <Controller
@@ -192,7 +210,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="targetAmount" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="targetAmount"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Target Amount
             </Label>
             <Controller
@@ -211,7 +232,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="imageUrl" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="imageUrl"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Upload Images
             </Label>
             <CldUploadButton
