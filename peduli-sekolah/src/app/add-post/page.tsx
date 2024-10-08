@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Upload, FileText, Tag, Calendar, FileImage } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { CldUploadButton } from "next-cloudinary"; // For handling image uploads
+import { CldUploadButton } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import { Category } from "@/utils/types";
-import { useEffect } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"; // Import the CSS for DatePicker
 
 export type PostInput = {
   title: string;
@@ -20,19 +20,18 @@ export type PostInput = {
   categoryId: string;
   amount: number;
   tags: string;
-  imageUrl: string[]; // Changed to array of image URLs
+  imageUrl: string[];
   deadLineAt: Date;
   meta_description: string;
 };
 
-const PostForm = () => {
+export default function Component() {
   const { control, handleSubmit } = useForm<PostInput>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]); // Array of image URLs
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const router = useRouter();
 
-  // Fetch categories from API
   useEffect(() => {
     const fetchCategory = async () => {
       const url = "http://localhost:3000/api/categories";
@@ -53,12 +52,10 @@ const PostForm = () => {
   const onSubmit = async (data: PostInput) => {
     setIsSubmitting(true);
 
-    // Add the uploaded image URLs to the form data
     if (imageUrls.length) {
       data.imageUrl = imageUrls;
     }
 
-    // Post submission logic
     try {
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -69,7 +66,7 @@ const PostForm = () => {
       });
 
       if (response.ok) {
-        router.push("/post"); // Redirect to success page
+        router.push("/post");
       } else {
         throw new Error(`Submission failed: ${response.statusText}`);
       }
@@ -82,32 +79,17 @@ const PostForm = () => {
 
   const handleUploadSuccess = (result: any) => {
     if (result?.info?.secure_url) {
-      setImageUrls((prev) => [...prev, result.info.secure_url]); // Append new image URL
+      setImageUrls((prev) => [...prev, result.info.secure_url]);
     }
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gray-100 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl"
-      >
-        <h1 className="text-3xl font-bold text-center mb-6">Create New Post</h1>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="title"
-              className="text-sm font-medium text-gray-700"
-            >
+    <div className="min-h-screen w-screen bg-[#ECF0F1] flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl">
+        <h1 className="text-3xl font-bold text-center mb-6 text-[#2C3E50]">Create New Post</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <Label htmlFor="title" className="text-sm font-medium text-[#34495E]">
               Title
             </Label>
             <Controller
@@ -119,21 +101,14 @@ const PostForm = () => {
                   type="text"
                   id="title"
                   placeholder="Post title"
-                  className="border-2 border-[#E67E22]"
+                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
                 />
               )}
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="content"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div>
+            <Label htmlFor="content" className="text-sm font-medium text-[#34495E]">
               Content
             </Label>
             <Controller
@@ -145,21 +120,15 @@ const PostForm = () => {
                   rows={4}
                   id="content"
                   placeholder="Post content"
-                  className="border-2 border-[#E67E22]"
+
+                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
                 />
               )}
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="categoryId"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div>
+            <Label htmlFor="categoryId" className="text-sm font-medium text-[#34495E]">
               Category
             </Label>
             <Controller
@@ -168,7 +137,8 @@ const PostForm = () => {
               render={({ field }) => (
                 <select
                   {...field}
-                  className="block w-full p-2 border-2 border-[#E67E22] rounded-md"
+
+                  className="block w-full p-2 bg-white border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60]"
                 >
                   {categories.map((el, i) => (
                     <option
@@ -181,17 +151,9 @@ const PostForm = () => {
                 </select>
               )}
             />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="tags"
-              className="text-sm font-medium text-gray-700"
-            >
+          </div>
+          <div>
+            <Label htmlFor="tags" className="text-sm font-medium text-[#34495E]">
               Tags (comma-separated)
             </Label>
             <Controller
@@ -203,46 +165,34 @@ const PostForm = () => {
                   type="text"
                   id="tags"
                   placeholder="Post tags"
-                  className="border-2 border-[#E67E22]"
+                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
                 />
               )}
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="deadLineAt"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div>
+            <Label htmlFor="deadLineAt" className="text-sm font-medium text-[#34495E]">
               Deadline At
             </Label>
             <Controller
               name="deadLineAt"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="datetime-local"
-                  id="deadLineAt"
-                  className="border-2 border-[#E67E22]"
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  selected={value ? new Date(value) : null} // Convert value to Date if it exists
+                  onChange={(date) => onChange(date)} // Update the form state
+                  showTimeSelect // Show time selection
+                  dateFormat="Pp" // Format the date and time
+                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] w-full p-2 rounded-md"
+                  placeholderText="Select a date"
                 />
               )}
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="targetAmount"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div>
+            <Label htmlFor="targetAmount" className="text-sm font-medium text-[#34495E]">
               Target Amount
             </Label>
             <Controller
@@ -254,59 +204,45 @@ const PostForm = () => {
                   type="number"
                   id="targetAmount"
                   placeholder="Target amount"
-                  className="border-2 border-[#E67E22]"
+                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
                 />
               )}
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Label
-              htmlFor="imageUrl"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div>
+            <Label htmlFor="imageUrl" className="text-sm font-medium text-[#34495E]">
               Upload Images
             </Label>
             <CldUploadButton
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
               onSuccess={handleUploadSuccess}
-              className="border-2 border-[#E67E22] p-2 mx-3 rounded-sm hover:bg-black hover:text-white"
-            />
+              className="bg-[#E67E22] text-white px-4 py-2 rounded-md hover:bg-[#D35400] transition-colors"
+            >
+              Upload Image
+            </CldUploadButton>
             {imageUrls.length > 0 && (
-              <p className="text-sm text-green-500">Images uploaded!</p>
+              <p className="text-sm text-[#27AE60] mt-2">Images uploaded!</p>
             )}
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div>
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-[#2C3E50] hover:bg-[#34495E] text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
+                <div className="animate-spin h-5 w-5">
                   <FileText className="h-5 w-5" />
-                </motion.div>
+                </div>
               ) : (
                 "Submit Post"
               )}
             </Button>
-          </motion.div>
+          </div>
         </form>
-      </motion.div>
+      </div>
     </div>
   );
-};
-
-export default PostForm;
+}

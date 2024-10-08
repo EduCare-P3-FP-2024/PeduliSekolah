@@ -12,39 +12,34 @@ import { CldUploadButton } from "next-cloudinary";
 import { SchoolProfile } from "@/utils/types"; // Adjust path accordingly
 import { useRouter } from "next/navigation"; // For redirecting after form submission
 
-// Fix 1: Add imageFileUrl to SchoolProfileInput type
 export type SchoolProfileInput = Omit<SchoolProfile, "status"> & {
-  imageFileUrl?: string[]; // Fixed imageFileUrl type
+  imageFileUrl?: string[];
 };
 
 export default function SchoolProfileForm() {
   const { control, handleSubmit } = useForm<SchoolProfileInput>();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string[]>([]); // Changed to array of strings
+  const [imageUrl, setImageUrl] = useState<string[]>([]);
   const router = useRouter();
 
   const onSubmit = async (data: SchoolProfileInput) => {
     setIsSubmitting(true);
 
-    // Add the uploaded image URL to the form data if available
     if (imageUrl.length) {
       data.imageFileUrl = imageUrl;
     }
 
-    // Retrieve userId from the middleware or cookies
-    const userId = document.cookie // assuming it is available in cookies
+    const userId = document.cookie
       .split("; ")
       .find((row) => row.startsWith("userId="))
       ?.split("=")[1];
 
-    // Simulate form submission
     const submissionData = {
       ...data,
-      userId, // Attach userId
-      status: "pending", // Set status to 'pending'
+      userId,
+      status: "pending",
     };
 
-    // Send form data to the backend (you'll replace this with actual submission logic)
     const response = await fetch("/api/school-document", {
       method: "POST",
       headers: {
@@ -55,7 +50,7 @@ export default function SchoolProfileForm() {
 
     if (response.ok) {
       console.log("Form submitted successfully", submissionData);
-      router.push("/payee"); // Redirect to a success page if needed
+      router.push("/payee");
     } else {
       console.error("Form submission failed");
     }
@@ -65,7 +60,7 @@ export default function SchoolProfileForm() {
 
   const handleUploadSuccess = (result: any) => {
     if (result?.info?.secure_url) {
-      setImageUrl((prev) => [...prev, result.info.secure_url]); // Append to array
+      setImageUrl((prev) => [...prev, result.info.secure_url]);
     }
   };
 
@@ -77,71 +72,73 @@ export default function SchoolProfileForm() {
   ];
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-purple-700 to-teal-500 flex items-center justify-center p-4">
+    <div className="min-h-screen w-screen bg-[#ECF0F1] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md"
+        className="bg-white rounded-lg shadow-xl p-8 w-full max-w-4xl mx-auto lg:w-3/4 xl:w-2/3"
       >
-        <h1 className="text-3xl font-bold text-center mb-6 text-purple-800">
+        <h1 className="text-3xl font-bold text-center mb-6 text-[#2C3E50]">
           School Profile Form
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {formFields.map((field, index) => (
-            <motion.div
-              key={field.name}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <Label
-                htmlFor={field.name}
-                className="text-sm font-medium text-gray-700"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {formFields.map((field, index) => (
+              <motion.div
+                key={field.name}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                {field.label}
-              </Label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <field.icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <Label
+                  htmlFor={field.name}
+                  className="text-sm font-medium text-[#34495E]"
+                >
+                  {field.label}
+                </Label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <field.icon className="h-5 w-5 text-[#2C3E50]" aria-hidden="true" />
+                  </div>
+                  <Controller
+                    name={field.name as keyof SchoolProfileInput}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type={field.type}
+                        className="block w-full pl-10 sm:text-sm border-[#2C3E50] rounded-md focus:ring-[#E67E22] focus:border-[#E67E22] text-[#34495E]"
+                        placeholder={field.label}
+                      />
+                    )}
+                  />
                 </div>
-                <Controller
-                  name={field.name as keyof SchoolProfileInput}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      // Fix 3: Pass type directly instead of using field.type
-                      type={field.type}
-                      className="block w-full pl-10 sm:text-sm border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
-                      placeholder={field.label}
-                    />
-                  )}
-                />
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
 
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
-            <Label htmlFor="file" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="file" className="text-sm font-medium text-[#34495E]">
               Upload Image
             </Label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-[#2C3E50] border-dashed rounded-md">
               <div className="space-y-1 text-center">
-                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                <Upload className="mx-auto h-12 w-12 text-[#2C3E50]" />
                 <CldUploadButton
-                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
+                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
                   onSuccess={handleUploadSuccess}
+                  className="text-[#2C3E50] hover:text-[#E67E22]"
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-[#34495E]">
                   PNG, JPG, GIF up to 10MB
                 </p>
                 {imageUrl.length > 0 && (
-                  <p className="text-sm text-green-500">Image Uploaded!</p>
+                  <p className="text-sm text-[#27AE60]">Image Uploaded!</p>
                 )}
               </div>
             </div>
@@ -154,7 +151,7 @@ export default function SchoolProfileForm() {
           >
             <Label
               htmlFor="description"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-[#34495E]"
             >
               Description
             </Label>
@@ -165,10 +162,9 @@ export default function SchoolProfileForm() {
                 render={({ field }) => (
                   <Textarea
                     {...field}
-                    // Fix 2: Ensure Date is converted to a string
                     value={field.value instanceof Date ? field.value.toISOString() : field.value}
                     rows={4}
-                    className="shadow-sm focus:ring-purple-500 focus:border-purple-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-[#E67E22] focus:border-[#E67E22] mt-1 block w-full sm:text-sm border-[#2C3E50] rounded-md text-[#34495E]"
                     placeholder="Tell us more about your school..."
                   />
                 )}
@@ -183,7 +179,7 @@ export default function SchoolProfileForm() {
           >
             <Button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2C3E50] hover:bg-[#E67E22] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27AE60]"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

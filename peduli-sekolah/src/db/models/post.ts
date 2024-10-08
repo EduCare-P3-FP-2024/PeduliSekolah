@@ -45,7 +45,9 @@ export const getPosts = async (
   const skip = (page - 1) * perPage;
 
   // Build query object based on category and search term
-  const query: any = {};
+  const query: any = {
+    status: "published"
+  };
   if (category && category !== "All") {
     query.categoryId = new ObjectId(category); // Correct the field name
   }
