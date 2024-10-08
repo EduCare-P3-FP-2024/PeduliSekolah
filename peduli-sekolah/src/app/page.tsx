@@ -54,7 +54,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-[#ECF0F1]">
+        <section className="bg-[#2C3E50] text-[#ECF0F1] py-20">
           <div className="container mx-auto">
             <FeaturesLandingPage />
           </div>
@@ -66,7 +66,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-[#ECF0F1]">
+        <section className="py-20 bg-[#2C3E50] text-[#ECF0F1]">
           <div className="container mx-auto">
             <HowItWorksLandingPage />
           </div>
