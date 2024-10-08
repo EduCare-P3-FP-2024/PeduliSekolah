@@ -36,7 +36,6 @@ export default function RootLayout({
       >
         {/* Wrap the application with SessionProvider */}
         <div className="flex min-h-screen">
-          {/* Sidebar (if applicable) */}
           <Toaster />
           {/* Main content area */}
           <main className="flex-1 flex items-center justify-center">
