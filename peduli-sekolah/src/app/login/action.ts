@@ -5,6 +5,7 @@ import { createTokenJose } from "@/utils/jose";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { getUserByEmailAndType } from "@/db/models/user";
+import { getDocumentByUserId } from "@/db/models/schoolDocument";
 
 export const actionLogin = async (formData: FormData) => {
   const loginInputSchema = z.object({
@@ -36,6 +37,9 @@ export const actionLogin = async (formData: FormData) => {
     return { error: "Invalid credentials" }; // Return error
   }
 
+
+  const school = await getDocumentByUserId(user._id.toString());
+
   if (user.status === "banned") {
     return { error: "This user has been banned" }; // Return error
   }
@@ -47,6 +51,7 @@ export const actionLogin = async (formData: FormData) => {
     role: user.role,
     account_type: user.account_type,
     username: user.username,
+    schoolstatus: school?.status,
   };
 
   // Generate token using jose

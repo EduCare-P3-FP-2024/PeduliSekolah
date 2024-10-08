@@ -16,17 +16,18 @@ export const banUser = async (id: string) => {
 };
 
 export const deleteAuthCookies = async () => {
-  const cookieStore = cookies(); // Use cookies() once and assign it to a variable
+  const cookieStore = cookies();
   cookieStore.delete("token");
   cookieStore.delete("userId");
   cookieStore.delete("username");
   cookieStore.delete("role");
   cookieStore.delete("accountType");
+  
   return redirect("/login");
 };
 
 export const getAuthCookies = async () => {
-  const cookieStore = cookies(); // Use cookies() once and assign it to a variable
+  const cookieStore = cookies();
   const token = cookieStore.get("token");
   return token;
 };

@@ -3,36 +3,46 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
-import { Upload, MapPin, User, Mail, Phone, FileText } from "lucide-react";
+import { Upload, MapPin, User, Mail, Phone, Clipboard } from "lucide-react";
+import Cookies from "js-cookie";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CldUploadButton } from "next-cloudinary";
-import { SchoolProfile } from "@/utils/types"; // Adjust path accordingly
-import { useRouter } from "next/navigation"; // For redirecting after form submission
+import { SchoolProfile } from "@/utils/types";
+import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";  // Assuming you have a textarea component
 
 export type SchoolProfileInput = Omit<SchoolProfile, "status"> & {
   imageFileUrl?: string[];
 };
 
 export default function SchoolProfileForm() {
-  const { control, handleSubmit } = useForm<SchoolProfileInput>();
+  const { control, handleSubmit, setError, clearErrors, formState: { errors } } = useForm<SchoolProfileInput>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const router = useRouter();
 
   const onSubmit = async (data: SchoolProfileInput) => {
     setIsSubmitting(true);
+    clearErrors();
 
     if (imageUrl.length) {
       data.imageFileUrl = imageUrl;
     }
 
-    const userId = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("userId="))
-      ?.split("=")[1];
+    const userId = Cookies.get('userId');
+
+    if (!userId) {
+      toast({
+        title: "Unauthorized",
+        description: "User is not logged in",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
 
     const submissionData = {
       ...data,
@@ -48,11 +58,27 @@ export default function SchoolProfileForm() {
       body: JSON.stringify(submissionData),
     });
 
+    const result = await response.json();
+
     if (response.ok) {
-      console.log("Form submitted successfully", submissionData);
+      toast({
+        title: "Success",
+        description: "School profile created successfully.",
+        variant: "success",
+      });
       router.push("/payee");
     } else {
-      console.error("Form submission failed");
+      if (result.errors) {
+        Object.keys(result.errors).forEach((field) => {
+          setError(field as keyof SchoolProfileInput, { message: result.errors[field].message || "Invalid value" });
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to create school profile.",
+          variant: "destructive",
+        });
+      }
     }
 
     setIsSubmitting(false);
@@ -67,8 +93,9 @@ export default function SchoolProfileForm() {
   const formFields = [
     { name: "name", label: "Name", icon: User, type: "text" },
     { name: "email", label: "Email", icon: Mail, type: "email" },
-    { name: "phoneNumber", label: "Phone Number", icon: Phone, type: "tel" },
+    { name: "phone", label: "Phone Number", icon: Phone, type: "tel" },
     { name: "location", label: "Location", icon: MapPin, type: "text" },
+    { name: "purpose", label: "Purpose", icon: Clipboard, type: "text" },  // Assuming purpose is a required field
   ];
 
   return (
@@ -91,10 +118,7 @@ export default function SchoolProfileForm() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <Label
-                  htmlFor={field.name}
-                  className="text-sm font-medium text-[#34495E]"
-                >
+                <Label htmlFor={field.name} className="text-sm font-medium text-[#34495E]">
                   {field.label}
                 </Label>
                 <div className="mt-1 relative rounded-md shadow-sm">
@@ -113,19 +137,38 @@ export default function SchoolProfileForm() {
                       />
                     )}
                   />
+                  {errors[field.name as keyof SchoolProfileInput]?.message && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors[field.name as keyof SchoolProfileInput]?.message}
+                    </p>
+                  )}
                 </div>
               </motion.div>
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-          >
-            <Label htmlFor="file" className="text-sm font-medium text-[#34495E]">
-              Upload Image
-            </Label>
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.4 }}>
+            <Label htmlFor="description" className="text-sm font-medium text-[#34495E]">Description</Label>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  className="block w-full pl-3 sm:text-sm border-[#2C3E50] rounded-md focus:ring-[#E67E22] focus:border-[#E67E22] text-[#34495E]"
+                  placeholder="Provide any additional information"
+                />
+              )}
+            />
+            {errors.description && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.description.message}
+              </p>
+            )}
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.5 }}>
+            <Label htmlFor="file" className="text-sm font-medium text-[#34495E]">Upload Image</Label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-[#2C3E50] border-dashed rounded-md">
               <div className="space-y-1 text-center">
                 <Upload className="mx-auto h-12 w-12 text-[#2C3E50]" />
@@ -134,49 +177,13 @@ export default function SchoolProfileForm() {
                   onSuccess={handleUploadSuccess}
                   className="text-[#2C3E50] hover:text-[#E67E22]"
                 />
-                <p className="text-xs text-[#34495E]">
-                  PNG, JPG, GIF up to 10MB
-                </p>
-                {imageUrl.length > 0 && (
-                  <p className="text-sm text-[#27AE60]">Image Uploaded!</p>
-                )}
+                <p className="text-xs text-[#34495E]">PNG, JPG, GIF up to 10MB</p>
+                {imageUrl.length > 0 && <p className="text-sm text-[#27AE60]">Image Uploaded!</p>}
               </div>
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
-          >
-            <Label
-              htmlFor="description"
-              className="text-sm font-medium text-[#34495E]"
-            >
-              Description
-            </Label>
-            <div className="mt-1">
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    value={field.value instanceof Date ? field.value.toISOString() : field.value}
-                    rows={4}
-                    className="shadow-sm focus:ring-[#E67E22] focus:border-[#E67E22] mt-1 block w-full sm:text-sm border-[#2C3E50] rounded-md text-[#34495E]"
-                    placeholder="Tell us more about your school..."
-                  />
-                )}
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }}>
             <Button
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2C3E50] hover:bg-[#E67E22] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27AE60]"
@@ -186,11 +193,10 @@ export default function SchoolProfileForm() {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <FileText className="h-5 w-5" />
-                </motion.div>
+                  className="w-5 h-5 border-4 border-white border-t-transparent rounded-full"
+                />
               ) : (
-                "Submit"
+                "Submit Profile"
               )}
             </Button>
           </motion.div>

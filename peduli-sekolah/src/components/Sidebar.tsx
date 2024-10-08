@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   HomeIcon,
   UserIcon,
@@ -14,6 +14,9 @@ import {
 import { cn } from "@/lib/utils";
 import logoPs from "@/assets/logo.png";
 import profilePicture from "@/assets/tempestus2.jpg";
+import Cookies from "js-cookie"; // Import js-cookie
+import { deleteAuthCookies } from "@/app/admin/SchoolList/action";
+import { signOut } from "next-auth/react";
 
 type NavItem = {
   name: string;
@@ -24,14 +27,26 @@ type NavItem = {
 const navItems: NavItem[] = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "Schools", href: "/schools", icon: AcademicCapIcon },
-  { name: "Profile", href: "/profile", icon: UserIcon },
   { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
-  { name: "Own Post", href: "/own-post", icon: EnvelopeIcon },
+  { name: "Feedback", href: "/feedback", icon: EnvelopeIcon },
 ];
 
 export default function Sidebar() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  const handleLogout = async () => {
+    const success = await deleteAuthCookies();
+    if (success) {
+      router.push("/login");
+      await signOut();
+    } else {
+      await signOut();
+      router.push("/login");
+    }
+  };
+
+  const name = Cookies.get('username');
 
   if (
     pathname === "/admin" ||
@@ -84,15 +99,8 @@ export default function Sidebar() {
           </div>
         ) : (
           <>
-            <Image
-              src={profilePicture}
-              alt="User Avatar"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <span className="text-sm font-medium text-[#34495E]">John Doe</span>
-            <button className="ml-auto">
+            <span className="text-sm font-medium text-[#34495E]">{name ? name : "Orang Baik"}</span>
+            <button className="ml-auto" onClick={handleLogout}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

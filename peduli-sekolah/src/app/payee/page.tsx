@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "@/hooks/use-toast"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 
 export default function PayeeForm() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [bankAccount, setBankAccount] = useState("")
-  const [walletId, setWalletId] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const router = useRouter()
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [bankAccount, setBankAccount] = useState("");
+  const [walletId, setWalletId] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/payee", {
@@ -32,29 +32,43 @@ export default function PayeeForm() {
           bankAccount,
           walletId,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         toast({
           title: "Success",
           description: "Payee details submitted successfully.",
-        })
-        router.push("/success")
+        });
+        router.push("/success/payee");
+      } else if (response.status === 409) {
+        toast({
+          title: "Duplicate Payee",
+          description: "A payee with the same email or bank account already exists.",
+          variant: "destructive",
+        });
+      } else if (data.errors) {
+        Object.keys(data.errors).forEach((field) => {
+          toast({
+            title: "Validation Error",
+            description: `${field}: ${data.errors[field]._errors[0]}`,
+            variant: "destructive",
+          });
+        });
       } else {
-        throw new Error(data.message)
+        throw new Error(data.message);
       }
     } catch (error) {
       toast({
         title: "Error",
         description: error.message || "An error occurred while submitting the form.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto mt-8">
@@ -116,5 +130,5 @@ export default function PayeeForm() {
         All fields are required unless marked as optional.
       </CardFooter>
     </Card>
-  )
+  );
 }

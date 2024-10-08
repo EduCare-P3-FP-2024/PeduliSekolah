@@ -1,6 +1,7 @@
 import AdminSidebar from "@/components/AdminSidebar";
 import { getPostsList } from "./action";
 import ImageModal from "@/components/imageModal";
+import AdminButtonDeleteClient from "@/components/AdminButtonDeleteClient";
 
 const PageAdminSchool = async ({
   page = 1,
@@ -8,6 +9,10 @@ const PageAdminSchool = async ({
   searchTerm = "",
 }) => {
   const posts = await getPostsList(page, category, searchTerm);
+  const modifiedPosts = [...posts].map((post) => ({
+    ...post,
+    _id: post._id.toString(),
+  }));
 
   return (
     <>
@@ -15,7 +20,7 @@ const PageAdminSchool = async ({
         <div className="flex min-h-screen">
           <AdminSidebar />
           <div className="w-9/12 mx-auto mt-2 p-5 bg-[#2C3E50]">
-            {posts.map((post, index) => (
+            {modifiedPosts.map((post, index) => (
               <div
                 key={index}
                 className="border shadow-lg rounded-xl p-5 bg-white mb-5"
@@ -28,7 +33,9 @@ const PageAdminSchool = async ({
                         <h2>Donasi Terkumpul : Rp. {post.amount}</h2>
                         <h2>
                           Target Donasi : Rp.{" "}
-                          {post.target_amount.toLocaleString()}
+                          {typeof post.target_amount === "number"
+                            ? post.target_amount.toLocaleString()
+                            : "N/A"}
                         </h2>
                       </div>
                     </div>
@@ -55,21 +62,11 @@ const PageAdminSchool = async ({
                     {/* Display images */}
                     <div className="flex space-x-4">
                       {post.imageUrl.map((image, index) => (
-                        <ImageModal
-                          image={image}
-                          key={index}
-                        />
+                        <ImageModal image={image} key={index} />
                       ))}
                     </div>
 
-                    <div className="flex justify-end mt-5 space-x-2">
-                      <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
-                        Pin Post
-                      </button>
-                      <button className="bg-red-500 text-white px-4 py-2 rounded-lg">
-                        Delete
-                      </button>
-                    </div>
+                    <AdminButtonDeleteClient id={post._id} />
                   </div>
                 </div>
               </div>

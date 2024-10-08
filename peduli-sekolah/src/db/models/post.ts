@@ -71,6 +71,41 @@ export const getPosts = async (
   return posts;
 };
 
+export const getPostsFeatured = async () => {
+  const db = await getDb();
+  const posts = (await db
+    .collection(COLLECTION_POST)
+    .find({featured_status: true})
+    .toArray()
+  ) as Post[]
+
+  return posts
+}
+
+export const adminGetPosts = async (page: number) => {
+  const db = await getDb();
+  const perPage = 10;
+  const skip = (page - 1) * perPage;
+
+  // Build query object based on category and search term
+  const query: any = {
+    status: "draft",
+  };
+
+  // Use aggregate directly, since you're combining lookup and projection
+  const posts = (await db
+    .collection(COLLECTION_POST)
+    .aggregate([
+      { $match: query }, // Match based on the query filter
+      { $skip: skip },
+      { $limit: perPage },
+      ...agg, // Apply the aggregation pipeline
+    ])
+    .toArray()) as Post[];
+
+  return posts;
+};
+
 export const createPost = async (postInput: CreatePostInput) => {
   const db = await getDb();
 
@@ -83,12 +118,67 @@ export const createPost = async (postInput: CreatePostInput) => {
   return result;
 };
 
+export const updatePostPublished = async (id: string) => {
+  const db = await getDb();
+
+  const result = await db.collection(COLLECTION_POST).updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: {
+        status: "published",
+      },
+    },
+  );
+
+  return result;
+};
+
+export const updatePostRejected = async (id: string) => {
+  const db = await getDb();
+
+  const result = await db.collection(COLLECTION_POST).updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: {
+        status: "rejected",
+      },
+    },
+  );
+
+  return result;
+};
+
 export const getPostBySlug = async (slug: string) => {
   const db = await getDb();
 
   const post = (await db.collection(COLLECTION_POST).findOne({ slug })) as Post;
 
   return post;
+};
+
+export const deletePostById = async (id: string) => {
+  const db = await getDb();
+
+  const result = await db
+    .collection(COLLECTION_POST)
+    .deleteOne({ _id: new ObjectId(id) });
+
+  return result;
+};
+
+export const pinPostById = async (id: string) => {
+  const db = await getDb();
+
+  const result = await db.collection(COLLECTION_POST).updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: {
+        featured_status: true,
+      },
+    },
+  );
+
+  return result;
 };
 
 export const getPostsByCategory = async (categoryId: string) => {

@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";  // Removed signOut import
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Check } from "lucide-react";
@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ToastComponent } from "@/components/ToastComponent";
+
 
 interface User {
   email: string;
@@ -34,7 +35,6 @@ interface LoginButtonProps {
 
 interface LoginResponse {
   success?: boolean; // Optional in case it could also return something else
-  error?: string;
 }
 
 export default function LoginForm({ session, providers }: LoginButtonProps) {
@@ -165,12 +165,7 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
           <h1 className="text-[#34495E] text-lg font-semibold mb-4">
             Welcome, {session.user.email}
           </h1>
-          <Button
-            onClick={() => signOut()}
-            className="w-full bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-3 transition-colors duration-200"
-          >
-            Sign out
-          </Button>
+          {/* Sign-out functionality is removed */}
         </>
       )}
     </div>

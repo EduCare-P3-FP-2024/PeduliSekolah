@@ -9,20 +9,26 @@ import {
   getAuthCookies,
 } from "@/app/admin/SchoolList/action";
 import { useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
 
 export default function NavbarPublic() {
   const router = useRouter();
   const [token, setToken] = useState<string | undefined>(undefined);
   // Function to delete the token (if stored in localStorage)
   const handleLogout = async () => {
-    await deleteAuthCookies(); // This will delete the token and cookies
-    router.push("/login"); // Redirect to login page after logging out
+    const success = await deleteAuthCookies();
+    if (success) {
+      router.push("/login");
+      await signOut();
+    } else {
+      await signOut();
+      router.push("/login");
+    }
   };
 
   useEffect(() => {
     const getToken = async () => {
       const data = await getAuthCookies();
-
       setToken(data?.value ?? undefined);
     };
     getToken();
@@ -59,7 +65,6 @@ export default function NavbarPublic() {
             {token ? (
               <button
                 onClick={handleLogout}
-
                 className="bg-[#E67E22] text-[#ECF0F1] px-4 py-2 rounded-md hover:bg-[#D35400] transition duration-200"
               >
                 Logout

@@ -39,13 +39,13 @@ export default function FeaturesLandingPage() {
   return (
     <div className="container mx-auto px-4">
       <FadeInWhenVisible>
-        <h2 className="text-3xl font-bold mb-12 text-center text-[#2C3E50]">
+        <h2 className="text-3xl font-bold mb-12 text-center text-[#ECF0F1]">
           How We Make a Difference
         </h2>
       </FadeInWhenVisible>
       <div className="grid md:grid-cols-2 gap-8">
         <FadeInWhenVisible>
-          <div className="bg-[#2C3E50] p-6 rounded-lg">
+          <div className="bg-[#E67E22] p-6 rounded-lg">
             <h3 className="text-xl font-semibold mb-4 text-[#ECF0F1]">
               Material Support
             </h3>
@@ -79,7 +79,7 @@ export default function FeaturesLandingPage() {
           </div>
         </FadeInWhenVisible>
         <FadeInWhenVisible>
-          <div className="bg-[#34495E] p-6 rounded-lg">
+          <div className="bg-[#E67E22] p-6 rounded-lg">
             <h3 className="text-xl font-semibold mb-4 text-[#ECF0F1]">
               Advocacy
             </h3>
