@@ -4,8 +4,9 @@ import { Post } from "@/utils/types";
 export const getPostsList = async (
   page: number,
   category: string,
-  searchTerm: string
+  searchTerm: string,
 ) => {
   const data = (await getPosts(page, category, searchTerm)) as Post[];
+
   return data;
 };

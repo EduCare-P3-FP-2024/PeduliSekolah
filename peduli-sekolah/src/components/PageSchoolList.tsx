@@ -1,5 +1,4 @@
 "use client"; // Enable client-side interactivity
-
 import { SchoolProfile } from "@/utils/types";
 import { banUser } from "@/app/admin/SchoolList/action"; // Import the banUser action
 
@@ -8,6 +7,7 @@ const SchoolListClient = ({ schools }: { schools: SchoolProfile[] }) => {
     try {
       await banUser(schoolId);
       // BUTUH TOAST ATAU APA BEBAS
+      
     } catch (error) {
       console.error("Error banning school:", error);
       // BUTUH TOAST ATAU APA BEBAS
