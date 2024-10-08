@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Heart, Share2, MessageCircle, ArrowLeft, Calendar, DollarSign, Users, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Post } from "@/utils/types";
@@ -21,22 +21,20 @@ import { Label } from "@/components/ui/label";
 export default function DonationPage() {
   const { slug } = useParams();
   const [projectData, setProjectData] = useState<Post | null>(null);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(42);
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [amount, setAmount] = useState<number | string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [donorName, setDonorName] = useState("");
   const [donorEmail, setDonorEmail] = useState("");
+  const [daysLeft, setDaysLeft] = useState(0);
 
-  // Fetch project data with headers
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
         const response = await fetch(`/api/posts/${slug}`, {
           method: "GET",
           headers: {
-            "x-userId": "your-x-userId-value", // Retrieve the actual value if needed
+            "x-userId": "your-x-userId-value",
             "x-role": "your-x-role-value",
             "x-accountType": "your-x-accountType-value",
             "x-username": "your-x-username-value",
@@ -45,6 +43,12 @@ export default function DonationPage() {
 
         const data = await response.json();
         setProjectData(data.data);
+        
+        // Calculate days left
+        const deadline = new Date(data.data.deadLineAt).getTime();
+        const today = new Date().getTime();
+        const daysRemaining = Math.max(0, Math.ceil((deadline - today) / (1000 * 3600 * 24)));
+        setDaysLeft(daysRemaining);
       } catch (error) {
         console.error("Failed to fetch project data:", error);
       }
@@ -55,21 +59,14 @@ export default function DonationPage() {
     }
   }, [slug]);
 
-  // Fetch donor details from headers when modal opens
   useEffect(() => {
     const fetchDonorDetails = async () => {
-      // Assuming you fetch donor info from the headers as well
-      setDonorName("your-x-username-value"); // Replace with actual value from header
-      setDonorEmail("your-x-email-value"); // Replace with actual value from header
+      setDonorName("your-x-username-value");
+      setDonorEmail("your-x-email-value");
     };
 
     fetchDonorDetails();
   }, []);
-
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
-  };
 
   const handleSupportProject = () => {
     setIsModalOpen(true);
@@ -207,7 +204,7 @@ export default function DonationPage() {
 
           <p className="text-[#34495E] mb-6">{projectData.content}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="flex items-center">
               <DollarSign className="text-[#E67E22] mr-2" />
               <div>
@@ -216,19 +213,10 @@ export default function DonationPage() {
               </div>
             </div>
             <div className="flex items-center">
-              <Users className="text-[#E67E22] mr-2" />
-              <div>
-                <p className="text-sm text-[#34495E]">Supporters</p>
-                <p className="font-semibold text-[#2C3E50]">{likeCount}</p>
-              </div>
-            </div>
-            <div className="flex items-center">
               <Clock className="text-[#E67E22] mr-2" />
               <div>
                 <p className="text-sm text-[#34495E]">Days Left</p>
-                <p className="font-semibold text-[#2C3E50]">
-                  {Math.max(0, Math.ceil((new Date(projectData.deadLineAt).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))}
-                </p>
+                <p className="font-semibold text-[#2C3E50]">{daysLeft}</p>
               </div>
             </div>
           </div>
@@ -241,11 +229,11 @@ export default function DonationPage() {
             <Progress value={progressPercentage} className="h-2" />
           </div>
 
-          <div className="flex flex-wrap justify-between items-center mb-6">
+          <div className="flex justify-center mb-6">
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
                 <Button
-                  className="bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-2 px-4 rounded-full mb-4 md:mb-0"
+                  className="bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold py-2 px-4 rounded-full"
                   onClick={handleSupportProject}
                   disabled={loadingPayment}
                 >
@@ -279,33 +267,6 @@ export default function DonationPage() {
                 </Button>
               </DialogContent>
             </Dialog>
-
-            <div className="flex space-x-4">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleLike}
-                className={`rounded-full ${
-                  isLiked ? "text-red-500" : "text-[#34495E]"
-                }`}
-              >
-                <Heart className={isLiked ? "fill-current" : ""} />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full text-[#34495E]"
-              >
-                <Share2 />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full text-[#34495E]"
-              >
-                <MessageCircle />
-              </Button>
-            </div>
           </div>
 
           <div className="flex flex-wrap justify-between text-sm text-[#34495E]">
