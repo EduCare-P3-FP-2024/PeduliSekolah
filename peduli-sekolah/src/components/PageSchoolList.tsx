@@ -33,7 +33,7 @@ const SchoolListClient = ({
         return (
           <div
             key={school._id}
-            className="border shadow-lg rounded-xl p-5 mb-5"
+            className="border shadow-lg rounded-xl p-5 mb-5 bg-[#fff]"
           >
             <div className="flex">
               <img

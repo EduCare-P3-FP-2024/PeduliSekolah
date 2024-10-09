@@ -60,6 +60,10 @@ const PageAdminSchool: React.FC = () => {
     }
   };
 
+  const handleVerify = async (id: string) => {
+    router.push(`/CaptchaPage/${id}`);
+  };
+
   const openModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
     if (modal) {

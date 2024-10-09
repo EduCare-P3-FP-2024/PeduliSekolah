@@ -22,7 +22,10 @@ const PageAdminSchoolList = async () => {
         <AdminSidebar />
         <div className="w-9/12 bg-[#2C3E50] mx-auto mt-2 p-5">
           {/* Pass the data to the client component */}
-          <SchoolListClient schools={modifiedData} users={modifiedUsers} />
+          <SchoolListClient
+            schools={modifiedData}
+            users={modifiedUsers}
+          />
         </div>
       </div>
     </div>
