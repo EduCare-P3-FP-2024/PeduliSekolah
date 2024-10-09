@@ -18,7 +18,7 @@ const PostPage = async ({ page = 1 }) => {
             {modifiedPosts.map((post, index) => (
               <div
                 key={post._id}
-                className="border shadow-lg rounded-xl p-5 bg-white"
+                className="border shadow-lg rounded-xl p-5 bg-white mb-5"
               >
                 <div className="flex">
                   <img

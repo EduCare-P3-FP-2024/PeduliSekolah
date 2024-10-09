@@ -16,13 +16,14 @@ const SchoolListClient = ({
   const router = useRouter();
   // Function to find user by school.userId
   const findUserBySchool = (userId: string) => {
-    return users.find((user) => user._id === userId);
+    return users.find((user) => user._id.toString() === userId);
   };
 
   const handleBanUser = async (schoolId: string) => {
-    await banUser(schoolId);
-    toast({ title: "School has been banned" });
-    router.push("/admin/SchoolList");
+    router.push(`/CaptchaPageBan/${schoolId}`);
+    // await banUser(schoolId);
+    // toast({ title: "School has been banned" });
+    // router.push("/admin/SchoolList");
   };
 
   return (
@@ -66,12 +67,14 @@ const SchoolListClient = ({
 
                 <div className="flex justify-end mt-5">
                   {user?.status === "active" ? (
-                    <button
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                      onClick={() => handleBanUser(school.userId)}
-                    >
-                      Ban This School
-                    </button>
+                    <div>
+                      <button
+                        className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                        onClick={() => handleBanUser(school.userId)}
+                      >
+                        Ban This School
+                      </button>
+                    </div>
                   ) : (
                     <button className="bg-red-500 opacity-50 text-white px-4 py-2 rounded-lg disabled:opacity-50">
                       School Banned

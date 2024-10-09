@@ -21,8 +21,6 @@ const PageAdminSchool: React.FC = () => {
 
       const result = await response.json();
       if (response.ok) {
-        console.log(result.message);
-
         setData((prevData) =>
           prevData.map((item) =>
             item.userId.toString() === userId

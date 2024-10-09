@@ -50,9 +50,14 @@ export const addDocument = async (document: SchoolDocumentInput) => {
   return result;
 };
 
-export const updateSchoolDocumentStatus = async (documentId: string, newStatus: string) => {
+export const updateSchoolDocumentStatus = async (
+  documentId: string,
+  newStatus: string,
+) => {
   const db = await getDb();
   const objectId = new ObjectId(documentId);
+
+  console.log(newStatus);
 
   const result = await db
     .collection(COLLECTION_DOCUMENT)
@@ -60,4 +65,3 @@ export const updateSchoolDocumentStatus = async (documentId: string, newStatus: 
 
   return result;
 };
-
