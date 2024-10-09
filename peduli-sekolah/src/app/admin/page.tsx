@@ -116,7 +116,7 @@ const PageAdminSchool: React.FC = () => {
                       {/* Invalidate Button */}
                       <button
                         className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                        onClick={() => openModal("my_modal_2")}
+                        onClick={() => openModal(`my_modal_2_${item._id}`)} // Open Invalidate Modal
                       >
                         Invalidate
                       </button>
@@ -124,14 +124,14 @@ const PageAdminSchool: React.FC = () => {
                       {/* Verify Button */}
                       <button
                         className="bg-green-500 text-white px-4 py-2 rounded-lg"
-                        onClick={() => openModal("my_modal_1")}
+                        onClick={() => openModal(`my_modal_1_${item._id}`)} // Open Verify Modal
                       >
                         Verify
                       </button>
 
                       {/* Verification Dialog */}
                       <dialog
-                        id="my_modal_1"
+                        id={`my_modal_1_${item._id}`} // Unique ID for each modal
                         className="modal"
                       >
                         <div className="modal-box">
@@ -162,7 +162,7 @@ const PageAdminSchool: React.FC = () => {
                       </dialog>
                       {/* Invalidation Dialog */}
                       <dialog
-                        id="my_modal_2"
+                        id={`my_modal_2_${item._id}`} // Unique ID for each modal
                         className="modal"
                       >
                         <div className="modal-box">
