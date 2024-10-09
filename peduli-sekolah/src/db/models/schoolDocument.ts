@@ -49,3 +49,15 @@ export const addDocument = async (document: SchoolDocumentInput) => {
 
   return result;
 };
+
+export const updateSchoolDocumentStatus = async (documentId: string, newStatus: string) => {
+  const db = await getDb();
+  const objectId = new ObjectId(documentId);
+
+  const result = await db
+    .collection(COLLECTION_DOCUMENT)
+    .updateOne({ _id: objectId }, { $set: { status: newStatus } });
+
+  return result;
+};
+

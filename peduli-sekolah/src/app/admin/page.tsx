@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import { SchoolDocument } from "@/utils/types";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,56 @@ const PageAdminSchool: React.FC = () => {
   const [data, setData] = useState<SchoolDocument[]>([]);
   const router = useRouter();
 
-  const handleYes = (id: string) => {
-    router.push(`/CaptchaPage/${id}`);
+  // Function to handle invalidation
+  const handleInvalidate = async (userId: string) => {
+    try {
+      const response = await fetch("/api/invalidate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log(result.message);
+        // Optionally, refresh the data or show a notification
+        setData(prevData =>
+          prevData.map(item => item.userId.toString() === userId ? { ...item, account_type: "Personal" } : item)
+        );
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error("Failed to invalidate user:", error);
+    }
+  };
+
+  // Function to handle verification
+  const handleVerify = async (userId: string, schoolDocumentId: string) => {
+    try {
+      const response = await fetch("/api/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, schoolDocumentId }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log(result.message);
+        // Optionally, refresh the data or show a notification
+        setData(prevData =>
+          prevData.map(item => item._id.toString() === schoolDocumentId ? { ...item, status: "Tidak Layak", account_type: "School" } : item)
+        );
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error("Failed to verify user:", error);
+    }
   };
 
   const handleVerify = async (id: string) => {
@@ -61,6 +109,7 @@ const PageAdminSchool: React.FC = () => {
                     </div>
                     <p className="my-3 text-sm">{item.description}</p>
                     <div className="flex justify-end mt-5 space-x-2">
+                      {/* Invalidate Button */}
                       <button
                         className="bg-red-500 text-white px-4 py-2 rounded-lg"
                         onClick={() => openModal("my_modal_2")}
@@ -68,6 +117,7 @@ const PageAdminSchool: React.FC = () => {
                         Invalidate
                       </button>
 
+                      {/* Verify Button */}
                       <button
                         className="bg-green-500 text-white px-4 py-2 rounded-lg"
                         onClick={() => openModal("my_modal_1")}
@@ -76,10 +126,7 @@ const PageAdminSchool: React.FC = () => {
                       </button>
 
                       {/* Verification Dialog */}
-                      <dialog
-                        id="my_modal_1"
-                        className="modal"
-                      >
+                      <dialog id="my_modal_1" className="modal">
                         <div className="modal-box">
                           <h3 className="font-bold text-lg">
                             Verification Required
@@ -88,16 +135,14 @@ const PageAdminSchool: React.FC = () => {
                             Please verify the CAPTCHA to proceed with the
                             verification.
                           </p>
-
                           <div className="modal-action">
                             <button
                               className="btn"
-                              onClick={() => handleVerify(item._id.toString())}
+                              onClick={() => handleVerify(item.userId.toString(), item._id.toString())}
                             >
                               Verify
                             </button>
                             <form method="dialog">
-                              {/* if there is a button in form, it will close the modal */}
                               <button className="btn">Close</button>
                             </form>
                           </div>
@@ -105,27 +150,20 @@ const PageAdminSchool: React.FC = () => {
                       </dialog>
 
                       {/* Invalidation Dialog */}
-                      <dialog
-                        id="my_modal_2"
-                        className="modal"
-                      >
+                      <dialog id="my_modal_2" className="modal">
                         <div className="modal-box">
                           <h3 className="font-bold text-lg">Invalidate?</h3>
                           <p className="py-4">
                             Are you sure you want to invalidate {item.name}?
                           </p>
-
-                          {/* ReCAPTCHA for Invalidation */}
-
                           <div className="modal-action">
                             <button
                               className="btn"
-                              onClick={() => handleYes(item._id.toString())}
+                              onClick={() => handleInvalidate(item.userId.toString())}
                             >
                               Yes
                             </button>
                             <form method="dialog">
-                              {/* if there is a button in form, it will close the modal */}
                               <button className="btn">Close</button>
                             </form>
                           </div>

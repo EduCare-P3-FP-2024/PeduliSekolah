@@ -85,3 +85,15 @@ export const bannedUser = async (id: string) => {
 
   return bannedUser;
 };
+
+export const updateUserType = async (userId: string, newType: string) => {
+  const db = await getDb();
+  const objectId = new ObjectId(userId);
+
+  const result = await db
+    .collection(COLLECTION_USER)
+    .updateOne({ _id: objectId }, { $set: { account_type: newType } });
+
+  return result;
+};
+
