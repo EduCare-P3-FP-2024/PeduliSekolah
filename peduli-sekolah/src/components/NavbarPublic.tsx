@@ -49,16 +49,10 @@ export default function NavbarPublic() {
           </div>
           <nav className="flex-1 hidden md:flex justify-center space-x-6">
             <Link
-              href="#"
-              className="hover:text-[#E67E22] transition duration-200"
-            >
-              About
-            </Link>
-            <Link
               href="/post"
               className="hover:text-[#E67E22] transition duration-200"
             >
-              Post
+              Donation
             </Link>
           </nav>
           <div className="flex-1 flex justify-end space-x-4">
