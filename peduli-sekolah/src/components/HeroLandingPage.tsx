@@ -1,17 +1,15 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import Link from "next/link";
 import { TypeAnimation } from "react-type-animation";
 import Image from "next/image";
-import logoPs from "@/assets/logo.svg";
-import SadSchool from "@/assets/SADSchool.png";
-import publicPhoto from "@/assets/publicmarketing.jpg";
-import forPublic from "@/assets/marketing.svg";
+
 import photoPublic from "@/assets/publicmarketingrounded.png";
+import { getAuthCookies } from "@/app/admin/SchoolList/action";
 
 interface FadeInWhenVisibleProps {
   children: ReactNode;
@@ -44,6 +42,19 @@ const FadeInWhenVisible = ({ children }: FadeInWhenVisibleProps) => {
 };
 
 export default function HeroLandingPage() {
+  const [token, setToken] = useState<object>();
+
+  useEffect(() => {
+    const fethingToken = async () => {
+      {
+        const fetchToken = await getAuthCookies();
+        setToken(fetchToken);
+      }
+    };
+
+    fethingToken();
+  }, []);
+
   return (
     <div className="container mx-auto px-4 relative">
       <FadeInWhenVisible>
@@ -74,12 +85,22 @@ export default function HeroLandingPage() {
               opportunities for all.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link
-                href="/register"
-                className="bg-[#E67E22] text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300"
-              >
-                Sign Up Now
-              </Link>
+              {token ? (
+                <Link
+                  href="/register"
+                  className="bg-[#E67E22] hidden text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300"
+                >
+                  Sign Up Now
+                </Link>
+              ) : (
+                <Link
+                  href="/register"
+                  className="bg-[#E67E22]  text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300"
+                >
+                  Sign Up Now
+                </Link>
+              )}
+
               <Link
                 href="#"
                 className="bg-transparent border border-[#ECF0F1] text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#ECF0F1] hover:text-[#2C3E50] transition-colors duration-300"

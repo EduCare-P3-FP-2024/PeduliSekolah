@@ -60,7 +60,7 @@ export default function Footer() {
               <ul className="text-sm text-[#ECF0F1] space-y-2">
                 <li>
                   <Link
-                    href="#"
+                    href="/post"
                     className="hover:text-[#E67E22] transition-colors duration-300"
                   >
                     Donate
@@ -68,7 +68,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/post"
                     className="hover:text-[#E67E22] transition-colors duration-300"
                   >
                     Post
@@ -126,7 +126,7 @@ export default function Footer() {
               <ul className="text-sm text-[#ECF0F1] space-y-2">
                 <li>
                   <Link
-                    href="#"
+                    href="/feedback"
                     className="hover:text-[#E67E22] transition-colors duration-300"
                   >
                     Contact Us
