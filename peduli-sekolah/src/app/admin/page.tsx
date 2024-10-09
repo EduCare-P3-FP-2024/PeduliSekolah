@@ -12,6 +12,10 @@ const PageAdminSchool: React.FC = () => {
     router.push(`/CaptchaPage/${id}`);
   };
 
+  const handleVerify = async (id: string) => {
+    router.push(`/CaptchaPage/${id}`);
+  };
+
   const openModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
     if (modal) {
@@ -86,7 +90,12 @@ const PageAdminSchool: React.FC = () => {
                           </p>
 
                           <div className="modal-action">
-                            <button className="btn">Verify</button>
+                            <button
+                              className="btn"
+                              onClick={() => handleVerify(item._id.toString())}
+                            >
+                              Verify
+                            </button>
                             <form method="dialog">
                               {/* if there is a button in form, it will close the modal */}
                               <button className="btn">Close</button>
