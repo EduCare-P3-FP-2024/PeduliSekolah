@@ -60,11 +60,19 @@ export default function PayeeForm() {
         throw new Error(data.message);
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error.message || "An error occurred while submitting the form.",
-        variant: "destructive",
-      });
+      if (error instanceof Error) {
+        toast({
+          title: "Error",
+          description: error.message || "An error occurred while submitting the form.",
+          variant: "destructive",
+        });  
+      } else {
+        toast({
+          title: "Error",
+          description: "An error occurred while submitting the form.",
+          variant: "destructive",
+        });  
+      }
     } finally {
       setIsSubmitting(false);
     }

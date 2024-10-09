@@ -6,8 +6,8 @@ import {
 } from "@/db/models/post";
 import { Post } from "@/utils/types";
 
-export const getAdminPostList = async (page: number) => {
-  const data = (await adminGetPosts(page)) as Post[];
+export const getAdminPostList = async () => {
+  const data = (await adminGetPosts()) as Post[];
   return data;
 };
 

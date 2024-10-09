@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Upload, FileText, Tag, Calendar, FileImage } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -25,12 +24,18 @@ export type PostInput = {
   meta_description: string;
 };
 
+type FormErrors = {
+  [key: string]: {
+    _errors: string[];
+  };
+};
+
 export default function Component() {
   const { control, handleSubmit } = useForm<PostInput>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [formErrors, setFormErrors] = useState<any>({}); // State for form errors
+  const [formErrors, setFormErrors] = useState<FormErrors>({}); // Form errors with a more specific type
   const router = useRouter();
 
   useEffect(() => {
@@ -112,10 +117,14 @@ export default function Component() {
                     type="text"
                     id="title"
                     placeholder="Post title"
-                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.title ? 'border-red-500' : ''}`}
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${
+                      formErrors.title ? "border-red-500" : ""
+                    }`}
                   />
                   {formErrors.title && (
-                    <p className="text-red-500 text-sm">{formErrors.title._errors[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {formErrors.title._errors[0]}
+                    </p>
                   )}
                 </>
               )}
@@ -136,10 +145,14 @@ export default function Component() {
                     rows={4}
                     id="content"
                     placeholder="Post content"
-                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.content ? 'border-red-500' : ''}`}
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${
+                      formErrors.content ? "border-red-500" : ""
+                    }`}
                   />
                   {formErrors.content && (
-                    <p className="text-red-500 text-sm">{formErrors.content._errors[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {formErrors.content._errors[0]}
+                    </p>
                   )}
                 </>
               )}
@@ -147,7 +160,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="categoryId" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="categoryId"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Category
             </Label>
             <Controller
@@ -166,7 +182,9 @@ export default function Component() {
                     ))}
                   </select>
                   {formErrors.categoryId && (
-                    <p className="text-red-500 text-sm">{formErrors.categoryId._errors[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {formErrors.categoryId._errors[0]}
+                    </p>
                   )}
                 </>
               )}
@@ -187,10 +205,14 @@ export default function Component() {
                     type="text"
                     id="tags"
                     placeholder="Post tags"
-                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.tags ? 'border-red-500' : ''}`}
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${
+                      formErrors.tags ? "border-red-500" : ""
+                    }`}
                   />
                   {formErrors.tags && (
-                    <p className="text-red-500 text-sm">{formErrors.tags._errors[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {formErrors.tags._errors[0]}
+                    </p>
                   )}
                 </>
               )}
@@ -198,7 +220,10 @@ export default function Component() {
           </div>
 
           <div>
-            <Label htmlFor="deadLineAt" className="text-sm font-medium text-[#34495E]">
+            <Label
+              htmlFor="deadLineAt"
+              className="text-sm font-medium text-[#34495E]"
+            >
               Deadline At
             </Label>
             <Controller
@@ -206,14 +231,18 @@ export default function Component() {
               control={control}
               render={({ field }) => (
                 <DatePicker
-                  selected={field.value} 
+                  selected={field.value}
                   onChange={(date) => field.onChange(date)}
-                  className={`block w-full p-2 border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.deadLineAt ? 'border-red-500' : ''}`}
+                  className={`block w-full p-2 border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60] ${
+                    formErrors.deadLineAt ? "border-red-500" : ""
+                  }`}
                 />
               )}
             />
             {formErrors.deadLineAt && (
-              <p className="text-red-500 text-sm">{formErrors.deadLineAt._errors[0]}</p>
+              <p className="text-red-500 text-sm">
+                {formErrors.deadLineAt._errors[0]}
+              </p>
             )}
           </div>
 
@@ -231,10 +260,14 @@ export default function Component() {
                     type="number"
                     id="amount"
                     placeholder="Amount"
-                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.amount ? 'border-red-500' : ''}`}
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${
+                      formErrors.amount ? "border-red-500" : ""
+                    }`}
                   />
                   {formErrors.amount && (
-                    <p className="text-red-500 text-sm">{formErrors.amount._errors[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {formErrors.amount._errors[0]}
+                    </p>
                   )}
                 </>
               )}
@@ -246,7 +279,7 @@ export default function Component() {
               Upload Images
             </Label>
             <CldUploadButton
-              onUpload={handleUploadSuccess}
+              onSuccess={handleUploadSuccess}
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
               className="block w-full border-[#2C3E50] rounded-md p-2 bg-[#27AE60] text-white"
             >

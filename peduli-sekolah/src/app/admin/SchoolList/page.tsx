@@ -2,18 +2,20 @@ import AdminSidebar from "@/components/AdminSidebar";
 import SchoolListClient from "@/components/PageSchoolList"; // Import client component
 import { getSchoolList } from "./action";
 import { getUsers } from "@/db/models/user";
+import { ObjectId } from "mongodb"; // Import ObjectId
 
 const PageAdminSchoolList = async () => {
   const schoolData = await getSchoolList();
   const modifiedData = [...schoolData].map((school) => ({
     ...school,
-    _id: school._id.toString(),
-    userId: school.userId.toString(),
+    _id: new ObjectId(school._id), // Convert back to ObjectId
+    userId: new ObjectId(school.userId), // If userId also needs conversion
   }));
+  
   const userData = await getUsers();
   const modifiedUsers = [...userData].map((user) => ({
     ...user,
-    _id: user._id.toString(),
+    _id: new ObjectId(user._id), // If user._id also needs conversion
   }));
 
   return (

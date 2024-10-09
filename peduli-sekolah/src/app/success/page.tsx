@@ -1,10 +1,10 @@
 "use client";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
-const Success = () => {
+const SuccessContent = () => {
   const searchParams = useSearchParams();
-  const router = useRouter(); // Initialize useRouter to navigate
+  const router = useRouter();
   const orderId = searchParams.get("orderId");
   const payment_method = searchParams.get("payment_method");
   const payment_date = searchParams.get("payment_date");
@@ -26,7 +26,7 @@ const Success = () => {
   }, [orderId, payment_method, payment_date]);
 
   const handleGoBack = () => {
-    router.back(); // Use router.back() to navigate to the previous page
+    router.back();
   };
 
   return (
@@ -45,6 +45,14 @@ const Success = () => {
         </button>
       </div>
     </div>
+  );
+};
+
+const Success = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 };
 

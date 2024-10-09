@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     const { name, email, bankAccount, walletId } = validationResult.data;
 
     // Check if a payee with the same userId and email/bankAccount already exists
-    const existingPayee = await getPayeeByUserId(userId);
+    const existingPayee = await getPayeeByUserId(userId.toString());
 
     if (existingPayee) {
       return NextResponse.json({ success: false, message: "Payee already exists with the given email or bank account" }, { status: 409 });
