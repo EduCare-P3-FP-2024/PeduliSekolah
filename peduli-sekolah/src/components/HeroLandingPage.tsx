@@ -100,7 +100,6 @@ export default function HeroLandingPage() {
                   Sign Up Now
                 </Link>
               )}
-
               <Link
                 href="#"
                 className="bg-transparent border border-[#ECF0F1] text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#ECF0F1] hover:text-[#2C3E50] transition-colors duration-300"
