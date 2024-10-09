@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     await updateSchoolDocumentStatus(schoolDocumentId, 'Tidak Layak');
 
     // Update the user's account type to "School"
-    await updateUserType(userId, 'School');
+    await updateUserType(userId, 'school');
 
     return NextResponse.json({ message: 'User and document updated' });
   } catch (error) {
