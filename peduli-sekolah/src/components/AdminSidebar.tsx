@@ -39,12 +39,11 @@ const AdminSidebar: FC = () => {
 
   const handleLogout = async () => {
     await deleteAuthCookies();
-
     router.push("/login");
   };
 
   return (
-    <div className="w-6/12 sm:w-3/12 p-5 hidden sm:flex flex-col h-screen border-r-2 bg-[#2C3E50] ">
+    <div className="w-6/12 sm:w-3/12 p-5 hidden sm:flex flex-col h-screen border-r-2 bg-[#2C3E50] sticky top-0 ">
       <div className="rounded-xl flex flex-col h-full">
         <nav className="space-y-4">
           {navItems.map((item) => (
