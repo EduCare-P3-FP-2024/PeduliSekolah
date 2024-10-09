@@ -101,7 +101,7 @@ export default async function RegisterPage() {
                       <SelectValue placeholder="Select type" id="accountType" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="individual">Personal</SelectItem>
+                      <SelectItem value="personal">Personal</SelectItem>
                       <SelectItem value="school">School</SelectItem>
                     </SelectContent>
                   </Select>
