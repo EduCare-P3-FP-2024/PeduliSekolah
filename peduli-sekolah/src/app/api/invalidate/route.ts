@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 import { getUserById, updateUserType } from '@/db/models/user';
+import { updateSchoolDocumentStatus } from '@/db/models/schoolDocument';
 
 export async function POST(request: Request) {
   try {
-    const { userId } = await request.json(); // Expecting the userId in the request body
+    const { userId, schoolDocumentId } = await request.json(); // Expecting the userId in the request body
     const user = await getUserById(userId);
 
     if (!user) {
@@ -13,6 +14,7 @@ export async function POST(request: Request) {
 
     // Update the user's account type to "Personal"
     await updateUserType(userId, 'Personal');
+    await updateSchoolDocumentStatus(schoolDocumentId, 'Pending');
     return NextResponse.json({ message: 'User account type updated to Personal' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });

@@ -8,7 +8,7 @@ const PageAdminSchool: React.FC = () => {
   const [data, setData] = useState<SchoolDocument[]>([]);
   const router = useRouter();
 
-  const handleInvalidate = async (userId: string) => {
+  const handleInvalidate = async (userId: string , schoolDocumentId: string) => {
     try {
       router.push(`/CaptchaPage`);
       const response = await fetch("/api/invalidate", {
@@ -16,7 +16,7 @@ const PageAdminSchool: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId, schoolDocumentId }),
       });
 
       const result = await response.json();
@@ -174,7 +174,8 @@ const PageAdminSchool: React.FC = () => {
                             <button
                               className="btn"
                               onClick={() =>
-                                handleInvalidate(item.userId.toString())
+                                handleInvalidate(item.userId.toString(),  item._id.toString())
+
                               }
                             >
                               Yes
