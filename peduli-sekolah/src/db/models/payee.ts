@@ -40,12 +40,13 @@ export const getPayeeById = async (id: string) => {
   return payee;
 };
 
-export const getPayeeByUserId = async (userId: ObjectId) => {
+export const getPayeeByUserId = async (userId: string) => {
   const db = await getDb();
+  const id = new ObjectId(userId)
 
   const payee = (await db
     .collection(COLLECTION_PAYEE)
-    .findOne({ userId  })) as Payee;
+    .findOne({ userId: id })) as Payee;
 
   return payee;
 };

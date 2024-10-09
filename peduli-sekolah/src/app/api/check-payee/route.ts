@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { getPayeeByUserId } from "@/db/models/payee"; // Adjust import path
 
 export async function GET(req: Request) {
-  const userId = req.nextUrl.searchParams.get("userId");
+  // Create a URL object from the request URL
+  const url = new URL(req.url);
+  const userId = url.searchParams.get("userId");
 
   if (!userId) {
     return NextResponse.json({ exists: false, message: "No userId provided" }, { status: 400 });
@@ -16,6 +18,10 @@ export async function GET(req: Request) {
       return NextResponse.json({ exists: false });
     }
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if(error instanceof Error){
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    } else {
+      return NextResponse.json({ error }, { status: 500 });
+    }
   }
 }

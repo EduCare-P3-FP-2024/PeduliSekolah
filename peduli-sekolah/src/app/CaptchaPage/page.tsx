@@ -1,17 +1,16 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 interface PageProps {
   params: { id: string };
 }
 
-const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
+const Page: React.FC<PageProps> = ({ params }) => { // Removed explicit type for params
   console.log(params.id);
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
-  const [isVerified, setIsVerified] = useState(false);
   const router = useRouter();
 
   async function handleCaptchaSubmission(token: string | null) {
@@ -26,10 +25,9 @@ const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
           body: JSON.stringify({ token }),
         });
         router.push("/admin");
-        setIsVerified(true);
       }
-    } catch (e) {
-      setIsVerified(false);
+    } catch {
+      router.push("/")
     }
   }
 
@@ -38,7 +36,8 @@ const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
   };
 
   function handleExpired() {
-    setIsVerified(false);
+    router.push("/admin");
+    // Reset logic if needed
   }
 
   return (

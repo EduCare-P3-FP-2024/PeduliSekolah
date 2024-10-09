@@ -12,14 +12,20 @@ import { CldUploadButton } from "next-cloudinary";
 import { SchoolProfile } from "@/utils/types";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-import { Textarea } from "@/components/ui/textarea";  // Assuming you have a textarea component
+import { Textarea } from "@/components/ui/textarea"; // Assuming you have a textarea component
 
 export type SchoolProfileInput = Omit<SchoolProfile, "status"> & {
   imageFileUrl?: string[];
 };
 
 export default function SchoolProfileForm() {
-  const { control, handleSubmit, setError, clearErrors, formState: { errors } } = useForm<SchoolProfileInput>();
+  const {
+    control,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<SchoolProfileInput>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const router = useRouter();
@@ -32,7 +38,7 @@ export default function SchoolProfileForm() {
       data.imageFileUrl = imageUrl;
     }
 
-    const userId = Cookies.get('userId');
+    const userId = Cookies.get("userId");
 
     if (!userId) {
       toast({
@@ -64,13 +70,15 @@ export default function SchoolProfileForm() {
       toast({
         title: "Success",
         description: "School profile created successfully.",
-        variant: "success",
+        variant: "default",
       });
       router.push("/payee");
     } else {
       if (result.errors) {
         Object.keys(result.errors).forEach((field) => {
-          setError(field as keyof SchoolProfileInput, { message: result.errors[field].message || "Invalid value" });
+          setError(field as keyof SchoolProfileInput, {
+            message: result.errors[field].message || "Invalid value",
+          });
         });
       } else {
         toast({
@@ -95,7 +103,7 @@ export default function SchoolProfileForm() {
     { name: "email", label: "Email", icon: Mail, type: "email" },
     { name: "phone", label: "Phone Number", icon: Phone, type: "tel" },
     { name: "location", label: "Location", icon: MapPin, type: "text" },
-    { name: "purpose", label: "Purpose", icon: Clipboard, type: "text" },  // Assuming purpose is a required field
+    { name: "purpose", label: "Purpose", icon: Clipboard, type: "text" }, // Assuming purpose is a required field
   ];
 
   return (
@@ -118,12 +126,18 @@ export default function SchoolProfileForm() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <Label htmlFor={field.name} className="text-sm font-medium text-[#34495E]">
+                <Label
+                  htmlFor={field.name}
+                  className="text-sm font-medium text-[#34495E]"
+                >
                   {field.label}
                 </Label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <field.icon className="h-5 w-5 text-[#2C3E50]" aria-hidden="true" />
+                    <field.icon
+                      className="h-5 w-5 text-[#2C3E50]"
+                      aria-hidden="true"
+                    />
                   </div>
                   <Controller
                     name={field.name as keyof SchoolProfileInput}
@@ -131,9 +145,17 @@ export default function SchoolProfileForm() {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        type={field.type}
+                        type={field.name}
                         className="block w-full pl-10 sm:text-sm border-[#2C3E50] rounded-md focus:ring-[#E67E22] focus:border-[#E67E22] text-[#34495E]"
-                        placeholder={field.label}
+                        placeholder={field.name}
+                        value={
+                          field.value instanceof Date
+                            ? field.value.toISOString() // Convert Date to string
+                            : typeof field.value === "object" &&
+                              field.value?.toString
+                            ? field.value.toString() // Convert ObjectId to string
+                            : field.value // Otherwise, use the value directly
+                        }
                       />
                     )}
                   />
@@ -147,8 +169,17 @@ export default function SchoolProfileForm() {
             ))}
           </div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.4 }}>
-            <Label htmlFor="description" className="text-sm font-medium text-[#34495E]">Description</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
+          >
+            <Label
+              htmlFor="description"
+              className="text-sm font-medium text-[#34495E]"
+            >
+              Description
+            </Label>
             <Controller
               name="description"
               control={control}
@@ -167,8 +198,17 @@ export default function SchoolProfileForm() {
             )}
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.5 }}>
-            <Label htmlFor="file" className="text-sm font-medium text-[#34495E]">Upload Image</Label>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+          >
+            <Label
+              htmlFor="file"
+              className="text-sm font-medium text-[#34495E]"
+            >
+              Upload Image
+            </Label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-[#2C3E50] border-dashed rounded-md">
               <div className="space-y-1 text-center">
                 <Upload className="mx-auto h-12 w-12 text-[#2C3E50]" />
@@ -177,13 +217,21 @@ export default function SchoolProfileForm() {
                   onSuccess={handleUploadSuccess}
                   className="text-[#2C3E50] hover:text-[#E67E22]"
                 />
-                <p className="text-xs text-[#34495E]">PNG, JPG, GIF up to 10MB</p>
-                {imageUrl.length > 0 && <p className="text-sm text-[#27AE60]">Image Uploaded!</p>}
+                <p className="text-xs text-[#34495E]">
+                  PNG, JPG, GIF up to 10MB
+                </p>
+                {imageUrl.length > 0 && (
+                  <p className="text-sm text-[#27AE60]">Image Uploaded!</p>
+                )}
               </div>
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             <Button
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2C3E50] hover:bg-[#E67E22] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27AE60]"

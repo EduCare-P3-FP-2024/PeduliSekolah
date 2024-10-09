@@ -3,6 +3,8 @@ import * as jose from "jose";
 import { verifyTokenJose } from "@/utils/jose";
 import { getUserById } from "@/db/models/user";
 
+export const dynamic = 'force-dynamic';  // Explicitly mark this route as dynamic
+
 export const GET = async (request: Request) => {
   try {
     const token = request.headers.get("Authorization")?.split(" ")[1];
@@ -23,5 +25,6 @@ export const GET = async (request: Request) => {
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.log(error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 };

@@ -1,7 +1,6 @@
 "use client"; // Enable client-side interactivity
 
 import { SchoolProfile, User } from "@/utils/types";
-import { banUser } from "@/app/admin/SchoolList/action"; // Import the banUser action
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -29,11 +28,11 @@ const SchoolListClient = ({
   return (
     <>
       {schools.map((school) => {
-        const user = findUserBySchool(school.userId); // Find the user associated with the school
+        const user = findUserBySchool(school.userId.toString()); // Find the user associated with the school
 
         return (
           <div
-            key={school._id}
+            key={school._id.toString()}
             className="border shadow-lg rounded-xl p-5 mb-5 bg-[#fff]"
           >
             <div className="flex">
@@ -70,7 +69,7 @@ const SchoolListClient = ({
                     <div>
                       <button
                         className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                        onClick={() => handleBanUser(school.userId)}
+                        onClick={() => handleBanUser(school.userId.toString())}
                       >
                         Ban This School
                       </button>

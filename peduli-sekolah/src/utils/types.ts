@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export type User = {
-  _id: ObjectId;
+  _id: ObjectId | string;
   username?: string;
   email: string;
   password: string;
@@ -60,8 +60,8 @@ export type SchoolDocument = {
   email: string;
   phoneNumber: string;
   userId: ObjectId;
-  imageFileUrl?: string[];
-  description?: string;
+  imageFileUrl?: string[] | undefined;
+  description?: string | undefined;
   createdAt: Date;
   updatedAt: Date;
   purpose: string;
@@ -106,7 +106,7 @@ export type Payee = {
   name: string;
   email: string;
   bank_account: string;
-  wallet_id: string;
+  wallet_id?: string;
   createdAt: Date;
   updatedAt: Date;
   userId: ObjectId;

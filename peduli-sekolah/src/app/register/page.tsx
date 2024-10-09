@@ -111,7 +111,7 @@ export default async function RegisterPage() {
                   <Label htmlFor="password" className="text-[#ECF0F1]">
                     Password *:
                   </Label>
-                  <PasswordInput name="password" />
+                  <PasswordInput name="password"/>
                 </div>
 
                 <Button

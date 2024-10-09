@@ -1,15 +1,15 @@
 import { getDocuments } from "@/db/models/schoolDocument";
-import { SchoolProfile } from "@/utils/types";
+import { SchoolProfile } from "@/utils/types"; // Assuming SchoolProfile has _id as string
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
+// Define the response format
 type MyResponse<T> = {
   statusCode: number;
   message?: string;
   data?: T;
   error?: string;
 };
-
-type Response = SchoolProfile[];
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,8 +23,18 @@ export async function GET(request: NextRequest) {
       console.log(`Fetched ${schools.length} schools`, schools);
     }
 
+    // Convert schools to match SchoolProfile type
+    const formattedSchools: SchoolProfile[] = schools.map(school => ({
+      ...school,
+      _id: new ObjectId(school._id), // Convert ObjectId to string
+      userId: new ObjectId(school._id)
+    }));
+
     // Return the fetched school data
-    return NextResponse.json<Response>(schools);
+    return NextResponse.json<MyResponse<SchoolProfile[]>>({
+      statusCode: 200,
+      data: formattedSchools, // Wrap in the response structure
+    });
   } catch (error) {
     // Log the error for debugging
     console.error("Error fetching schools:", error);

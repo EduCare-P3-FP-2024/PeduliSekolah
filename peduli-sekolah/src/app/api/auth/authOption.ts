@@ -4,11 +4,10 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import DiscordProvider from "next-auth/providers/discord";
+import LINEProvider from "next-auth/providers/line";
 import { createUser, getUserByEmailAndType } from "@/db/models/user";
 import { createTokenJose } from "@/utils/jose";
 import { cookies } from "next/headers";
-import { getDocumentByUserId } from "@/db/models/schoolDocument"; // Import the function
-import { ObjectId } from "mongodb"; // If you are using ObjectId
 
 const scopes = ["identify"].join(" ");
 let check;
@@ -58,17 +57,13 @@ const authOptions: NextAuthOptions = {
           });
         }
 
-        // Retrieve the user's school document
-        const school = await getDocumentByUserId(new ObjectId(dbUser._id));
-        
-        // Create token payload with user details and school status
+        // Create token payload with user details
         const payload = {
           id: dbUser._id, // Use the ID from the database, cast to string
           email: dbUser.email,
           role: dbUser.role,
           account_type: dbUser.account_type,
-          username: dbUser.username,
-          schoolstatus: school?.status, // Add school status
+          username: dbUser.username
         };
 
         // Generate token using jose

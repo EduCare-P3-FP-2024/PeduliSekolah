@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
 import { getUserById, updateUserType } from "@/db/models/user";
 import { updateSchoolDocumentStatus } from "@/db/models/schoolDocument";
 
