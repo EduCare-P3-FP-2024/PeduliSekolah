@@ -8,9 +8,9 @@ const PageAdminSchool: React.FC = () => {
   const [data, setData] = useState<SchoolDocument[]>([]);
   const router = useRouter();
 
-  // Function to handle invalidation
   const handleInvalidate = async (userId: string) => {
     try {
+      router.push(`/CaptchaPage`);
       const response = await fetch("/api/invalidate", {
         method: "POST",
         headers: {
@@ -22,9 +22,13 @@ const PageAdminSchool: React.FC = () => {
       const result = await response.json();
       if (response.ok) {
         console.log(result.message);
-        // Optionally, refresh the data or show a notification
-        setData(prevData =>
-          prevData.map(item => item.userId.toString() === userId ? { ...item, account_type: "Personal" } : item)
+
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.userId.toString() === userId
+              ? { ...item, account_type: "Personal" }
+              : item,
+          ),
         );
       } else {
         console.error(result.message);
@@ -34,9 +38,9 @@ const PageAdminSchool: React.FC = () => {
     }
   };
 
-  // Function to handle verification
   const handleVerify = async (userId: string, schoolDocumentId: string) => {
     try {
+      router.push(`/CaptchaPage`);
       const response = await fetch("/api/verify", {
         method: "POST",
         headers: {
@@ -48,9 +52,13 @@ const PageAdminSchool: React.FC = () => {
       const result = await response.json();
       if (response.ok) {
         console.log(result.message);
-        // Optionally, refresh the data or show a notification
-        setData(prevData =>
-          prevData.map(item => item._id.toString() === schoolDocumentId ? { ...item, status: "Tidak Layak", account_type: "School" } : item)
+
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id.toString() === schoolDocumentId
+              ? { ...item, status: "Tidak Layak", account_type: "School" }
+              : item,
+          ),
         );
       } else {
         console.error(result.message);
@@ -58,10 +66,6 @@ const PageAdminSchool: React.FC = () => {
     } catch (error) {
       console.error("Failed to verify user:", error);
     }
-  };
-
-  const handleVerify = async (id: string) => {
-    router.push(`/CaptchaPage/${id}`);
   };
 
   const openModal = (modalId: string) => {
@@ -126,7 +130,10 @@ const PageAdminSchool: React.FC = () => {
                       </button>
 
                       {/* Verification Dialog */}
-                      <dialog id="my_modal_1" className="modal">
+                      <dialog
+                        id="my_modal_1"
+                        className="modal"
+                      >
                         <div className="modal-box">
                           <h3 className="font-bold text-lg">
                             Verification Required
@@ -138,7 +145,12 @@ const PageAdminSchool: React.FC = () => {
                           <div className="modal-action">
                             <button
                               className="btn"
-                              onClick={() => handleVerify(item.userId.toString(), item._id.toString())}
+                              onClick={() =>
+                                handleVerify(
+                                  item.userId.toString(),
+                                  item._id.toString(),
+                                )
+                              }
                             >
                               Verify
                             </button>
@@ -148,9 +160,11 @@ const PageAdminSchool: React.FC = () => {
                           </div>
                         </div>
                       </dialog>
-
                       {/* Invalidation Dialog */}
-                      <dialog id="my_modal_2" className="modal">
+                      <dialog
+                        id="my_modal_2"
+                        className="modal"
+                      >
                         <div className="modal-box">
                           <h3 className="font-bold text-lg">Invalidate?</h3>
                           <p className="py-4">
@@ -159,7 +173,9 @@ const PageAdminSchool: React.FC = () => {
                           <div className="modal-action">
                             <button
                               className="btn"
-                              onClick={() => handleInvalidate(item.userId.toString())}
+                              onClick={() =>
+                                handleInvalidate(item.userId.toString())
+                              }
                             >
                               Yes
                             </button>

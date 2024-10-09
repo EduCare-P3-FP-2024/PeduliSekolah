@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
-  console.log(params);
+  console.log(params.id);
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [isVerified, setIsVerified] = useState(false);
@@ -25,7 +25,7 @@ const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
           },
           body: JSON.stringify({ token }),
         });
-        router.push("/login");
+        router.push("/admin");
         setIsVerified(true);
       }
     } catch (e) {
@@ -49,15 +49,6 @@ const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
         onChange={handleChange}
         onExpired={handleExpired}
       />
-      <button
-        className="border-solid border-1 border-gray-300 rounded-md p-2 
-        bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500
-        disabled:cursor-not-allowed"
-        type="submit"
-        disabled={!isVerified}
-      >
-        Submit Form
-      </button>
     </main>
   );
 };
