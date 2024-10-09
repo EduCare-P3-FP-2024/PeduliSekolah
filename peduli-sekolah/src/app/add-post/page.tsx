@@ -30,11 +30,12 @@ export default function Component() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [formErrors, setFormErrors] = useState<any>({}); // State for form errors
   const router = useRouter();
 
   useEffect(() => {
     const fetchCategory = async () => {
-      const url = "http://localhost:3000/api/categories";
+      const url = "/api/categories";
       try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -52,8 +53,11 @@ export default function Component() {
   const onSubmit = async (data: PostInput) => {
     setIsSubmitting(true);
 
-    if (imageUrls.length) {
-      data.imageUrl = imageUrls;
+    // Handle image URLs
+    if (imageUrls.length === 0) {
+      data.imageUrl = [""]; // If no images, set to empty array
+    } else {
+      data.imageUrl = imageUrls; // Use uploaded images
     }
 
     try {
@@ -65,10 +69,14 @@ export default function Component() {
         body: JSON.stringify(data),
       });
 
+      const result = await response.json(); // Parse the JSON response
+
       if (response.ok) {
         router.push("/post");
       } else {
-        throw new Error(`Submission failed: ${response.statusText}`);
+        // Handle errors returned from the server
+        console.error("Submission error:", result.error);
+        setFormErrors(result.error); // Set form errors state
       }
     } catch (err) {
       console.error("Submission error:", err);
@@ -89,182 +97,166 @@ export default function Component() {
         <h1 className="text-3xl font-bold text-center mb-6 text-[#2C3E50]">
           Create New Post
         </h1>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <Label
-              htmlFor="title"
-              className="text-sm font-medium text-[#34495E]"
-            >
+            <Label htmlFor="title" className="text-sm font-medium text-[#34495E]">
               Title
             </Label>
             <Controller
               name="title"
               control={control}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="text"
-                  id="title"
-                  placeholder="Post title"
-                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
-                />
+                <>
+                  <Input
+                    {...field}
+                    type="text"
+                    id="title"
+                    placeholder="Post title"
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.title ? 'border-red-500' : ''}`}
+                  />
+                  {formErrors.title && (
+                    <p className="text-red-500 text-sm">{formErrors.title._errors[0]}</p>
+                  )}
+                </>
               )}
             />
           </div>
 
           <div>
-            <Label
-              htmlFor="content"
-              className="text-sm font-medium text-[#34495E]"
-            >
+            <Label htmlFor="content" className="text-sm font-medium text-[#34495E]">
               Content
             </Label>
             <Controller
               name="content"
               control={control}
               render={({ field }) => (
-                <Textarea
-                  {...field}
-                  rows={4}
-                  id="content"
-                  placeholder="Post content"
-                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
-                />
+                <>
+                  <Textarea
+                    {...field}
+                    rows={4}
+                    id="content"
+                    placeholder="Post content"
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.content ? 'border-red-500' : ''}`}
+                  />
+                  {formErrors.content && (
+                    <p className="text-red-500 text-sm">{formErrors.content._errors[0]}</p>
+                  )}
+                </>
               )}
             />
           </div>
 
           <div>
-            <Label
-              htmlFor="categoryId"
-              className="text-sm font-medium text-[#34495E]"
-            >
+            <Label htmlFor="categoryId" className="text-sm font-medium text-[#34495E]">
               Category
             </Label>
             <Controller
               name="categoryId"
               control={control}
               render={({ field }) => (
-                <select
-                  {...field}
-                  className="block w-full p-2 bg-white border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60]"
-                >
-                  {categories.map((el, i) => (
-                    <option
-                      key={i}
-                      value={el._id.toString()}
-                    >
-                      {el.name}
-                    </option>
-                  ))}
-                </select>
+                <>
+                  <select
+                    {...field}
+                    className="block w-full p-2 bg-white border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60]"
+                  >
+                    {categories.map((el, i) => (
+                      <option key={i} value={el._id.toString()}>
+                        {el.name}
+                      </option>
+                    ))}
+                  </select>
+                  {formErrors.categoryId && (
+                    <p className="text-red-500 text-sm">{formErrors.categoryId._errors[0]}</p>
+                  )}
+                </>
               )}
             />
           </div>
+
           <div>
-            <Label
-              htmlFor="tags"
-              className="text-sm font-medium text-[#34495E]"
-            >
+            <Label htmlFor="tags" className="text-sm font-medium text-[#34495E]">
               Tags (comma-separated)
             </Label>
             <Controller
               name="tags"
               control={control}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="text"
-                  id="tags"
-                  placeholder="Post tags"
-                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
-                />
+                <>
+                  <Input
+                    {...field}
+                    type="text"
+                    id="tags"
+                    placeholder="Post tags"
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.tags ? 'border-red-500' : ''}`}
+                  />
+                  {formErrors.tags && (
+                    <p className="text-red-500 text-sm">{formErrors.tags._errors[0]}</p>
+                  )}
+                </>
               )}
             />
           </div>
 
           <div>
-            <Label
-              htmlFor="deadLineAt"
-              className="text-sm font-medium text-[#34495E]"
-            >
+            <Label htmlFor="deadLineAt" className="text-sm font-medium text-[#34495E]">
               Deadline At
             </Label>
             <Controller
               name="deadLineAt"
               control={control}
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <DatePicker
-                  selected={value ? new Date(value) : null} // Convert value to Date if it exists
-                  onChange={(date) => onChange(date)} // Update the form state
-                  showTimeSelect // Show time selection
-                  dateFormat="Pp" // Format the date and time
-                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] w-full p-2 rounded-md"
-                  placeholderText="Select a date"
+                  selected={field.value} 
+                  onChange={(date) => field.onChange(date)}
+                  className={`block w-full p-2 border-[#2C3E50] rounded-md focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.deadLineAt ? 'border-red-500' : ''}`}
                 />
               )}
             />
+            {formErrors.deadLineAt && (
+              <p className="text-red-500 text-sm">{formErrors.deadLineAt._errors[0]}</p>
+            )}
           </div>
 
           <div>
-            <Label
-              htmlFor="targetAmount"
-              className="text-sm font-medium text-[#34495E]"
-            >
-              Target Amount
+            <Label htmlFor="amount" className="text-sm font-medium text-[#34495E]">
+              Amount
             </Label>
             <Controller
               name="amount"
               control={control}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="number"
-                  id="targetAmount"
-                  placeholder="Target amount"
-                  className="border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60]"
-                />
+                <>
+                  <Input
+                    {...field}
+                    type="number"
+                    id="amount"
+                    placeholder="Amount"
+                    className={`border-[#2C3E50] focus:ring-[#27AE60] focus:border-[#27AE60] ${formErrors.amount ? 'border-red-500' : ''}`}
+                  />
+                  {formErrors.amount && (
+                    <p className="text-red-500 text-sm">{formErrors.amount._errors[0]}</p>
+                  )}
+                </>
               )}
             />
           </div>
 
           <div>
-            <Label
-              htmlFor="imageUrl"
-              className="text-sm font-medium text-[#34495E]"
-            >
+            <Label htmlFor="imageUrl" className="text-sm font-medium text-[#34495E]">
               Upload Images
             </Label>
             <CldUploadButton
+              onUpload={handleUploadSuccess}
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
-              onSuccess={handleUploadSuccess}
-              className="bg-[#E67E22] text-white px-4 py-2 rounded-md hover:bg-[#D35400] transition-colors"
+              className="block w-full border-[#2C3E50] rounded-md p-2 bg-[#27AE60] text-white"
             >
-              Upload Image
+              Upload Images
             </CldUploadButton>
-            {imageUrls.length > 0 && (
-              <p className="text-sm text-[#27AE60] mt-2">Images uploaded!</p>
-            )}
           </div>
 
-          <div>
-            <Button
-              type="submit"
-              className="w-full bg-[#2C3E50] hover:bg-[#34495E] text-white"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <div className="animate-spin h-5 w-5">
-                  <FileText className="h-5 w-5" />
-                </div>
-              ) : (
-                "Submit Post"
-              )}
-            </Button>
-          </div>
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? "Submitting..." : "Submit"}
+          </Button>
         </form>
       </div>
     </div>

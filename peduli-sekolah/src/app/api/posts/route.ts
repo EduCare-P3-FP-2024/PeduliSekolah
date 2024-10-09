@@ -2,6 +2,20 @@ import { NextResponse } from "next/server";
 import { getPosts } from "@/db/models/post";
 import { createPost } from "@/db/models/post";
 import { ObjectId } from "mongodb";
+import { z } from "zod";
+
+// Define a Zod schema to validate the post input
+const postSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  categoryId: z.string().min(1, "Category is required"),
+  tags: z.string().min(1, "Tags are required"),
+  imageUrl: z.array(z.string()).nonempty("At least one image is required"),
+  deadLineAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Invalid deadline date",
+  }),
+  amount: z.number().positive("Amount must be positive"),
+});
 
 export async function GET(req: Request) {
   try {
@@ -17,7 +31,7 @@ export async function GET(req: Request) {
     const posts = await getPosts(Number(page), category, search);
 
     // Response object with paginated posts
-    return NextResponse.json({ 
+    return NextResponse.json({
       data: posts,
       currentPage: Number(page),
       totalPages: Math.ceil(posts.length / Number(limit)),
@@ -25,7 +39,7 @@ export async function GET(req: Request) {
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch posts" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -38,7 +52,7 @@ export type Post = {
   slug: string;
   categoryId: ObjectId;
   tags: string[];
-  imageUrl: [string];
+  imageUrl: string[];
   status: string;
   createdAt: Date;
   updatedAt: Date;
@@ -62,6 +76,26 @@ export const POST = async (req: Request) => {
       deadLineAt,
       meta_description,
     } = await req.json();
+
+    // Validate incoming data with Zod
+    const validationResult = postSchema.safeParse({
+      title,
+      content,
+      categoryId,
+      amount: Number(amount),
+      tags,
+      imageUrl,
+      deadLineAt,
+      meta_description,
+    });
+
+    if (!validationResult.success) {
+      // Return errors if validation fails
+      return NextResponse.json(
+        { error: validationResult.error.format() }, // Format errors for response
+        { status: 400 }
+      );
+    }
 
     // Simulate getting userId from a session/cookie (replace with actual user logic)
     const userId = new ObjectId(); // Replace with actual userId
