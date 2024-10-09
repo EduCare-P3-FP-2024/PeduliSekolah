@@ -12,7 +12,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Update the user's account type to "Personal"
     await updateUserType(userId, "Personal");
     await updateSchoolDocumentStatus(schoolDocumentId, "Layak");
     return NextResponse.json({

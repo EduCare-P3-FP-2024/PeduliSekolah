@@ -1,4 +1,5 @@
 "use client";
+import { banUser } from "@/app/admin/SchoolList/action";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -7,8 +8,8 @@ interface PageProps {
   params: { id: string };
 }
 
-const Page: React.FC<PageProps> = ({ params }) => {
-  console.log(params);
+const Page: React.FC<PageProps> = ({ params }: { params: { id: string } }) => {
+  console.log(params.id);
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [isVerified, setIsVerified] = useState(false);
@@ -25,7 +26,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
           },
           body: JSON.stringify({ token }),
         });
-        router.push("/login");
+        router.push("/admin/SchoolList");
         setIsVerified(true);
       }
     } catch (e) {
@@ -33,8 +34,10 @@ const Page: React.FC<PageProps> = ({ params }) => {
     }
   }
 
-  const handleChange = (token: string | null) => {
+  const handleChange = async (token: string | null) => {
+    await banUser(params.id);
     handleCaptchaSubmission(token);
+    router.push("/admin/SchoolList");
   };
 
   function handleExpired() {
@@ -42,20 +45,13 @@ const Page: React.FC<PageProps> = ({ params }) => {
   }
 
   return (
-    <main className="flex flex-col items-center mt-10 gap-3 ">
+    <main className="flex flex-col items-center mt-10 gap-3">
       <ReCAPTCHA
         sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
         ref={recaptchaRef}
         onChange={handleChange}
         onExpired={handleExpired}
       />
-      <button
-        className="border-solid border-1 border-gray-300 rounded-md p-2 bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
-        type="submit"
-        disabled={!isVerified}
-      >
-        Submit Form
-      </button>
     </main>
   );
 };

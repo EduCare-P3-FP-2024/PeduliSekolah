@@ -62,7 +62,10 @@ const PageAdminSchool = async ({
                     {/* Display images */}
                     <div className="flex space-x-4">
                       {post.imageUrl.map((image, index) => (
-                        <ImageModal image={image} key={index} />
+                        <ImageModal
+                          image={image}
+                          key={index}
+                        />
                       ))}
                     </div>
 
