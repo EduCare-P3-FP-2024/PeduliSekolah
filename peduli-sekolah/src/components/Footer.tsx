@@ -66,14 +66,7 @@ export default function Footer() {
                     Donate
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/post"
-                    className="hover:text-[#E67E22] transition-colors duration-300"
-                  >
-                    Post
-                  </Link>
-                </li>
+
                 <li>
                   <Link
                     href="#"

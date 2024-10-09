@@ -87,25 +87,19 @@ export default function HeroLandingPage() {
             <div className="flex flex-wrap gap-4">
               {token ? (
                 <Link
-                  href="/register"
-                  className="bg-[#E67E22] hidden text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300"
+                  href="/post"
+                  className="bg-[#E67E22] hidden text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#D35400] transition-colors duration-300"
                 >
-                  Sign Up Now
+                  Donate Now
                 </Link>
               ) : (
                 <Link
                   href="/register"
-                  className="bg-[#E67E22]  text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300"
+                  className="bg-[#E67E22]  text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#D35400] transition-colors duration-300"
                 >
                   Sign Up Now
                 </Link>
               )}
-              <Link
-                href="#"
-                className="bg-transparent border border-[#ECF0F1] text-[#ECF0F1] px-6 py-3 rounded-md hover:bg-[#ECF0F1] hover:text-[#2C3E50] transition-colors duration-300"
-              >
-                Learn More
-              </Link>
             </div>
           </div>
           <div className="flex justify-center items-center">

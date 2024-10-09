@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import {
   ChatBubbleOvalLeftEllipsisIcon,
   EnvelopeIcon,
   AcademicCapIcon,
+  DocumentArrowUpIcon,
 } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
 import logoPs from "@/assets/logo.png";
@@ -35,6 +36,18 @@ const navItems1: NavItem[] = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "Schools", href: "/schools", icon: AcademicCapIcon },
   { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
+  {
+    name: "Add School Document",
+    href: "/school-document",
+    icon: DocumentArrowUpIcon,
+  },
+  { name: "Feedback", href: "/feedback", icon: EnvelopeIcon },
+];
+
+const navItems2: NavItem[] = [
+  { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Schools", href: "/schools", icon: AcademicCapIcon },
+  { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
   { name: "Add Post", href: "/add-post", icon: ChatBubbleOvalLeftEllipsisIcon },
   { name: "Feedback", href: "/feedback", icon: EnvelopeIcon },
 ];
@@ -56,10 +69,16 @@ export default function Sidebar() {
 
   const name = Cookies.get("username");
   const schoolstatus = Cookies.get("schoolstatus");
-  console.log(schoolstatus);
 
   // Conditional rendering based on role
-  const navigationItems = schoolstatus === "Tidak Layak" ? navItems1 : navItems;
+  let navigationItems;
+  if (schoolstatus === "Tidak Layak") {
+    navigationItems = navItems2;
+  } else if (schoolstatus === "Layak") {
+    navigationItems = navItems;
+  } else {
+    navigationItems = navItems1;
+  }
 
   if (
     pathname === "/admin" ||
@@ -80,12 +99,7 @@ export default function Sidebar() {
           {isLoading ? (
             <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse" />
           ) : (
-            <Image
-              src={logoPs}
-              alt="PS Logo"
-              width={50}
-              height={50}
-            />
+            <Image src={logoPs} alt="PS Logo" width={50} height={50} />
           )}
         </div>
 
@@ -120,10 +134,7 @@ export default function Sidebar() {
             <span className="text-sm font-medium text-[#34495E]">
               {name ? name : "Orang Baik"}
             </span>
-            <button
-              className="ml-auto"
-              onClick={handleLogout}
-            >
+            <button className="ml-auto" onClick={handleLogout}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

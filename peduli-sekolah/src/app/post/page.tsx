@@ -1,101 +1,113 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Post } from "@/utils/types"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Post } from "@/utils/types";
+import { useRouter } from "next/navigation";
 
 export default function Component() {
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
-  const [posts, setPosts] = useState<Post[]>([])
-  const [featuredPosts, setFeaturedPosts] = useState<Post[]>([])
-  const [categories, setCategories] = useState<string[]>(["All"])
-  const [loading, setLoading] = useState(true)
-  const [loadingFeatured, setLoadingFeatured] = useState(true)
-  const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0)
-  const router = useRouter()
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
+  const [categories, setCategories] = useState<string[]>(["All"]);
+  const [loading, setLoading] = useState(true);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
+  const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch("/api/categories")
-        const data = await response.json()
-        const fetchedCategories = data.map((category: { name: string }) => category.name)
-        setCategories(["All", ...fetchedCategories])
+        const response = await fetch("/api/categories");
+        const data = await response.json();
+        const fetchedCategories = data.map(
+          (category: { name: string }) => category.name,
+        );
+        setCategories(["All", ...fetchedCategories]);
       } catch (error) {
-        console.error("Error fetching categories:", error)
+        console.error("Error fetching categories:", error);
       }
     }
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     async function fetchFeaturedPosts() {
-      setLoadingFeatured(true)
+      setLoadingFeatured(true);
       try {
-        const response = await fetch("/api/post-featured")
-        const data = await response.json()
-        setFeaturedPosts(data.data)
+        const response = await fetch("/api/post-featured");
+        const data = await response.json();
+        setFeaturedPosts(data.data);
       } catch (error) {
-        console.error("Error fetching featured posts:", error)
+        console.error("Error fetching featured posts:", error);
       } finally {
-        setLoadingFeatured(false)
+        setLoadingFeatured(false);
       }
     }
-    fetchFeaturedPosts()
-  }, [])
+    fetchFeaturedPosts();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentFeaturedIndex((prevIndex) =>
-        prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1
-      )
-    }, 5000) // Change slide every 5 seconds
+        prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1,
+      );
+    }, 5000); // Change slide every 5 seconds
 
-    return () => clearInterval(interval)
-  }, [featuredPosts])
+    return () => clearInterval(interval);
+  }, [featuredPosts]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm)
-    }, 500)
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
 
     return () => {
-      clearTimeout(handler)
-    }
-  }, [searchTerm])
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
   useEffect(() => {
     async function fetchPosts() {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await fetch(
-          `/api/posts?page=1&category=${selectedCategory}&search=${debouncedSearchTerm}`
-        )
-        const data = await response.json()
-        setPosts(data.data)
+          `/api/posts?page=1&category=${selectedCategory}&search=${debouncedSearchTerm}`,
+        );
+        const data = await response.json();
+        setPosts(data.data);
       } catch (error) {
-        console.error("Error fetching posts:", error)
+        console.error("Error fetching posts:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    fetchPosts()
-  }, [selectedCategory, debouncedSearchTerm])
+    fetchPosts();
+  }, [selectedCategory, debouncedSearchTerm]);
 
   return (
     <div className="min-h-screen w-full bg-[#F5F7FA]">
       <main className="container mx-auto px-4 py-8">
         {/* Featured Posts Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-[#D35400] mb-6">Featured Posts</h2>
+          <h2 className="text-3xl font-bold text-[#D35400] mb-6">
+            Featured Posts
+          </h2>
           {loadingFeatured ? (
-            <p className="text-center text-[#2C3E50]">Loading featured posts...</p>
+            <p className="text-center text-[#2C3E50]">
+              Loading featured posts...
+            </p>
           ) : (
             <div className="relative h-[400px]">
               <AnimatePresence mode="wait">
@@ -119,7 +131,9 @@ export default function Component() {
                   <button
                     key={index}
                     className={`w-3 h-3 rounded-full ${
-                      index === currentFeaturedIndex ? 'bg-[#D35400]' : 'bg-[#BDC3C7]'
+                      index === currentFeaturedIndex
+                        ? "bg-[#D35400]"
+                        : "bg-[#BDC3C7]"
                     }`}
                     onClick={() => setCurrentFeaturedIndex(index)}
                   />
@@ -146,7 +160,10 @@ export default function Component() {
               />
             </div>
 
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger className="w-full md:w-[200px]">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -163,7 +180,9 @@ export default function Component() {
 
         {/* Posts Grid */}
         <section>
-          <h2 className="text-3xl font-bold text-[#2C3E50] mb-6">All Projects</h2>
+          <h2 className="text-3xl font-bold text-[#2C3E50] mb-6">
+            All Projects
+          </h2>
           {loading ? (
             <p className="text-center text-[#2C3E50]">Loading projects...</p>
           ) : (
@@ -181,14 +200,30 @@ export default function Component() {
         </section>
       </main>
     </div>
-  )
+  );
 }
 
-function PostCard({ post, router, featured = false }: { post: Post; router: any; featured?: boolean }) {
+function PostCard({
+  post,
+  router,
+  featured = false,
+}: {
+  post: Post;
+  router: any;
+  featured?: boolean;
+}) {
+  if (!post) {
+    // Return a placeholder or message when the post is undefined or null
+    return (
+      <div className="bg-white rounded-lg overflow-hidden shadow-lg p-4 border-2 border-[#D35400]">
+        <p className="text-center text-[#2C3E50]">Post not available</p>
+      </div>
+    );
+  }
   return (
     <motion.div
       className={`bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${
-        featured ? 'border-4 h-full' : 'border-2'
+        featured ? "border-4 h-full" : "border-2"
       } border-[#D35400] cursor-pointer`}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
@@ -200,15 +235,19 @@ function PostCard({ post, router, featured = false }: { post: Post; router: any;
       <img
         src={post.imageUrl[0]}
         alt={post.title}
-        className={`w-full ${featured ? 'h-64' : 'h-48'} object-cover`}
+        className={`w-full ${featured ? "h-64" : "h-48"} object-cover`}
       />
       <div className="p-4">
-        <h2 className={`${featured ? 'text-2xl' : 'text-xl'} font-semibold mb-2 text-[#2C3E50]`}>
+        <h2
+          className={`${
+            featured ? "text-2xl" : "text-xl"
+          } font-semibold mb-2 text-[#2C3E50]`}
+        >
           {post.title}
         </h2>
         <span
           className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${getCategoryColor(
-            post.content
+            post.content,
           )}`}
         >
           {post.content}
@@ -218,22 +257,22 @@ function PostCard({ post, router, featured = false }: { post: Post; router: any;
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
 function getCategoryColor(category: string) {
   switch (category) {
     case "Health":
-      return "bg-[#D35400] text-white"
+      return "bg-[#D35400] text-white";
     case "Education":
-      return "bg-[#2980B9] text-white"
+      return "bg-[#2980B9] text-white";
     case "Environment":
-      return "bg-[#27AE60] text-white"
+      return "bg-[#27AE60] text-white";
     case "Technology":
-      return "bg-[#8E44AD] text-white"
+      return "bg-[#8E44AD] text-white";
     case "Arts":
-      return "bg-[#F39C12] text-white"
+      return "bg-[#F39C12] text-white";
     default:
-      return "bg-[#BDC3C7] text-[#2C3E50]"
+      return "bg-[#BDC3C7] text-[#2C3E50]";
   }
 }

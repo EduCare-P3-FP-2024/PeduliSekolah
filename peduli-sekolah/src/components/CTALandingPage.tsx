@@ -63,14 +63,14 @@ export default function CTALandingPage() {
         {token ? (
           <Link
             href="/post"
-            className="bg-[#2C3E50] text-[#ECF0F1] px-8 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300 inline-block"
+            className="bg-[#2C3E50] text-[#ECF0F1] px-8 py-3 rounded-md hover:bg-[#D35400] transition-colors duration-300 inline-block"
           >
             Donate Now
           </Link>
         ) : (
           <Link
             href="/register"
-            className="bg-[#2C3E50] text-[#ECF0F1] px-8 py-3 rounded-md hover:bg-[#27AE60] transition-colors duration-300 inline-block"
+            className="bg-[#2C3E50] text-[#ECF0F1] px-8 py-3 rounded-md hover:bg-[#D35400] transition-colors duration-300 inline-block"
           >
             Sign Up Now
           </Link>
