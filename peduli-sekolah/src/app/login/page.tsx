@@ -4,7 +4,6 @@ import Image from "next/image";
 import studentBg from "@/assets/studentbg.jpg";
 import { Suspense } from "react";
 import ClientFlashComponent from "@/components/ClientFlashComponent";
-import LoginButton from "@/components/LoginButton";
 import { getServerSession } from "next-auth";
 import { getProviders } from "next-auth/react";
 import authOptions from "../api/auth/authOption";

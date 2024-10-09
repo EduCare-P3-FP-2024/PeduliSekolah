@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { signIn } from "next-auth/react";  // Removed signOut import
+import { signIn } from "next-auth/react"; // Removed signOut import
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Check } from "lucide-react";
@@ -14,8 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ToastComponent } from "@/components/ToastComponent";
-
+import { toast } from "@/hooks/use-toast";
 
 interface User {
   email: string;
@@ -65,15 +64,22 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
 
     if (res?.success) {
       // Trigger success toast
-      ToastComponent({
+      toast({
         title: "Login successful!",
         description: "You have successfully logged in with your credentials.",
         variant: "default",
       });
       window.location.href = "/";
+    } else if (res?.admin) {
+      toast({
+        title: "Login successful as admin",
+        description: "You have successfully logged in with your credentials.",
+        variant: "default",
+      });
+      window.location.href = "/admin";
     } else {
-      // Trigger error toast
-      ToastComponent({
+      // Triggerz error toast
+      toast({
         title: "Login failed",
         description: res?.error || "Invalid credentials. Please try again.",
         variant: "destructive",
@@ -116,7 +122,10 @@ export default function LoginForm({ session, providers }: LoginButtonProps) {
             Or Continue with
           </div>
 
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <Dialog
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+          >
             <DialogTrigger asChild>
               <Button className="w-full bg-[#2C3E50]/10 border border-[#2C3E50]/20 text-[#ECF0F1] font-bold p-2 rounded-md flex justify-between items-center mt-4">
                 {selectedProvider
