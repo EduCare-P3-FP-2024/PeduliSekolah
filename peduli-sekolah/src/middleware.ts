@@ -50,10 +50,8 @@ export const middleware = async (request: NextRequest) => {
 
   // Protect /add-post route: only "School" account types can add posts
   if (
-    (isAddPostPage && tokenData.account_type !== "School") ||
-    (
-     isAddPostPage && tokenData.schoolstatus !== "Tidak Layak"
-    )
+    (isAddPostPage && tokenData.account_type !== "school") ||
+    (isAddPostPage && tokenData.schoolstatus !== "Tidak Layak")
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -112,7 +110,6 @@ export const middleware = async (request: NextRequest) => {
     headers: requestHeaders,
   });
 };
-
 
 // Configure paths for the middleware to match
 export const config = {

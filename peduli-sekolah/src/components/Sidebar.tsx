@@ -6,8 +6,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   HomeIcon,
-  UserIcon,
   ChatBubbleOvalLeftIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
   EnvelopeIcon,
   AcademicCapIcon,
 } from "@heroicons/react/24/outline";
@@ -31,6 +31,14 @@ const navItems: NavItem[] = [
   { name: "Feedback", href: "/feedback", icon: EnvelopeIcon },
 ];
 
+const navItems1: NavItem[] = [
+  { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Schools", href: "/schools", icon: AcademicCapIcon },
+  { name: "Post", href: "/post", icon: ChatBubbleOvalLeftIcon },
+  { name: "Add Post", href: "/add-post", icon: ChatBubbleOvalLeftEllipsisIcon },
+  { name: "Feedback", href: "/feedback", icon: EnvelopeIcon },
+];
+
 export default function Sidebar() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +54,12 @@ export default function Sidebar() {
     }
   };
 
-  const name = Cookies.get('username');
+  const name = Cookies.get("username");
+  const schoolstatus = Cookies.get("schoolstatus");
+  console.log(schoolstatus);
+
+  // Conditional rendering based on role
+  const navigationItems = schoolstatus === "Tidak Layak" ? navItems1 : navItems;
 
   if (
     pathname === "/admin" ||
@@ -61,13 +74,18 @@ export default function Sidebar() {
   setTimeout(() => setIsLoading(false), 2000);
 
   return (
-    <div className="flex h-screen w-64 flex-col justify-between border-r border-[#E67E22] bg-[#ECF0F1] p-4">
+    <div className="flex h-screen w-64 flex-col justify-between border-r border-[#E67E22] bg-[#ECF0F1] p-4 sticky top-0">
       <div>
         <div className="mb-8">
           {isLoading ? (
             <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse" />
           ) : (
-            <Image src={logoPs} alt="PS Logo" width={50} height={50} />
+            <Image
+              src={logoPs}
+              alt="PS Logo"
+              width={50}
+              height={50}
+            />
           )}
         </div>
 
@@ -81,7 +99,7 @@ export default function Sidebar() {
                     className="h-10 w-full animate-pulse rounded-md bg-gray-200"
                   />
                 ))
-            : navItems.map((item) => (
+            : navigationItems.map((item) => (
                 <NavButton
                   key={item.name}
                   item={item}
@@ -99,8 +117,13 @@ export default function Sidebar() {
           </div>
         ) : (
           <>
-            <span className="text-sm font-medium text-[#34495E]">{name ? name : "Orang Baik"}</span>
-            <button className="ml-auto" onClick={handleLogout}>
+            <span className="text-sm font-medium text-[#34495E]">
+              {name ? name : "Orang Baik"}
+            </span>
+            <button
+              className="ml-auto"
+              onClick={handleLogout}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -131,13 +154,13 @@ function NavButton({ item, isActive }: { item: NavItem; isActive: boolean }) {
         "flex items-center space-x-2 rounded-full px-3 py-2 text-sm font-medium", // Removed transition
         isActive
           ? "bg-[#2C3E50] text-[#E67E22] border-2 border-[#E67E22]" // Active state: Orange text, Navy background, border
-          : "text-[#34495E] hover:bg-[#E67E22] hover:text-white border-2 border-transparent" // Idle & Hover state: Dark Gray text with hover effects
+          : "text-[#34495E] hover:bg-[#E67E22] hover:text-white border-2 border-transparent", // Idle & Hover state: Dark Gray text with hover effects
       )}
     >
       <item.icon
         className={cn(
           "h-5 w-5", // Removed transition
-          isActive ? "text-[#E67E22]" : "text-[#34495E]" // Active: Orange, Idle: Dark Gray
+          isActive ? "text-[#E67E22]" : "text-[#34495E]", // Active: Orange, Idle: Dark Gray
         )}
       />
       <span>{item.name}</span>

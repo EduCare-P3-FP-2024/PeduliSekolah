@@ -8,7 +8,7 @@ const PageAdminSchool: React.FC = () => {
   const [data, setData] = useState<SchoolDocument[]>([]);
   const router = useRouter();
 
-  const handleInvalidate = async (userId: string , schoolDocumentId: string) => {
+  const handleInvalidate = async (userId: string, schoolDocumentId: string) => {
     try {
       router.push(`/CaptchaPage`);
       const response = await fetch("/api/invalidate", {
@@ -174,8 +174,10 @@ const PageAdminSchool: React.FC = () => {
                             <button
                               className="btn"
                               onClick={() =>
-                                handleInvalidate(item.userId.toString(),  item._id.toString())
-
+                                handleInvalidate(
+                                  item.userId.toString(),
+                                  item._id.toString(),
+                                )
                               }
                             >
                               Yes

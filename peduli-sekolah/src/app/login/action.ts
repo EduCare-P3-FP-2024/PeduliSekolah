@@ -6,6 +6,8 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 import { getUserByEmailAndType } from "@/db/models/user";
 import { getDocumentByUserId } from "@/db/models/schoolDocument";
+import { redirect } from "next/navigation";
+import { ObjectId } from "mongodb";
 
 export const actionLogin = async (formData: FormData) => {
   const loginInputSchema = z.object({
@@ -32,13 +34,14 @@ export const actionLogin = async (formData: FormData) => {
   // Retrieve user by email
   const user = await getUserByEmailAndType(parsedData.data.email, "origin");
 
+  console.log(user);
+
   // Check if user exists and password is correct
   if (!user || !comparePassword(parsedData.data.password, user.password)) {
     return { error: "Invalid credentials" }; // Return error
   }
 
-
-  const school = await getDocumentByUserId(user._id.toString());
+  const school = await getDocumentByUserId(new ObjectId(user._id));
 
   if (user.status === "banned") {
     return { error: "This user has been banned" }; // Return error
@@ -53,6 +56,7 @@ export const actionLogin = async (formData: FormData) => {
     username: user.username,
     schoolstatus: school?.status,
   };
+  console.log(payload);
 
   // Generate token using jose
   const token = await createTokenJose(payload);
@@ -64,6 +68,10 @@ export const actionLogin = async (formData: FormData) => {
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3), // Expires in 3 days
     sameSite: "strict",
   });
+
+  if (user.role === "admin") {
+    return { admin: true };
+  }
 
   return { success: true }; // Return success
 };
