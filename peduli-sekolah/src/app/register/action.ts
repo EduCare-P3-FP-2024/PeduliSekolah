@@ -15,7 +15,7 @@ export const RegisterLogic = async (formData: FormData) => {
     password: z
       .string({ message: "Password is required" })
       .min(5, { message: "Password must be at least 5 characters" }),
-    accountType: z.enum(["individual", "school"], {
+    accountType: z.enum(["personal", "school"], {
       errorMap: () => ({ message: "Please select an account type" }),
     }),
   });

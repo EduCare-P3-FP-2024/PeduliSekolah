@@ -75,9 +75,17 @@ const PageAdminSchool: React.FC = () => {
 
   useEffect(() => {
     const fetchingSchool = async () => {
-      const response = await fetch("/api/schools");
-      const data: SchoolDocument[] = await response.json();
-      setData(data);
+      try {
+        const response = await fetch("/api/schools");
+        if (!response.ok) {
+          throw new Error("Failed to fetch school data");
+        }
+        const data: any = await response.json();
+        console.log(data.data);
+        setData(data.data);
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
     };
     fetchingSchool();
   }, []);
