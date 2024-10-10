@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
-import { SchoolDocument } from "@/utils/types"; // Ensure this is correctly pointing to your types
+import { Post, SchoolDocument } from "@/utils/types"; // Ensure this is correctly pointing to your types
 import { useRouter } from "next/navigation";
 
 const PageAdminSchool: React.FC = () => {
-  const [data, setData] = useState<SchoolDocument[]>([]);
+  const [data, setData] = useState<Post[]>([]);
   const router = useRouter();
 
   const handleInvalidate = async (userId: string, schoolDocumentId: string) => {
@@ -75,17 +75,20 @@ const PageAdminSchool: React.FC = () => {
 
   useEffect(() => {
     const fetchingSchool = async () => {
-      const response = await fetch("/api/schools");
-      const fetchedData: SchoolDocument[] = await response.json();
+      try {
+        const response = await fetch("/api/post1");
+        const result = await response.json();
 
-      // Convert _id and userId to ObjectId
-      const modifiedData = fetchedData.map(item => ({
-        ...item,
-        // Ensure userId is also an ObjectId
-      }));
-
-      setData(modifiedData);
+        if (response.ok) {
+          setData(result.data); // Assuming the data array comes under 'data'
+        } else {
+          console.error(result.message || "Failed to fetch data.");
+        }
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
     };
+
     fetchingSchool();
   }, []);
 
@@ -95,7 +98,7 @@ const PageAdminSchool: React.FC = () => {
         <AdminSidebar />
         <div className="w-9/12 mx-auto p-5">
           {data.length > 0 ? (
-            data.map((item: SchoolDocument) => (
+            data.map((item: Post) => (
               <div
                 key={item._id.toString()}
                 className="border shadow-lg rounded-xl p-5 bg-white"
@@ -108,15 +111,15 @@ const PageAdminSchool: React.FC = () => {
                   />
                   <div className="w-full">
                     <div className="flex justify-between">
-                      <h2 className="font-bold text-left my-5">{item.name}</h2>
+                      <h2 className="font-bold text-left my-5">{item.title}</h2>
                       <div className="hidden sm:block text-right">
-                        <p className="text-xs">Pendaftar: {item.email}</p>
+                        <p className="text-xs">{item.slug}</p>
                         <p className="text-xs">
-                          No. Handphone: {item.phoneNumber || "N/A"}
+                          Deadline: {item.deadLineAt || "N/A"}
                         </p>
                       </div>
                     </div>
-                    <p className="my-3 text-sm">{item.description}</p>
+                    <p className="my-3 text-sm">{item.content}</p>
                     <div className="flex justify-end mt-5 space-x-2">
                       {/* Invalidate Button */}
                       <button
@@ -173,7 +176,7 @@ const PageAdminSchool: React.FC = () => {
                         <div className="modal-box">
                           <h3 className="font-bold text-lg">Invalidate?</h3>
                           <p className="py-4">
-                            Are you sure you want to invalidate {item.name}?
+                            Are you sure you want to invalidate {item.title}?
                           </p>
                           <div className="modal-action">
                             <button
