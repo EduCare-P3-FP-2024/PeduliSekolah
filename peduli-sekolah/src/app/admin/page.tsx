@@ -78,7 +78,6 @@ const PageAdminSchool: React.FC = () => {
       const response = await fetch("/api/schools");
       const data: any = await response.json();
       setData(data.data);
-      console.log(data.data, "TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
     };
     fetchingSchool();
   }, []);

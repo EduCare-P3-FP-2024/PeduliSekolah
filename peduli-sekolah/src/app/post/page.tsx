@@ -102,11 +102,11 @@ export default function Component() {
         {/* Featured Posts Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-[#D35400] mb-6">
-            Featured Posts
+            Featured Donations
           </h2>
           {loadingFeatured ? (
             <p className="text-center text-[#2C3E50]">
-              Loading featured posts...
+              Loading featured Donations...
             </p>
           ) : (
             <div className="relative h-[400px]">
@@ -181,10 +181,10 @@ export default function Component() {
         {/* Posts Grid */}
         <section>
           <h2 className="text-3xl font-bold text-[#2C3E50] mb-6">
-            All Projects
+            All Donations
           </h2>
           {loading ? (
-            <p className="text-center text-[#2C3E50]">Loading projects...</p>
+            <p className="text-center text-[#2C3E50]">Loading Donations...</p>
           ) : (
             <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -216,7 +216,7 @@ function PostCard({
     // Return a placeholder or message when the post is undefined or null
     return (
       <div className="bg-white rounded-lg overflow-hidden shadow-lg p-4 border-2 border-[#D35400]">
-        <p className="text-center text-[#2C3E50]">Post not available</p>
+        <p className="text-center text-[#2C3E50]">Donation not available</p>
       </div>
     );
   }
