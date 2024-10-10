@@ -24,10 +24,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Convert schools to match SchoolProfile type
-    const formattedSchools: SchoolProfile[] = schools.map(school => ({
+    const formattedSchools: SchoolProfile[] = schools.map((school) => ({
       ...school,
-      _id: school._id.toString(), // Convert ObjectId to string
-      userId: school._id.toString()
+      _id: new ObjectId(school._id), // Convert ObjectId to string
+      userId: new ObjectId(school._id),
     }));
 
     // Return the fetched school data
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

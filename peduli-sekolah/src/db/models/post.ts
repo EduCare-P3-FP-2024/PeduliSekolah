@@ -71,25 +71,57 @@ export const getPosts = async (
   return posts;
 };
 
+export const getPostsAdmin = async (
+  page: number,
+  category: string,
+  searchTerm: string,
+) => {
+  const db = await getDb();
+  const perPage = 10;
+  const skip = (page - 1) * perPage;
+
+  // Build query object based on category and search term
+  const query: any = {
+    status: "draft",
+  };
+  if (category && category !== "All") {
+    query.categoryId = new ObjectId(category); // Correct the field name
+  }
+  if (searchTerm) {
+    query.title = { $regex: searchTerm, $options: "i" }; // Case-insensitive search
+  }
+
+  // Use aggregate directly, since you're combining lookup and projection
+  const posts = (await db
+    .collection(COLLECTION_POST)
+    .aggregate([
+      { $match: query }, // Match based on the query filter
+      { $skip: skip },
+      { $limit: perPage },
+      ...agg, // Apply the aggregation pipeline
+    ])
+    .toArray()) as Post[];
+
+  return posts;
+};
+
 export const getPostsFeatured = async () => {
   const db = await getDb();
   const posts = (await db
     .collection(COLLECTION_POST)
-    .find({featured_status: true})
-    .toArray()
-  ) as Post[]
+    .find({ featured_status: true })
+    .toArray()) as Post[];
 
-  return posts
-}
+  return posts;
+};
 
 export const adminGetPosts = async () => {
   const db = await getDb();
-  
+
   const posts = (await db
     .collection(COLLECTION_POST)
-    .find()
-    .toArray() as Post[]
-  )
+    .find({ status: "draft" })
+    .toArray()) as Post[];
 
   return posts;
 };
